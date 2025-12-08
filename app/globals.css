@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-yellow:#ffd814;
+    --color-dark_blue:#232f3e;
+    --color-dark:#131921;
+    --color-light_blue:#37475a;
+    --color-orange:#fdbc69;
+    --color-gray:#f0f2f2;
+    --font-sans: var(--font-amazon-sans), Arial, sans-serif;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;    /* Firefox */
+}
