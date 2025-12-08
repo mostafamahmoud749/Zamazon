@@ -1,4 +1,4 @@
-import Filter from '@/components/deals/filter';
+import Filter from '@/components/deals/Filter';
 
 export default function FiltersBlock({ filtersState, name, toggle }) {
   const showFilters = Object.entries(filtersState ?? {}).map(([key, value]) => (
