@@ -44,7 +44,7 @@ export default function DesktopHeader({ navs }) {
         <div onClick={() => toggle()} className="mr-4 flex cursor-pointer items-center text-xl">
           ☰<span className="ml-1 text-sm font-bold">All</span>
         </div>
-        <Navigations H={true} navs={navs} My={false} />
+        <Navigations H={true} navs={navs} my={false} />
       </div>
       <Sidebar
         border={true}

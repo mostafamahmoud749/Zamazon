@@ -1,3 +1,3 @@
 export default function DealsDetailsLayout({ children }) {
-  return <div className="min-h-screen">{children}</div>;
+  return <div className="">{children}</div>;
 }

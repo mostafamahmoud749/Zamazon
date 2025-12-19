@@ -1,13 +1,13 @@
-import Image from "next/image";
-import Link from "next/link"
+import Image from 'next/image';
+import Link from 'next/link';
 
-export default function ProductCard({el}) {
-  return(
+export default function ProductCard({ el }) {
+  return (
     <Link
       href={`/deals/${el.id}`}
-      className="bg-gray-100 w-full h-80 rounded-md shadow-md p-2 hover:shadow-lg transition flex flex-col items-center justify-between"
+      className="flex h-80 w-full flex-col items-center justify-between rounded-md bg-gray-100 p-2 shadow-md transition hover:shadow-lg"
     >
-      <div className="h-56 flex items-center justify-center w-full">
+      <div className="flex h-56 w-full items-center justify-center">
         <Image
           src={el.image}
           width={500}
@@ -18,5 +18,5 @@ export default function ProductCard({el}) {
       </div>
       <p className="text-center text-sm font-medium text-gray-700">{el.title}</p>
     </Link>
-  )
+  );
 }
