@@ -8,6 +8,7 @@ import Navigations from '@/components/layout/navigations/Navigations';
 import Search from '@/components/common/Search';
 import HSidebarMobile from '@/components/layout/navigations/HSidebarMobile';
 import MSidebar from '@/components/layout/navigations/MSidebar';
+import Logo from '@/components/common/Logo';
 
 export default function MobileHeader({ navs }) {
   const [open, setOpen] = useState(false);
@@ -22,9 +23,7 @@ export default function MobileHeader({ navs }) {
           <div className="cursor-pointer text-2xl" onClick={() => toggle()}>
             ☰
           </div>
-          <Link href="/" className="ml-2 text-xl font-bold">
-            zamazon
-          </Link>
+          <Logo />
         </div>
         <div className="flex">
           <MUserNav />

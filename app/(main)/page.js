@@ -11,7 +11,7 @@ export default async function Home() {
   ]);
 
   const showProducts = products
-    .filter((_, index) => index >= 10)
+    .filter((_, index) => index >= 8)
     .map((el) => <ProductCard key={el.id} el={el} />);
   return (
     <div className="flex flex-col md:bg-gray-200">

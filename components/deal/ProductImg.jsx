@@ -1,3 +1,7 @@
 export default function ProductImg({ img }) {
-  return <img src={img} alt="Product" className="h-[300px] my-4 w-full object-contain" />;
+  return (
+    <div className="max-w-[450px] aspect-square w-full m-auto">
+      <img src={img} alt="Product" className="h-full w-full object-contain" />
+    </div>
+  );
 }

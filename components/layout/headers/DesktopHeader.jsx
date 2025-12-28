@@ -9,6 +9,7 @@ import HSidebarDesktop from '@/components/layout/navigations/HSidebarDesktop';
 import DUserNav from '@/components/layout/user/DUserNav';
 import MSidebar from '@/components/layout/navigations/MSidebar';
 import MergeText from '@/components/layout/headers/MergeText';
+import Logo from '@/components/common/Logo';
 
 export default function DesktopHeader({ navs }) {
   const [open, setOpen] = useState(false);
@@ -18,9 +19,7 @@ export default function DesktopHeader({ navs }) {
   return (
     <header className="bg-dark text-white">
       <nav className="flex items-center justify-between gap-4 px-4 py-0.5">
-        <Link href="/" className="text-xl font-bold">
-          zamazon
-        </Link>
+        <Logo />
 
         <div className="flex items-end gap-1">
           <MapPin className="h-5 w-5" />

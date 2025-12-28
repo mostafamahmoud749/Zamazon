@@ -131,7 +131,7 @@ export default function MainDeals({ products }) {
         </div>
 
         <div
-          className={`fixed bottom-0 left-0 z-50 h-[65vh] w-full overflow-y-auto rounded-t-3xl border-t border-gray-300 bg-white p-4 shadow-xl transition-transform duration-300 ease-out ${open ? 'translate-y-0' : 'translate-y-full'} md:sticky md:top-4 md:h-auto md:w-fit md:min-w-fit md:translate-y-0 md:rounded-none md:border-none md:shadow-none`}
+          className={`fixed bottom-0 left-0 z-48 h-[65vh] w-full overflow-y-auto rounded-t-3xl border-t border-gray-300 bg-white p-4 shadow-xl transition-transform duration-300 ease-out ${open ? 'translate-y-0' : 'translate-y-full'} md:sticky md:top-4 md:h-auto md:w-fit md:min-w-fit md:translate-y-0 md:rounded-none md:border-none md:shadow-none`}
         >
           <div className="flex justify-end border-b-2 border-b-gray-300 p-3 pt-2 md:hidden">
             <X onClick={() => setOpen((v) => !v)} className="cursor-pointer" />
