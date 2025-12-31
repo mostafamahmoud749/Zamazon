@@ -5,9 +5,6 @@ import { headers } from 'next/headers';
 
 export default async function RootLayout({ children }) {
   const headersList = await headers();
-
-
-
   const userAgent = headersList.get('user-agent') || '';
 
   return (
