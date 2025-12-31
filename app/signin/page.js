@@ -3,7 +3,7 @@ import Input from "@/components/auth/Input";
 import Form from "@/components/auth/Form";
 import Button from "@/components/auth/Button";
 import { useState } from "react";
-import SigninWithGithup from "@/components/auth/SigninWithGithup";
+import SigninWithGithub from "@/components/auth/SigninWithGithub";
 import SigninWithGoogle from "@/components/auth/SigninWithGoogle";
 
 export default function Home() {
@@ -36,7 +36,7 @@ export default function Home() {
         <div className="mx-4">
           <Input type="email" label="Email or phone number" />
         <div className="flex flex-col gap-3 mb-4">
-          <SigninWithGithup />
+          <SigninWithGithub />
           <SigninWithGoogle />
         </div>
           <Button />
