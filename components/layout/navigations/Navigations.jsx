@@ -14,7 +14,7 @@ export default function Navigations({ my, H, navs = [], toggle }) {
 
   return (
     <div
-      className={`bg-dark-blue p-1 ${
+      className={` p-1 ${
         H ? 'scrollbar-hide flex gap-3 overflow-x-auto scroll-smooth' : ''
       }`}
     >

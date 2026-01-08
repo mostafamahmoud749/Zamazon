@@ -11,6 +11,7 @@ export default function Home() {
   function toggle(selected) {
     if (!selected) setRadio((prev) => !prev);
   }
+  
   return (
     <main className="m-auto md:mt-6 max-w-[400px] bg-white w-full border-gray-200 border-1 rounded-md shadow-sm ">
       <Form

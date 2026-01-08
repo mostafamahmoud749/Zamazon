@@ -1,7 +1,7 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { getServerSession } from 'next-auth';
 import SeeSign from '@/components/auth/SeeSign';
-import { fetchProducts } from '@/hooks/fetchProducts';
+import { fetchProducts } from '@/lib/fetchProducts';
 import ProductCard from '@/components/product/ProductCard';
 
 export default async function Home() {

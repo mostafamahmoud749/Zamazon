@@ -1,4 +1,4 @@
-import { fetchProducts } from '@/hooks/fetchProducts';
+import { fetchProducts } from '@/lib/fetchProducts';
 import DealMedia from './DealMedia';
 import { headers } from 'next/headers';
 

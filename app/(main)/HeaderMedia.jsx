@@ -1,6 +1,6 @@
 import MobileHeader from '@/components/layout/headers/MobileHeader';
 import DesktopHeader from '@/components/layout/headers/DesktopHeader';
-import { fetchCategories } from '@/hooks/fetchCategories';
+import { fetchCategories } from '@/lib/fetchCategories';
 
 export default async function HeaderMedia({ userAgent }) {
   const isMobile = /Mobi|Android/i.test(userAgent);
