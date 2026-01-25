@@ -9,7 +9,7 @@ export default function MobileDeal({ product }) {
         <ProductImg img={product.image} />
         <div className="px-4 pt-2 pb-4">
           <Details data={{ title: product.title, rating: product.rating }} m={true} />
-          <Buy price={product.price} description={product.description} />
+          <Buy product={product} />
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import HeaderMedia from './HeaderMedia';
 import Footer from '@/components/layout/footer/Footer';
 import { headers } from 'next/headers';
-
+import { CartProvider } from '@/components/cart/CartProvider';
 
 export default async function RootLayout({ children }) {
   const headersList = await headers();
@@ -9,8 +9,10 @@ export default async function RootLayout({ children }) {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <HeaderMedia userAgent={userAgent} />
-      <div className="flex flex-1 flex-col">{children}</div>
+      <CartProvider>
+        <HeaderMedia userAgent={userAgent} />
+        <div className="flex flex-1 flex-col">{children}</div>
+      </CartProvider>
       <Footer />
     </div>
   );

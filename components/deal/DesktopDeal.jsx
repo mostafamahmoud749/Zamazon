@@ -10,7 +10,7 @@ export default function DesktopDeal({ product }){
       </div>
       <div className='flex-2 max-w-[800px]'>
         <Details data={{ title: product.title, rating: product.rating }} m={true} />
-        <Buy price={product.price} description={product.description} />
+        <Buy product={product}  />
       </div>
     </div>
   )
