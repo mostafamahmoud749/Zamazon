@@ -1,0 +1,11 @@
+{
+    "tailwindCSS.experimental.configFile": null,
+    "tailwindCSS.includeLanguages": {
+        "javascript": "html",
+        "javascriptreact": "html",
+        "typescriptreact": "html"
+    },
+    "editor.quickSuggestions": {
+        "strings": true
+    }
+}
