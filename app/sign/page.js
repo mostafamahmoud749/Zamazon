@@ -2,7 +2,7 @@
 import Input from '@/components/auth/Input';
 import Form from '@/components/auth/Form';
 import Button from '@/components/auth/Button';
-import { useState } from 'react';
+import { useState ,Suspense } from 'react';
 import SigninWithGithub from '@/components/auth/SigninWithGithub';
 import SigninWithGoogle from '@/components/auth/SigninWithGoogle';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -23,6 +23,7 @@ export default function SignPage() {
   }
 
   return (
+    <Suspense fallback={<div>Loading...</div>}>
     <main className="m-auto w-full max-w-[400px] rounded-md border-1 border-gray-200 bg-white shadow-sm md:mt-6">
       <Form selected={newUser} toggle={toggle} text="Create account" textq="New to Zamazon?">
         <div className="mx-4">
@@ -44,5 +45,6 @@ export default function SignPage() {
         </div>
       </Form>
     </main>
+    </Suspense>
   );
 }
