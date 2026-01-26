@@ -1,6 +1,6 @@
 import SignHeader from "@/components/auth/SignHeader";
 
-export default function SignInLayout({ children }) {
+export default function SignLayout({ children }) {
   return (
     <>
       <SignHeader />

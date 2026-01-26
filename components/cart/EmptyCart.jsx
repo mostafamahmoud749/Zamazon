@@ -9,8 +9,8 @@ export default function EmptyCart () {
             <div className='md:text-2xl text-xl font-bold mb-1'>Your Zamazon Cart is empty</div>
             <Link href={"/deals"} className='text-sm text-sky-500'>shop todays deals</Link>
             <div className='flex flex-col md:flex-wrap md:flex-row gap-2  my-5'>
-                <Link href={"/signin"} className='block w-full md:w-fit cursor-pointer text-sm md:text-md py-2 md:py-1 px-2 rounded-3xl bg-amber-300'>Sign in to your account</Link>
-                <Link href={"/signin"} className='block w-full md:w-fit cursor-pointer text-sm md:text-md py-2 md:py-1 px-2 rounded-3xl border-1 border-gray-500'>Sign up now</Link>
+                <Link href={"/sign?s=signin"} className='block w-full md:w-fit cursor-pointer text-sm md:text-md py-2 md:py-1 px-2 rounded-3xl bg-amber-300'>Sign in to your account</Link>
+                <Link href={"/sign?s=signup"} className='block w-full md:w-fit cursor-pointer text-sm md:text-md py-2 md:py-1 px-2 rounded-3xl border-1 border-gray-500'>Sign up now</Link>
             </div>
         </div>
       </div>

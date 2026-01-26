@@ -31,7 +31,10 @@ export function CartProvider({ children }) {
     );
   }
 
-
+  useEffect(() => {
+    const saved = localStorage.getItem('cart');
+    if (saved) setProducts(JSON.parse(saved));
+  }, []);
 
   useEffect(() => {
     const { count, price } = products.reduce(
@@ -44,6 +47,8 @@ export function CartProvider({ children }) {
     );
     setTotalProductsCount(count);
     setTotalProductsPrice(price);
+
+    localStorage.setItem('cart', JSON.stringify(products));
   }, [products]);
   return (
     <CartContext.Provider
