@@ -3,8 +3,9 @@ import { providers } from '@/lib/nextAuth';
 
 export const authOptions = {
   providers,
+  secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: '/signin',
+    signIn: '/sign?s=signin',
   },
 };
 const handler = NextAuth(authOptions);
