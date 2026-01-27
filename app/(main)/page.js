@@ -5,10 +5,12 @@ import { fetchProducts } from '@/lib/fetchProducts';
 import ProductCard from '@/components/product/ProductCard';
 
 export default async function Home() {
-  const [products, session] = await Promise.all([
+  const [productsRaw, session] = await Promise.all([
     fetchProducts('https://fakestoreapi.com/products'),
     getServerSession(authOptions),
   ]);
+
+  const products = Array.isArray(productsRaw) ? productsRaw : [];
 
   const showProducts = products
     .filter((_, index) => index < 12)
