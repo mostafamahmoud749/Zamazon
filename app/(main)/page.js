@@ -22,7 +22,13 @@ export default async function Home() {
   return (
     <div className="flex flex-col md:bg-gray-200">
       <div className="mx-auto grid w-199/200 flex-1 grid-cols-2 gap-5 px-6 py-2 md:w-4/5 md:grid-cols-4 md:bg-white">
-        {showProducts}
+        {showProducts.length ? (
+          showProducts
+        ) : (
+          <p className="col-span-full py-6 text-center text-gray-600">
+            Products are unavailable right now.
+          </p>
+        )}
       </div>
       {!session && <SeeSign />}
     </div>
