@@ -2,8 +2,8 @@
 
 import Input from '@/components/auth/Input';
 import Form from '@/components/auth/Form';
-import Button from '@/components/auth/Button';
-import { useState } from 'react';
+import Button from '@/components/common/Button';
+import { useState,useEffect } from 'react';
 import SigninWithGithub from '@/components/auth/SigninWithGithub';
 import SigninWithGoogle from '@/components/auth/SigninWithGoogle';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -22,7 +22,10 @@ export default function SignClient() {
       router.push(`/sign?s=${next ? 'signup' : 'signin'}`);
     }
   }
-
+  useEffect(()=>{
+    setNewUser(S === 'signin' ? false : true)
+  }
+  ,[S])
   return (
     <main className="m-auto w-full max-w-[400px] rounded-md border-1 border-gray-200 bg-white shadow-sm md:mt-6">
       <Form selected={newUser} toggle={toggle} text="Create account" textq="New to Zamazon?">
@@ -30,7 +33,9 @@ export default function SignClient() {
           <Input type="text" label="First and last name" />
           <Input type="email" label="Mobile number or email" />
           <Input type="password" label="Create a password" />
-          <Button />
+          <Button color="bg-amber-300" hoverdColor="hover:bg-amber-400" padding='p-2' margin="mb-4" rounded="rounded-2xl">
+            continue
+          </Button>
         </div>
       </Form>
 
@@ -41,7 +46,9 @@ export default function SignClient() {
             <SigninWithGithub />
             <SigninWithGoogle />
           </div>
-          <Button />
+          <Button color="bg-amber-300" hoverdColor="hover:bg-amber-400" padding='p-2' margin="mb-4" rounded="rounded-2xl">
+            continue
+          </Button>
         </div>
       </Form>
     </main>

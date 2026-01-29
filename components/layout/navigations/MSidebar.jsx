@@ -12,12 +12,12 @@ export default function MSidebar({ my, navs, toggle }) {
       </Link>
       <div className="border-y-4 border-gray-300 p-4">
         <p className="mb-4">Trending</p>
-        <Link onClick={toggle} className="block w-full" href="/PC">
-          PC
+        <Link onClick={toggle} className="block w-full transition-all duration-200 hover:ml-1" href={`/deals?filters=${encodeURIComponent(JSON.stringify({group: 'departments', key: 'electronics'}))}`}>
+          Electronics
         </Link>
       </div>
       <Navigations my={my} navs={navs} toggle={toggle} />
-      <div className="border-t-4 border-gray-300 p-4">
+      <div className="border-t-4 transition-all duration-200 border-gray-300 hover:ml-1  p-4">
         <Signout />
       </div>
     </>

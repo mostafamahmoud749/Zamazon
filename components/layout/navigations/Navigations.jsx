@@ -6,7 +6,7 @@ export default function Navigations({ my, H, navs = [], toggle }) {
       key={el.key}
       onClick={toggle}
       href={`/deals?filters=${encodeURIComponent(JSON.stringify(el))}`}
-      className={`${my ? 'my-4 ' : ''} block pl-4 text-sm ${H ? 'flex-shrink-0 first:pl-0' : 'w-full'}`}
+      className={`${my ? 'my-4 ' : ''} transition-all duration-200 block ${H?"":"hover:ml-1"} pl-4 text-sm ${H ? 'flex-shrink-0 first:pl-0' : 'w-full'}`}
     >
       {el.key}
     </Link>
@@ -20,7 +20,7 @@ export default function Navigations({ my, H, navs = [], toggle }) {
     >
       <Link
         href="/deals"
-        className={`${my ? 'my-4 ' : ''} block pl-4 text-sm ${H ? 'flex-shrink-0 first:pl-0' : 'w-full'}`}
+        className={`${my ? 'my-4 ' : ''}  transition-all duration-200 block pl-4 text-sm ${H ? 'flex-shrink-0 first:pl-0' : 'w-full hover:ml-1'}`}
       >
         Today's Deals
       </Link>

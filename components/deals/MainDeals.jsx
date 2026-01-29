@@ -115,7 +115,7 @@ export default function MainDeals({ products }) {
   }
 
   return (
-    <div className="md:m-auto md:mt-8 md:flex md:w-4/5 md:gap-3">
+    <div className="md:m-auto md:my-8 md:flex md:w-4/5 md:gap-3">
       <div>
         <div className="relative flex items-center gap-2 border-y-2 border-gray-300 md:hidden">
           <span
@@ -130,7 +130,7 @@ export default function MainDeals({ products }) {
         </div>
 
         <div
-          className={`fixed bottom-0 left-0 z-48 h-[65vh] w-full overflow-y-auto rounded-t-3xl border-t border-gray-300 bg-white p-4 shadow-xl transition-transform duration-300 ease-out ${open ? 'translate-y-0' : 'translate-y-full'} md:sticky md:top-4 md:h-auto md:w-fit md:min-w-fit md:translate-y-0 md:rounded-none md:border-none md:shadow-none`}
+          className={`fixed bottom-0 left-0 z-48 h-[65vh] w-full overflow-y-auto rounded-t-3xl border-t border-gray-300 bg-white p-4 shadow-xl transition-transform duration-300 ease-out ${open ? 'translate-y-0' : 'translate-y-full'} md:sticky md:top-4 md:h-auto md:w-fit md:min-w-[250px] md:translate-y-0 md:rounded-none md:border-none md:shadow-none`}
         >
           <div className="flex justify-end border-b-2 border-b-gray-300 p-3 pt-2 md:hidden">
             <X onClick={() => setOpen((v) => !v)} className="cursor-pointer" />

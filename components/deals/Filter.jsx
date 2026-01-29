@@ -3,7 +3,7 @@ import Stars from '@/components/deals/Stars';
 
 export default function Filter({ name, toggle, value }) {
   return (
-    <div className="group flex cursor-pointer items-center gap-1" onClick={() => toggle(name)}>
+    <div className="group  flex cursor-pointer items-center gap-1" onClick={() => toggle(name)}>
       <div
         className={`hidden transition-all duration-200 md:block md:h-5 md:w-5 md:rounded-full ${
           value
@@ -12,7 +12,7 @@ export default function Filter({ name, toggle, value }) {
         }`}
       ></div>
       <div
-        className={`md:border-none md:bg-white ${
+        className={`md:border-none transition-all duration-200 group-hover:md:ml-1  md:bg-white ${
           value ? 'border-2 border-blue-600 bg-sky-100 font-bold' : 'border-1 border-gray-500'
         } rounded-xl px-2 py-1 md:my-2`}
       >
