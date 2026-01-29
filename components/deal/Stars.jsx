@@ -1,4 +1,4 @@
-export default function Stars({ value, max = 5 }) {
+export default function Stars({ value = 4, max = 5, big = false }) {
   const fullStars = Math.floor(value);
   const partial = value - fullStars;
   const emptyStars = max - fullStars - (partial > 0 ? 1 : 0);
@@ -8,7 +8,7 @@ export default function Stars({ value, max = 5 }) {
       {[...Array(fullStars)].map((_, i) => (
         <svg
           key={`full-${i}`}
-          className="h-4 w-4 text-orange-400"
+          className={`${big ? 'h-5 w-5' : 'h-4 w-4'} text-orange-400`}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -34,7 +34,7 @@ export default function Stars({ value, max = 5 }) {
       {[...Array(emptyStars)].map((_, i) => (
         <svg
           key={`empty-${i}`}
-          className="h-4 w-4"
+          className={`${big ? 'h-5 w-5' : 'h-4 w-4'}`}
           fill="#fff"
           stroke="#fb923c"
           strokeWidth="1"

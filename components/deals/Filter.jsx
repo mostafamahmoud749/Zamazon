@@ -1,5 +1,5 @@
 'use client';
-import Stars from '@/components/deals/Stars';
+import Stars from '@/components/deal/Stars';
 
 export default function Filter({ name, toggle, value }) {
   return (
@@ -16,7 +16,11 @@ export default function Filter({ name, toggle, value }) {
           value ? 'border-2 border-blue-600 bg-sky-100 font-bold' : 'border-1 border-gray-500'
         } rounded-xl px-2 py-1 md:my-2`}
       >
-        {name === '4_up' ? <Stars text="& up" /> : name}
+        {name === '4_up' ? <div className="flex whitespace-nowrap items-center text-yellow-500">
+      
+      <Stars big={true}/>
+      <span className="ml-1 text-black">&up</span>
+    </div> : name}
       </div>
     </div>
   );
