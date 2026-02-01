@@ -2,10 +2,11 @@ import HeaderMedia from './HeaderMedia';
 import Footer from '@/components/layout/footer/Footer';
 import { headers } from 'next/headers';
 import { CartProvider } from '@/components/cart/CartProvider';
+import {JSX,ReactNode} from "react"
 
-export default async function RootLayout({ children }) {
+export default async function RootLayout({ children }:{children:ReactNode}):Promise<JSX.Element> {
   const headersList = await headers();
-  const userAgent = headersList.get('user-agent') || '';
+  const userAgent:string = headersList.get('user-agent') || '';
 
   return (
     <div className="flex min-h-screen flex-col">

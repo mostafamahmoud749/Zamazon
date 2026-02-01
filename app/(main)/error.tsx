@@ -1,7 +1,9 @@
 'use client';
 
-export default function GlobalError({ error, reset }) {
-  const code = error?.statusCode || error?.code || 'Error';
+type NextError = Error & { digest?: string; code?: string | number; statusCode?: number };
+
+export default function GlobalError({ error, reset }: { error: NextError; reset: () => void }) {
+  const code = error.statusCode ?? error.code ?? 'Error';
 
   return (
     <div className="flex h-full w-full flex-1 flex-col items-center justify-center bg-gray-50">

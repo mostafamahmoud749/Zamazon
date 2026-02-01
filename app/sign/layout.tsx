@@ -1,6 +1,6 @@
 import SignHeader from "@/components/auth/SignHeader";
-
-export default function SignLayout({ children }) {
+import {ReactNode,JSX} from "react"
+export default function SignLayout({ children }:{children:ReactNode}):JSX.Element {
   return (
     <>
       <SignHeader />

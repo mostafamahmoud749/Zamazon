@@ -3,19 +3,25 @@ import { getServerSession } from 'next-auth';
 import SeeSign from '@/components/auth/SeeSign';
 import { fetchProducts } from '@/lib/fetchProducts';
 import ProductCard from '@/components/product/ProductCard';
+import type { Session } from 'next-auth';
+import type { Product } from '@/types/product';
+import type { JSX } from 'react';
 
-export default async function Home() {
+
+export default async function Home(): Promise<JSX.Element> {
   const [productsResult, sessionResult] = await Promise.allSettled([
     fetchProducts('https://fakestoreapi.com/products'),
     getServerSession(authOptions),
   ]);
 
-  const productsRaw = productsResult.status === 'fulfilled' ? productsResult.value : null;
-  const session = sessionResult.status === 'fulfilled' ? sessionResult.value : null;
+  const productsRaw: unknown = productsResult.status === 'fulfilled' ? productsResult.value : null;
+  const session: Session | null = sessionResult.status === 'fulfilled' ? sessionResult.value : null;
 
-  const products = Array.isArray(productsRaw) ? productsRaw : [];
+  const products: Product[] = Array.isArray(productsRaw)
+    ? productsRaw
+    : [];
 
-  const showProducts = products
+  const showProducts:JSX.Element[] = products
     .filter((_, index) => index < 12)
     .map((el) => <ProductCard key={el.id} el={el} />);
 
