@@ -1,7 +1,8 @@
 import MUserNav from '@/components/layout/user/MUserNav';
 import Link from 'next/link';
+import { JSX } from 'react';
 
-export default function HSidebarMobile() {
+export default function HSidebarMobile():JSX.Element {
   return (
     <>
       <div className="flex justify-end">

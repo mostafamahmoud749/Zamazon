@@ -10,11 +10,17 @@ import DUserNav from '@/components/layout/user/DUserNav';
 import MSidebar from '@/components/layout/navigations/MSidebar';
 import MergeText from '@/components/layout/headers/MergeText';
 import Logo from '@/components/common/Logo';
+import { JSX } from 'react';
+import type { NavItem } from '@/types/index';
 
-export default function DesktopHeader({ navs }) {
-  const [open, setOpen] = useState(false);
-  function toggle() {
-    setOpen((prev) => !prev);
+type DesktopHeaderProps = {
+  navs: NavItem[];
+};
+
+export default function DesktopHeader({ navs }: DesktopHeaderProps): JSX.Element {
+  const [open, setOpen] = useState<boolean>(false);
+  function toggle(): void {
+    setOpen((prev:boolean):boolean => !prev);
   }
   return (
     <header className="bg-dark text-white">

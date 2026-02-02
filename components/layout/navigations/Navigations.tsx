@@ -1,7 +1,16 @@
 import Link from 'next/link';
+import { JSX } from 'react';
+import type {NavItem} from "@/types/index"
 
-export default function Navigations({ my, H, navs = [], toggle }) {
-  const showNavs = navs.map((el) => (
+type NavigationsProps = {
+  my:boolean
+  H:boolean
+  navs:NavItem[]
+  toggle:()=>void
+}
+
+export default function Navigations({ my, H, navs = [], toggle }:Partial<NavigationsProps>):JSX.Element {
+  const showNavs:JSX.Element[] = navs.map((el) => (
     <Link
       key={el.key}
       onClick={toggle}

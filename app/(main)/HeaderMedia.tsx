@@ -2,11 +2,7 @@ import MobileHeader from '@/components/layout/headers/MobileHeader';
 import DesktopHeader from '@/components/layout/headers/DesktopHeader';
 import { fetchCategories } from '@/lib/fetchCategories';
 import type { JSX } from 'react';
-
-type NavItem = {
-  group: string;
-  key: string;
-};
+import type {NavItem} from "@/types/index"
 
 export default async function HeaderMedia({ userAgent }: { userAgent?: string }): Promise<JSX.Element> {
   const isMobile: boolean = /Mobi|Android/i.test(userAgent ?? '');

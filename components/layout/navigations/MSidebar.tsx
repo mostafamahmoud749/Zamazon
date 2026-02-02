@@ -2,8 +2,15 @@ import Navigations from '@/components/layout/navigations/Navigations';
 import Link from 'next/link';
 import { House } from 'lucide-react';
 import Signout from '@/components/auth/Signout';
+import { JSX } from 'react';
+import type {NavItem} from "@/types/index"
+type MSidebarProps = {
+  my?:boolean
+  navs:NavItem[]
+  toggle:()=>void
+}
 
-export default function MSidebar({ my, navs, toggle }) {
+export default function MSidebar({ my, navs, toggle }:MSidebarProps):JSX.Element {
   return (
     <>
       <Link onClick={toggle} href="/" className="flex justify-between p-4">

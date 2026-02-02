@@ -9,11 +9,17 @@ import Search from '@/components/common/Search';
 import HSidebarMobile from '@/components/layout/navigations/HSidebarMobile';
 import MSidebar from '@/components/layout/navigations/MSidebar';
 import Logo from '@/components/common/Logo';
+import { JSX } from 'react';
+import type { NavItem } from '@/types/index';
 
-export default function MobileHeader({ navs }) {
-  const [open, setOpen] = useState(false);
-  function toggle() {
-    setOpen((prev) => !prev);
+type MobileHeaderProps = {
+  navs: NavItem[];
+};
+
+export default function MobileHeader({ navs }:MobileHeaderProps):JSX.Element {
+  const [open, setOpen] = useState<boolean>(false);
+  function toggle():void {
+    setOpen((prev:boolean):boolean => !prev);
   }
 
   return (

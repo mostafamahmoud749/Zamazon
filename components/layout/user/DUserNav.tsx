@@ -1,7 +1,12 @@
 import { CircleUserRound } from 'lucide-react';
 import Link from 'next/link';
+import { JSX } from 'react';
 
-export default function DUserNav({ big }) {
+type DUserNavProps={
+  big?:boolean
+}
+
+export default function DUserNav({ big }:DUserNavProps):JSX.Element {
   return (
     <>
       {big ? (
