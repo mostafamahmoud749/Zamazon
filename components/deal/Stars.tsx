@@ -1,7 +1,15 @@
-export default function Stars({ value = 4, max = 5, big = false }) {
-  const fullStars = Math.floor(value);
-  const partial = value - fullStars;
-  const emptyStars = max - fullStars - (partial > 0 ? 1 : 0);
+import {JSX} from "react"
+
+type StarsProps ={
+  value:number
+  max:number
+  big:boolean
+}
+
+export default function Stars({ value = 4, max = 5, big = false }:Partial<StarsProps>):JSX.Element {
+  const fullStars:number = Math.floor(value);
+  const partial:number = value - fullStars;
+  const emptyStars:number = max - fullStars - (partial > 0 ? 1 : 0);
 
   return (
     <div className="flex items-center">

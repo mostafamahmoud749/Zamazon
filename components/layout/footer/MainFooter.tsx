@@ -1,6 +1,7 @@
 import Logo from '@/components/common/Logo';
+import { JSX } from 'react';
 
-export default function MainFooter() {
+export default function MainFooter():JSX.Element {
   return (
     <footer className=" bg-dark_blue text-white">
       <div className="w-full border-t border-blue-900" />

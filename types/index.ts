@@ -4,6 +4,5 @@ export type {
   DealsActiveFilter,
   DealsFilterGroup,
   DealsFiltersState,
-  DealsPageProps,
   NavItem,
 } from './deals';

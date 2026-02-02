@@ -6,49 +6,63 @@ import FiltersBlock from '@/components/deals/FiltersBlock';
 import ProductCard from '@/components/product/ProductCard';
 import Filter from '@/components/deals/Filter';
 import { X } from 'lucide-react';
-
-export default function MainDeals({ products }) {
+import type {
+  DealsFiltersState,
+  Product,
+  DealsActiveFilter,
+  DealsFilterGroup,
+} from '@/types/index';
+import { JSX } from 'react';
+type MainDealsProps = {
+  products: Product[];
+};
+export default function MainDeals({ products }: MainDealsProps): JSX.Element {
   const searchParams = useSearchParams();
-  const pathname = usePathname();
+  const pathname: string = usePathname();
 
-  const [filtersState, setFiltersState] = useState({
+  const [filtersState, setFiltersState] = useState<DealsFiltersState>({
     rating: { '4_up': false },
     departments: {},
   });
-  const [open, setOpen] = useState(false);
-  const [filtersReady, setFiltersReady] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [filtersReady, setFiltersReady] = useState<boolean>(false);
 
-  const activeFilters = useMemo(
+  const activeFilters = useMemo<DealsActiveFilter[]>(
     () =>
       Object.entries(filtersState).flatMap(([group, items]) =>
         Object.entries(items)
           .filter(([, value]) => value)
-          .map(([key]) => ({ group, key })),
+          .map(([key]) => ({ group: group as DealsFilterGroup, key })),
       ),
     [filtersState],
   );
 
   // 1) initialize from products + URL, and mark ready ONCE
-  useEffect(() => {
+  useEffect((): void => {
     // build departments map from products
-    const departments = {};
-    products.forEach((p) => {
+    const departments: Record<string, boolean> = {};
+    products.forEach((p: Product): void => {
       departments[p.category] = false;
     });
 
-    let initial = {
+    let initial: DealsFiltersState = {
       rating: { '4_up': false },
       departments,
     };
 
-    const filtersParam = searchParams.get('filters');
+    const filtersParam: string | null = searchParams.get('filters');
     if (filtersParam) {
       try {
         const parsed = JSON.parse(filtersParam);
         const arr = Array.isArray(parsed) ? parsed : [parsed];
-        arr.forEach(({ group, key }) => {
-          if (initial[group] && Object.prototype.hasOwnProperty.call(initial[group], key)) {
-            initial[group][key] = true;
+        arr.forEach(({ group, key }: { group: DealsFilterGroup; key: string }) => {
+          if (group === 'rating') {
+            if (key === '4_up') initial.rating['4_up'] = true;
+            return;
+          }
+
+          if (Object.prototype.hasOwnProperty.call(initial.departments, key)) {
+            initial.departments[key] = true;
           }
         });
       } catch {
@@ -56,9 +70,9 @@ export default function MainDeals({ products }) {
       }
     }
 
-    setFiltersState((prev) => {
-      const prevStr = JSON.stringify(prev);
-      const nextStr = JSON.stringify(initial);
+    setFiltersState((prev: DealsFiltersState): DealsFiltersState => {
+      const prevStr: string = JSON.stringify(prev);
+      const nextStr: string = JSON.stringify(initial);
       return prevStr === nextStr ? prev : initial;
     });
 
@@ -66,12 +80,12 @@ export default function MainDeals({ products }) {
   }, [products, searchParams]); // runs once per navigation / products change
 
   // 2) sync URL ONLY after filters are ready
-  useEffect(() => {
+  useEffect((): void => {
     if (!filtersReady) return; // don't touch URL while initializing
 
-    const newFiltersString = JSON.stringify(activeFilters);
+    const newFiltersString: string = JSON.stringify(activeFilters);
     const params = new URLSearchParams(window.location.search);
-    const currentFiltersString = params.get('filters') ?? '';
+    const currentFiltersString: string = params.get('filters') ?? '';
 
     if (currentFiltersString === newFiltersString) return;
 
@@ -84,36 +98,61 @@ export default function MainDeals({ products }) {
   }, [activeFilters, filtersReady, pathname]);
 
   // 3) filtering logic: only run when ready
-  const filteredProducts = useMemo(() => {
+  const filteredProducts = useMemo((): Product[] => {
     if (!filtersReady) return products;
 
     if (activeFilters.length === 0) return products;
 
-    const has4Up = activeFilters.some((f) => f.group === 'rating' && f.key === '4_up');
-    const departmentFilters = activeFilters.filter((f) => f.group === 'departments');
+    const has4Up: boolean = activeFilters.some((f) => f.group === 'rating' && f.key === '4_up');
+    const departmentFilters: DealsActiveFilter[] = activeFilters.filter(
+      (f) => f.group === 'departments',
+    );
 
-    return products.filter((product) => {
+    return products.filter((product: Product): boolean | void => {
+      if (!product.rating?.rate) return;
       if (has4Up && product.rating?.rate < 4) return false;
       if (departmentFilters.length === 0) return true;
       return departmentFilters.some((f) => f.key === product.category);
     });
   }, [products, activeFilters, filtersReady]);
-  const showProducts = filteredProducts.map((el) => <ProductCard key={el.id} el={el} />);
+  const showProducts: JSX.Element[] = filteredProducts.map((el) => (
+    <ProductCard key={el.id} el={el} />
+  ));
 
-  const showActiveFilters = activeFilters.map(({ group, key }) => (
+  const showActiveFilters: JSX.Element[] = activeFilters.map(({ group, key }) => (
     <Filter key={group + key} name={key} value toggle={() => toggle(group, key)} />
   ));
 
-  function toggle(group, key) {
-    setFiltersState((prev) => ({
-      ...prev,
-      [group]: {
-        ...prev[group],
-        [key]: !prev[group][key],
-      },
-    }));
-  }
+  function toggle(group: DealsFilterGroup, key: string): void {
+    setFiltersState((prev: DealsFiltersState): DealsFiltersState => {
+      if (group === 'rating') {
+        return {
+          ...prev,
+          rating: {
+            ...prev.rating,
+            '4_up': !prev.rating['4_up'],
+          },
+        };
+      }
 
+      return {
+        ...prev,
+        departments: {
+          ...prev.departments,
+          [key]: !prev.departments[key],
+        },
+      };
+    });
+  }
+  // function toggle(group:DealsFilterGroup, key:string) {
+  //   setFiltersState((prev:DealsFiltersState):DealsFiltersState => ({
+  //     ...prev,
+  //     [group]: {
+  //       ...prev[group],
+  //       [key]: !prev[group][key],
+  //     },
+  //   }));
+  // }
   return (
     <div className="md:m-auto md:my-8 md:flex md:w-4/5 md:gap-3">
       <div>

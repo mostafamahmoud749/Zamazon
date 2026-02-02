@@ -2,21 +2,26 @@
 import Button from '@/components/common/Button';
 import { useContext, useState } from 'react';
 import { CartContext } from '@/components/cart/CartProvider';
+import {JSX} from "react";
+import type { Product } from '@/types/index';
 
-export default function Buy({ product }) {
+type BuyProps={
+  product:Product
+}
+export default function Buy({ product }:BuyProps):JSX.Element {
   const { addToCart } = useContext(CartContext);
 
-  const [addState, setAddState] = useState('idle');
-  const [buyState, setBuyState] = useState('idle');
+  const [addState, setAddState] = useState<string>('idle');
+  const [buyState, setBuyState] = useState<string>('idle');
 
-  async function handleAddToCart() {
+  async function handleAddToCart():Promise<void> {
     if (addState !== 'idle') return;
     setAddState('loading');
     addToCart(product);
     window.setTimeout(() => setAddState('idle'), 300);
   }
 
-  async function handleBuyNow() {
+  async function handleBuyNow():Promise<void> {
     if (buyState !== 'idle') return;
     setBuyState('loading');
     window.setTimeout(() => setBuyState('idle'), 300);

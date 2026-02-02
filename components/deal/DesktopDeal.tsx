@@ -1,8 +1,15 @@
 import Details from '@/components/deal/Details';
 import ProductImg from '@/components/deal/ProductImg';
 import Buy from '@/components/deal/Buy';
+import type { Product } from '@/types/index';
+import {JSX} from "react";
 
-export default function DesktopDeal({ product }){
+
+type DesktopDealProps={
+  product:Product
+}
+
+export default function DesktopDeal({ product }:DesktopDealProps):JSX.Element{
   return(
     <div className='w-5/6 m-auto flex mt-8 gap-4 justify-center'>
       <div className='flex-1 max-w-[450px]'>
