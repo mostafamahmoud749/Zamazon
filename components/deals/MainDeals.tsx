@@ -1,11 +1,11 @@
 'use client';
-
 import { useEffect, useMemo, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import FiltersBlock from '@/components/deals/FiltersBlock';
 import ProductCard from '@/components/product/ProductCard';
 import Filter from '@/components/deals/Filter';
 import { X } from 'lucide-react';
+
 import type {
   DealsFiltersState,
   Product,

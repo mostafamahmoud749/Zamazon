@@ -1,15 +1,16 @@
 'use client';
 import Stars from '@/components/deal/Stars';
-import {JSX} from "react"
+import { JSX } from 'react';
 
-type FilterProps={
-  name:string
-  toggle:(name:string)=>void
-  value:unknown
-}
-export default function Filter({ name, toggle, value }:FilterProps):JSX.Element {
+type FilterProps = {
+  name: string;
+  toggle: (name: string) => void;
+  value: boolean;
+};
+
+export default function Filter({ name, toggle, value }: FilterProps): JSX.Element {
   return (
-    <div className="group  flex cursor-pointer items-center gap-1" onClick={() => toggle(name)}>
+    <div className="group flex cursor-pointer items-center gap-1" onClick={() => toggle(name)}>
       <div
         className={`hidden transition-all duration-200 md:block md:h-5 md:w-5 md:rounded-full ${
           value
@@ -18,15 +19,18 @@ export default function Filter({ name, toggle, value }:FilterProps):JSX.Element 
         }`}
       ></div>
       <div
-        className={`md:border-none transition-all duration-200 group-hover:md:ml-1  md:bg-white ${
+        className={`transition-all duration-200 md:border-none md:bg-white group-hover:md:ml-1 ${
           value ? 'border-2 border-blue-600 bg-sky-100 font-bold' : 'border-1 border-gray-500'
         } rounded-xl px-2 py-1 md:my-2`}
       >
-        {name === '4_up' ? <div className="flex whitespace-nowrap items-center text-yellow-500">
-      
-      <Stars big={true}/>
-      <span className="ml-1 text-black">&up</span>
-    </div> : name}
+        {name === '4_up' ? (
+          <div className="flex items-center whitespace-nowrap text-yellow-500">
+            <Stars big={true} />
+            <span className="ml-1 text-black">&up</span>
+          </div>
+        ) : (
+          name
+        )}
       </div>
     </div>
   );

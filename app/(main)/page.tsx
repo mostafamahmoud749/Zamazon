@@ -4,7 +4,7 @@ import SeeSign from '@/components/auth/SeeSign';
 import { fetchProducts } from '@/lib/fetchProducts';
 import ProductCard from '@/components/product/ProductCard';
 import type { Session } from 'next-auth';
-import type { Product } from '@/types/product';
+import type { Product } from '@/types/index';
 import type { JSX } from 'react';
 
 

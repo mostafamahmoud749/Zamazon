@@ -1,6 +1,6 @@
 import DesktopDeal from '@/components/deal/DesktopDeal';
 import MobileDeal from '@/components/deal/MobileDeal';
-import type { Product } from '@/types/product';
+import type { Product } from '@/types/index';
 import type { JSX } from 'react';
 
 type DealMediaProps = {

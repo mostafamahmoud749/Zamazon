@@ -8,7 +8,7 @@ import { useState } from 'react';
 import HSidebarDesktop from '@/components/layout/navigations/HSidebarDesktop';
 import DUserNav from '@/components/layout/user/DUserNav';
 import MSidebar from '@/components/layout/navigations/MSidebar';
-import MergeText from '@/components/layout/headers/MergeText';
+import MergeText from '@/components/common/MergeText';
 import Logo from '@/components/common/Logo';
 import { JSX } from 'react';
 import type { NavItem } from '@/types/index';

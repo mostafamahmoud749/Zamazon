@@ -1,6 +1,6 @@
 import MainDeals from '@/components/deals/MainDeals';
 import { fetchProducts } from '@/lib/fetchProducts';
-import type { Product } from '@/types/product';
+import type { Product } from '@/types/index';
 import type { JSX } from 'react';
 
 export default async function DealsPage(): Promise<JSX.Element> {
