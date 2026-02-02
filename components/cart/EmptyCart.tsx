@@ -1,8 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from "@/components/common/Button"
+import {JSX} from "react"
 
-export default function EmptyCart() {
+export default function EmptyCart():JSX.Element {
   return (
     <div className="mb-5 flex min-h-[300px] flex-col items-center bg-white md:flex-row md:gap-4">
       <Image width={400} height={400} src="/pngwing.com.png" alt="cart" />

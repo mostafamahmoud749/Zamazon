@@ -31,7 +31,7 @@
     "global.d.ts",
     "next-env.d.ts",
     ".next/types/**/*.ts",
-    "components/cart/CartItem.jsx"
+    "components/cart/CartItem.tsx"
 , "components/common/Button.tsx"  ],
   "exclude": ["node_modules"]
 }

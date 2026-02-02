@@ -1,8 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-export default function ScrollTop() {
-  const [visible, setVisible] = useState(false);
-  const checkY = () => {
+import {JSX} from "react"
+
+
+export default function ScrollTop():JSX.Element {
+
+  const [visible, setVisible] = useState<boolean>(false);
+
+  const checkY = ():void => {
     if (window.scrollY > 200) {
       setVisible(true);
     } else {
@@ -12,7 +17,7 @@ export default function ScrollTop() {
 
   useEffect(() => {
     window.addEventListener("scroll", checkY);
-    return () => window.removeEventListener("scroll", checkY);
+    return ():void => window.removeEventListener("scroll", checkY);
   }, []);
 
   return visible ? (
@@ -22,5 +27,5 @@ export default function ScrollTop() {
     >
       Back to top
     </div>
-  ) : null;
+  ) : <></>;
 }

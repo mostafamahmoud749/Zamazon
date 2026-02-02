@@ -1,6 +1,7 @@
 import { Search } from "lucide-react";
+import {JSX} from "react"
 
-export default function SearchBlock() {
+export default function SearchBlock():JSX.Element {
   return (
     <div className="flex items-center my-2 flex-1 ">
       <input

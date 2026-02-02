@@ -1,6 +1,12 @@
 import Button from '@/components/common/Button';
+import {JSX} from "react"
 
-export default function CartList({ totalProductsCount, totalProductsPrice }) {
+type CartList={
+  totalProductsCount:number
+  totalProductsPrice:number
+}
+
+export default function CartList({ totalProductsCount, totalProductsPrice }:CartList):JSX.Element {
   return (
     <div className="px-3 md:flex md:flex-row-reverse md:justify-between">
       <div className="flex items-center gap-2 border-b-1 border-b-amber-100 md:my-2 md:justify-end md:border-none">
