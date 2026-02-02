@@ -1,3 +1,17 @@
+import {ReactNode,JSX} from "react"
+
+type ButtonProps={
+  color:string
+  hoverdColor:string
+  children:ReactNode
+  padding:string
+  onClick:()=>void
+  disabled:boolean
+  extraStyling:string
+  margin:string
+  rounded:string,
+}
+
 export default function Button({
   color,
   hoverdColor,
@@ -8,7 +22,7 @@ export default function Button({
   extraStyling,
   margin,
   rounded="rounded-3xl",
-}) {
+}:Partial<ButtonProps>):JSX.Element {
 
   return (
     <button

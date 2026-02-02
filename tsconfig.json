@@ -32,6 +32,6 @@
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "components/cart/CartItem.jsx"
-  ],
+, "components/common/Button.tsx"  ],
   "exclude": ["node_modules"]
 }

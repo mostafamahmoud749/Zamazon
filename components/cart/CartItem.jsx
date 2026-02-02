@@ -1,5 +1,5 @@
 "use client"
- import Image from 'next/image';
+import Image from 'next/image';
 import { useContext } from 'react';
 import { CartContext } from '@/components/cart/CartProvider';
 

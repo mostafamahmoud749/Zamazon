@@ -7,15 +7,16 @@ import { useState,useEffect } from 'react';
 import SigninWithGithub from '@/components/auth/SigninWithGithub';
 import SigninWithGoogle from '@/components/auth/SigninWithGoogle';
 import { useSearchParams, useRouter } from 'next/navigation';
+import {JSX} from "react"
 
-export default function SignClient() {
+export default function SignClient():JSX.Element {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const S = searchParams.get('s');
+  const S:string|null = searchParams.get('s');
 
-  const [newUser, setNewUser] = useState(S === 'signin' ? false : true);
+  const [newUser, setNewUser] = useState<boolean>(S === 'signin' ? false : true);
 
-  function toggle(selected) {
+  function toggle(selected:boolean):void {
     if (!selected) {
       const next = !newUser;
       setNewUser(next);

@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import Button from '@/components/common/Button';
+import {JSX} from "react"
 
-export default function SignLink() {
+export default function SignLink():JSX.Element {
   return (
     <div className="my-2 text-center">
       <Link href="/signin" className="m-auto mb-1 block w-40">
