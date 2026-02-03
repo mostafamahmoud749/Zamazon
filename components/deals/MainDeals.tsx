@@ -16,7 +16,7 @@ import { JSX } from 'react';
 type MainDealsProps = {
   products: Product[];
 };
-export default function MainDeals({ products }: MainDealsProps): JSX.Element {
+export default function MainDeals({ products }: MainDealsProps) {
   const searchParams = useSearchParams();
   const pathname: string = usePathname();
 

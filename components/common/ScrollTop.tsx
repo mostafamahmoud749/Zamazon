@@ -1,9 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
-import {JSX} from "react"
 
 
-export default function ScrollTop():JSX.Element {
+export default function ScrollTop(){
 
   const [visible, setVisible] = useState<boolean>(false);
 

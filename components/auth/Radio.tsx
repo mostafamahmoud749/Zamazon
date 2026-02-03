@@ -1,7 +1,6 @@
 import { AuthProps } from "@/types/auth";
-import {JSX} from "react"
 
-export default function Radio({ text, textq, toggle, selected }:AuthProps):JSX.Element {
+export default function Radio({ text, textq, toggle, selected }:AuthProps){
   return (
     <div
       onClick={() => toggle(selected)}

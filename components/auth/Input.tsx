@@ -1,11 +1,10 @@
-import {  JSX } from 'react';
 
 type InputProps={
   label:string
   type:string
 }
 
-export default function Input({ label, type }:InputProps):JSX.Element {
+export default function Input({ label, type }:InputProps) {
   return (
     <div className="mb-4 font-bold w-full">
       <label>

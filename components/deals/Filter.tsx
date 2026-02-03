@@ -1,6 +1,5 @@
 'use client';
 import Stars from '@/components/deal/Stars';
-import { JSX } from 'react';
 
 type FilterProps = {
   name: string;
@@ -8,7 +7,7 @@ type FilterProps = {
   value: boolean;
 };
 
-export default function Filter({ name, toggle, value }: FilterProps): JSX.Element {
+export default function Filter({ name, toggle, value }: FilterProps) {
   return (
     <div className="group flex cursor-pointer items-center gap-1" onClick={() => toggle(name)}>
       <div

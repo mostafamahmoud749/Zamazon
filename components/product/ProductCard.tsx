@@ -1,13 +1,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { JSX } from 'react';
 import type { Product } from '@/types/index';
 
 type ProductCardProps = {
   el: Product;
 };
 
-export default function ProductCard({ el }: ProductCardProps): JSX.Element {
+export default function ProductCard({ el }: ProductCardProps){
   return (
     <Link
       href={`/deals/${el.id}`}

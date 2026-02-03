@@ -1,11 +1,10 @@
-import { JSX } from 'react';
 import Image from 'next/image';
 
 type ProductImgProps = {
   img: string;
 };
 
-export default function ProductImg({ img }: ProductImgProps): JSX.Element {
+export default function ProductImg({ img }: ProductImgProps) {
   return (
     <div className="relative m-auto aspect-square w-full max-w-[450px]">
       <Image

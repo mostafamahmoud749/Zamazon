@@ -1,4 +1,4 @@
-import {ReactNode,JSX} from "react"
+import {ReactNode} from "react"
 
 type ButtonProps={
   color:string
@@ -22,7 +22,7 @@ export default function Button({
   extraStyling,
   margin,
   rounded="rounded-3xl",
-}:Partial<ButtonProps>):JSX.Element {
+}:Partial<ButtonProps>) {
 
   return (
     <button

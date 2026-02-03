@@ -2,13 +2,12 @@
 import Button from '@/components/common/Button';
 import { useContext, useState } from 'react';
 import { CartContext } from '@/components/cart/CartProvider';
-import {JSX} from "react";
 import type { Product } from '@/types/index';
 
 type BuyProps={
   product:Product
 }
-export default function Buy({ product }:BuyProps):JSX.Element {
+export default function Buy({ product }:BuyProps) {
   const { addToCart } = useContext(CartContext);
 
   const [addState, setAddState] = useState<string>('idle');

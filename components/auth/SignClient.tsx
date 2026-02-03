@@ -7,9 +7,8 @@ import { useState,useEffect } from 'react';
 import SigninWithGithub from '@/components/auth/SigninWithGithub';
 import SigninWithGoogle from '@/components/auth/SigninWithGoogle';
 import { useSearchParams, useRouter } from 'next/navigation';
-import {JSX} from "react"
 
-export default function SignClient():JSX.Element {
+export default function SignClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const S:string|null = searchParams.get('s');

@@ -1,5 +1,4 @@
 import Filter from '@/components/deals/Filter';
-import { JSX } from 'react';
 type FiltersBlockProps = {
   filtersState: Record<string, boolean>;
   name: string;
@@ -9,7 +8,7 @@ export default function FiltersBlock({
   filtersState,
   name,
   toggle,
-}: FiltersBlockProps): JSX.Element {
+}: FiltersBlockProps){
   const showFilters = Object.entries(filtersState ?? {}).map(([key, value]) => (
     <Filter key={key} name={key} value={value} toggle={toggle} />
   ));

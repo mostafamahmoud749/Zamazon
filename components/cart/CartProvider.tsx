@@ -1,6 +1,6 @@
 'use client';
 import { createContext, useEffect, useMemo, useState } from 'react';
-import type { JSX, ReactNode } from 'react';
+import type {  ReactNode } from 'react';
 import type { CartContextValue, CartProduct, Product } from '@/types';
 
 const defaultCartContextValue: CartContextValue = {
@@ -13,7 +13,7 @@ const defaultCartContextValue: CartContextValue = {
 
 const CartContext = createContext<CartContextValue>(defaultCartContextValue);
 
-export function CartProvider({ children }: { children: ReactNode }): JSX.Element {
+export function CartProvider({ children }: { children: ReactNode }) {
   const [products, setProducts] = useState<CartProduct[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
 

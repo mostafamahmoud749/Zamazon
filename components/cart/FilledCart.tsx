@@ -5,7 +5,7 @@ import { useContext } from 'react';
 import { CartContext } from '@/components/cart/CartProvider';
 import {JSX} from "react"
 
-export default function FilledCart():JSX.Element {
+export default function FilledCart(){
     const {products,totalProductsCount,totalProductsPrice}=useContext(CartContext)
     const showProducts:JSX.Element[]|null=products && products.length > 0 ? (
         products.map(product => <CartItem key={product.id} product={product} />)

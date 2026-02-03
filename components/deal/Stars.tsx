@@ -1,4 +1,3 @@
-import {JSX} from "react"
 
 type StarsProps ={
   value:number
@@ -6,7 +5,7 @@ type StarsProps ={
   big:boolean
 }
 
-export default function Stars({ value = 4, max = 5, big = false }:Partial<StarsProps>):JSX.Element {
+export default function Stars({ value = 4, max = 5, big = false }:Partial<StarsProps>) {
   const fullStars:number = Math.floor(value);
   const partial:number = value - fullStars;
   const emptyStars:number = max - fullStars - (partial > 0 ? 1 : 0);
