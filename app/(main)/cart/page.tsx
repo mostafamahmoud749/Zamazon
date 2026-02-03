@@ -1,8 +1,8 @@
 import CartState from "@/components/cart/CartState"
-import type { JSX } from 'react';
 
 
-export default function CartPage():JSX.Element {
+
+export default function CartPage() {
   
   return (
     <div className="m-auto mt-4 w-11/12 md:7/8 max-w-6xl">

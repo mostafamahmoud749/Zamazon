@@ -1,6 +1,6 @@
-import {JSX} from "react"
 
-export default function OrdersPage():JSX.Element {
+
+export default function OrdersPage() {
 
   return (
     <div className="mx-auto w-199/200 px-6 py-8 md:w-4/5">
