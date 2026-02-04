@@ -11,15 +11,17 @@ import MSidebar from '@/components/layout/navigations/MSidebar';
 import Logo from '@/components/common/Logo';
 import { JSX } from 'react';
 import type { NavItem } from '@/types/index';
+import type { Session } from 'next-auth';
 
 type MobileHeaderProps = {
   navs: NavItem[];
+  session: Session | null;
 };
 
-export default function MobileHeader({ navs }:MobileHeaderProps):JSX.Element {
+export default function MobileHeader({ navs , session }: MobileHeaderProps): JSX.Element {
   const [open, setOpen] = useState<boolean>(false);
-  function toggle():void {
-    setOpen((prev:boolean):boolean => !prev);
+  function toggle(): void {
+    setOpen((prev: boolean): boolean => !prev);
   }
 
   return (
@@ -32,7 +34,7 @@ export default function MobileHeader({ navs }:MobileHeaderProps):JSX.Element {
           <Logo />
         </div>
         <div className="flex">
-          <MUserNav />
+          <MUserNav session={session} />
           <Link href="/cart">
             <ShoppingCart className="ml-3 h-8 w-8" />
           </Link>
@@ -41,8 +43,8 @@ export default function MobileHeader({ navs }:MobileHeaderProps):JSX.Element {
       <Search />
       <Navigations H={true} navs={navs} />
       <Sidebar
-        main={<MSidebar navs={navs} toggle={() => toggle()} />}
-        header={<HSidebarMobile />}
+        main={<MSidebar navs={navs} toggle={() => toggle()} session={session} />}
+        header={<HSidebarMobile session={session}/>}
         toggle={() => toggle()}
         open={open}
       />

@@ -1,15 +1,16 @@
 import { X } from 'lucide-react';
 import {JSX} from "react"
+import type { Session } from 'next-auth';
 
 type SidebarProps={
   header:JSX.Element
   main:JSX.Element
   toggle:()=>void
   open:boolean
-  border?:boolean
+  border?:boolean,  
 }
 
-export default function Sidebar({ header, main, toggle, open, border }:SidebarProps):JSX.Element {
+export default function Sidebar({ header, main, toggle, open, border }:SidebarProps) {
   return (
     <>
       <div

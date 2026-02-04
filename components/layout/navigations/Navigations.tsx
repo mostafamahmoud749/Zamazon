@@ -9,7 +9,7 @@ type NavigationsProps = {
   toggle:()=>void
 }
 
-export default function Navigations({ my, H, navs = [], toggle }:Partial<NavigationsProps>):JSX.Element {
+export default function Navigations({ my, H, navs = [], toggle }:Partial<NavigationsProps>) {
   const showNavs:JSX.Element[] = navs.map((el) => (
     <Link
       key={el.key}

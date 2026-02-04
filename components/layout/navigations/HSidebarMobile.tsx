@@ -1,12 +1,15 @@
 import MUserNav from '@/components/layout/user/MUserNav';
 import Link from 'next/link';
-import { JSX } from 'react';
+import type { Session } from 'next-auth';
 
-export default function HSidebarMobile():JSX.Element {
+type HSidebarMobileProps={
+  session: Session | null;
+}
+export default function HSidebarMobile({session}:HSidebarMobileProps) {
   return (
     <>
       <div className="flex justify-end">
-        <MUserNav />
+        <MUserNav session={session} />
       </div>
       <Link href="/">
         <p className="text-xl font-bold">Browse</p>

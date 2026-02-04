@@ -12,12 +12,14 @@ import MergeText from '@/components/common/MergeText';
 import Logo from '@/components/common/Logo';
 import { JSX } from 'react';
 import type { NavItem } from '@/types/index';
+import type { Session } from 'next-auth';
 
 type DesktopHeaderProps = {
   navs: NavItem[];
+  session: Session|null
 };
 
-export default function DesktopHeader({ navs }: DesktopHeaderProps): JSX.Element {
+export default function DesktopHeader({ navs , session }: DesktopHeaderProps): JSX.Element {
   const [open, setOpen] = useState<boolean>(false);
   function toggle(): void {
     setOpen((prev:boolean):boolean => !prev);
@@ -34,7 +36,7 @@ export default function DesktopHeader({ navs }: DesktopHeaderProps): JSX.Element
 
         <Search />
 
-        <DUserNav />
+        <DUserNav  session={session} />
 
         <Link href="/orders">
           <MergeText top="Returns" bottom="& Orders" />
@@ -53,8 +55,8 @@ export default function DesktopHeader({ navs }: DesktopHeaderProps): JSX.Element
       </div>
       <Sidebar
         border={true}
-        main={<MSidebar my={true} navs={navs} toggle={() => toggle()} />}
-        header={<HSidebarDesktop />}
+        main={<MSidebar my={true} navs={navs} toggle={() => toggle()} session={session} />}
+        header={<HSidebarDesktop session={session} />}
         toggle={() => toggle()}
         open={open}
       />

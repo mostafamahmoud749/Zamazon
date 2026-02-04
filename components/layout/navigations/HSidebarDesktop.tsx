@@ -1,10 +1,13 @@
 import DUserNav from '@/components/layout/user/DUserNav';
-import { JSX } from 'react';
+import type { Session } from 'next-auth';
 
-export default function HSidebarDesktop():JSX.Element {
+type HSidebarDesktopProps={
+  session: Session | null;
+}
+export default function HSidebarDesktop({session}:HSidebarDesktopProps) {
   return (
     <>
-      <DUserNav big={true} />
+      <DUserNav big={true} session={session} />
     </>
   );
 }

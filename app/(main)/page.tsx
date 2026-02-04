@@ -14,6 +14,7 @@ export default async function Home(): Promise<JSX.Element> {
     getServerSession(authOptions),
   ]);
 
+
   const productsRaw: unknown = productsResult.status === 'fulfilled' ? productsResult.value : null;
   const session: Session | null = sessionResult.status === 'fulfilled' ? sessionResult.value : null;
 
