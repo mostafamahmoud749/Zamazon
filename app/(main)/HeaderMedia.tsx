@@ -20,6 +20,6 @@ export default async function HeaderMedia({ userAgent }: { userAgent?: string })
   const navs: NavItem[] = (
     categories.length ? categories.sort() : ['Home', 'Health & Household', 'Books', 'PC', 'clothes']
   ).map((category) => ({ group: 'departments', key: category }));
-  console.log(session)
+  
   return isMobile ? <MobileHeader navs={navs} session={session} /> : <DesktopHeader navs={navs} session={session} />;
 }

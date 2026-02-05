@@ -144,15 +144,7 @@ export default function MainDeals({ products }: MainDealsProps) {
       };
     });
   }
-  // function toggle(group:DealsFilterGroup, key:string) {
-  //   setFiltersState((prev:DealsFiltersState):DealsFiltersState => ({
-  //     ...prev,
-  //     [group]: {
-  //       ...prev[group],
-  //       [key]: !prev[group][key],
-  //     },
-  //   }));
-  // }
+
   return (
     <div className="md:m-auto md:my-8 md:flex md:w-4/5 md:gap-3">
       <div>

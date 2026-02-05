@@ -12,6 +12,7 @@ export default function SignClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const S: string | null = searchParams.get('s');
+  const callbackUrl: string = searchParams.get('callbackUrl') || '/';
 
   const [newUser, setNewUser] = useState<boolean>(S === 'signin' ? false : true);
 
@@ -48,8 +49,8 @@ export default function SignClient() {
         <div className="mx-4">
           <Input type="email" label="Email or phone number" name="" />
           <div className="mb-4 flex flex-col gap-3">
-            <SigninWithGithub />
-            <SigninWithGoogle />
+            <SigninWithGithub callbackUrl={callbackUrl} />
+            <SigninWithGoogle callbackUrl={callbackUrl} />
           </div>
           <Button
             color="bg-amber-300"
