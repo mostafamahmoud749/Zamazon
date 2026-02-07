@@ -10,7 +10,7 @@ export default function FiltersBlock({
   toggle,
 }: FiltersBlockProps){
   const showFilters = Object.entries(filtersState ?? {}).map(([key, value]) => (
-    <Filter key={key} name={key} value={value} toggle={toggle} />
+    <Filter key={key} name={key} value={value} toggle={toggle} />         
   ));
   return (
     <div className="p-2">

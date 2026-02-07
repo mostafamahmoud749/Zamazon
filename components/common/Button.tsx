@@ -20,7 +20,7 @@ export default function Button({
   onClick,
   disabled = false,
   extraStyling,
-  margin,
+  margin="my-2",
   rounded="rounded-3xl",
 }:Partial<ButtonProps>) {
 
@@ -36,7 +36,7 @@ export default function Button({
         padding,
         color,
         !disabled ? hoverdColor : '',
-        'my-3 w-full  text-center transition-all duration-200',
+        'w-full  text-center transition-all duration-200',
         disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer',
       ].join(' ')}
     >

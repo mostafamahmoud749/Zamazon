@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { useContext } from 'react';
 import { CartContext } from '@/components/cart/CartProvider';
 import type { CartProduct } from '@/types/index';
+import Counter from "@/components/cart/Counter"
 
 type CartItemProps={
   product:CartProduct
@@ -26,11 +27,7 @@ export default function CartItem({ product }:CartItemProps){
           </div>
           <div className="text-xl font-semibold">{product.price}$</div>
         </div>
-        <div className="flex max-h-8 max-w-30 items-center justify-between gap-2 rounded-3xl border-3 border-amber-300 px-2 md:mt-2">
-          <button className="cursor-pointer text-xl" onClick={()=>removeFromCart(product)}> - </button>
-          <div>{product.count}</div>
-          <button className="cursor-pointer text-xl" onClick={()=>addToCart(product)}>+</button>
-        </div>
+        <Counter product={product} addToCart={addToCart} removeFromCart={removeFromCart} />
       </div>
     </div>
   );
