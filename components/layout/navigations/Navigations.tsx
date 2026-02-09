@@ -23,8 +23,9 @@ export default function Navigations({ my, H, navs = [], toggle }:Partial<Navigat
 
   return (
     <div
-      className={` p-1 ${
-        H ? 'scrollbar-hide flex gap-3 overflow-x-auto scroll-smooth' : ''
+
+      className={`p-1 ${
+        H ? 'scrollbar-hide flex w-full max-w-full gap-3 overflow-x-auto scroll-smooth' : ''
       }`}
     >
       <Link

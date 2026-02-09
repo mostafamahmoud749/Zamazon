@@ -41,7 +41,10 @@ export default function MobileHeader({ navs , session }: MobileHeaderProps): JSX
         </div>
       </nav>
       <Search />
-      <Navigations H={true} navs={navs} />
+
+      <div className="max-w-full overflow-hidden">
+        <Navigations H={true} navs={navs} />
+      </div>
       <Sidebar
         main={<MSidebar navs={navs} toggle={() => toggle()} session={session} />}
         header={<HSidebarMobile session={session}/>}

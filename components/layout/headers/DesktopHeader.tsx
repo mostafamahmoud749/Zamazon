@@ -53,11 +53,14 @@ export default function DesktopHeader({ navs , session }: DesktopHeaderProps): J
           <span className="text-sm font-bold">Cart</span>
         </Link>
       </nav>
-      <div className="bg-dark_blue flex items-center gap-1 py-1 pl-4">
-        <div onClick={() => toggle()} className="mr-4 flex cursor-pointer items-center text-xl">
+
+      <div className="bg-dark_blue flex items-center gap-1 overflow-hidden py-1 pl-4">
+        <div onClick={() => toggle()} className="mr-4 flex flex-shrink-0 cursor-pointer items-center text-xl">
           ☰<span className="ml-1 text-sm font-bold">All</span>
         </div>
-        <Navigations H={true} navs={navs} my={false} />
+        <div className="min-w-0 flex-1">
+          <Navigations H={true} navs={navs} my={false} />
+        </div>
       </div>
       <Sidebar
         border={true}
