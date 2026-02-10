@@ -2,7 +2,6 @@ import DesktopDeal from '@/components/deal/DesktopDeal';
 import MobileDeal from '@/components/deal/MobileDeal';
 import type { Product } from '@/types/index';
 
-
 type DealMediaProps = {
   userAgent?: string;
   product: Product;

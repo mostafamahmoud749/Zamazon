@@ -1,12 +1,12 @@
 import Logo from '@/components/common/Logo';
 import { JSX } from 'react';
 
-export default function MainFooter():JSX.Element {
+export default function MainFooter(): JSX.Element {
   return (
-    <footer className=" bg-dark_blue text-white">
+    <footer className="bg-dark_blue text-white">
       <div className="w-full border-t border-blue-900" />
       <div className="mx-auto flex w-full max-w-4xl flex-col items-center justify-between gap-4 px-4 py-4 md:flex-row">
-          <Logo />
+        <Logo />
         <div className="mb-2 flex gap-4 md:mb-0">
           <a
             href="https://github.com/mostafamahmoud749"

@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import FiltersBlock from '@/components/deals/FiltersBlock';
 import ProductCard from '@/components/product/ProductCard';
 import Filter from '@/components/deals/Filter';
@@ -19,6 +19,7 @@ type MainDealsProps = {
 export default function MainDeals({ products }: MainDealsProps) {
   const searchParams = useSearchParams();
   const pathname: string = usePathname();
+  const router = useRouter();
 
   const [filtersState, setFiltersState] = useState<DealsFiltersState>({
     rating: { '4_up': false },
@@ -94,8 +95,8 @@ export default function MainDeals({ products }: MainDealsProps) {
     } else {
       params.set('filters', newFiltersString);
     }
-    window.history.replaceState(null, '', `${pathname}?${params.toString()}`);
-  }, [activeFilters, filtersReady, pathname]);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [activeFilters, filtersReady, pathname, router]);
 
   // 3) filtering logic: only run when ready
   const filteredProducts = useMemo((): Product[] => {

@@ -15,7 +15,6 @@ export default async function RootLayout({
 
   return (
     <CartProvider>
-
       <div className="flex max-w-[100vw] overflow-x-hidden">
         <div className="flex min-h-screen flex-1 flex-col overflow-hidden">
           <HeaderMedia userAgent={userAgent} />

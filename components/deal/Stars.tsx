@@ -1,14 +1,13 @@
+type StarsProps = {
+  value: number;
+  max: number;
+  big: boolean;
+};
 
-type StarsProps ={
-  value:number
-  max:number
-  big:boolean
-}
-
-export default function Stars({ value = 4, max = 5, big = false }:Partial<StarsProps>) {
-  const fullStars:number = Math.floor(value);
-  const partial:number = value - fullStars;
-  const emptyStars:number = max - fullStars - (partial > 0 ? 1 : 0);
+export default function Stars({ value = 4, max = 5, big = false }: Partial<StarsProps>) {
+  const fullStars: number = Math.floor(value);
+  const partial: number = value - fullStars;
+  const emptyStars: number = max - fullStars - (partial > 0 ? 1 : 0);
 
   return (
     <div className="flex items-center">

@@ -4,7 +4,7 @@ import { MapPin, ShoppingCart } from 'lucide-react';
 import Search from '@/components/common/Search';
 import Navigations from '@/components/layout/navigations/Navigations';
 import Sidebar from '@/components/layout/navigations/Sidebar';
-import { useState,useContext } from 'react';
+import { useState, useContext } from 'react';
 import HSidebarDesktop from '@/components/layout/navigations/HSidebarDesktop';
 import DUserNav from '@/components/layout/user/DUserNav';
 import MSidebar from '@/components/layout/navigations/MSidebar';
@@ -17,15 +17,15 @@ import { CartContext } from '@/components/cart/CartProvider';
 
 type DesktopHeaderProps = {
   navs: NavItem[];
-  session: Session|null
+  session: Session | null;
 };
 
-export default function DesktopHeader({ navs , session }: DesktopHeaderProps): JSX.Element {
+export default function DesktopHeader({ navs, session }: DesktopHeaderProps): JSX.Element {
   const [open, setOpen] = useState<boolean>(false);
-  const {totalProductsCount}=useContext(CartContext)
+  const { totalProductsCount } = useContext(CartContext);
 
   function toggle(): void {
-    setOpen((prev:boolean):boolean => !prev);
+    setOpen((prev: boolean): boolean => !prev);
   }
   return (
     <header className="bg-dark text-white">
@@ -39,15 +39,15 @@ export default function DesktopHeader({ navs , session }: DesktopHeaderProps): J
 
         <Search />
 
-        <DUserNav  session={session} />
+        <DUserNav session={session} />
 
         <Link href="/orders">
           <MergeText top="Returns" bottom="& Orders" />
         </Link>
 
-        <Link href="/cart" className="flex items-end gap-1 -mt-4">
-          <div className='flex flex-col justify-center items-center'>
-            <div className='top-3 relative font-bold text-amber-400'>{totalProductsCount}</div>
+        <Link href="/cart" className="-mt-4 flex items-end gap-1">
+          <div className="flex flex-col items-center justify-center">
+            <div className="relative top-3 font-bold text-amber-400">{totalProductsCount}</div>
             <ShoppingCart className="h-8 w-8" />
           </div>
           <span className="text-sm font-bold">Cart</span>
@@ -55,9 +55,12 @@ export default function DesktopHeader({ navs , session }: DesktopHeaderProps): J
       </nav>
 
       <div className="bg-dark_blue flex items-center gap-1 overflow-hidden py-1 pl-4">
-        <div onClick={() => toggle()} className="mr-4 flex flex-shrink-0 cursor-pointer items-center text-xl">
+        <button
+          onClick={() => toggle()}
+          className="mr-4 flex flex-shrink-0 cursor-pointer items-center text-xl"
+        >
           ☰<span className="ml-1 text-sm font-bold">All</span>
-        </div>
+        </button>
         <div className="min-w-0 flex-1">
           <Navigations H={true} navs={navs} my={false} />
         </div>

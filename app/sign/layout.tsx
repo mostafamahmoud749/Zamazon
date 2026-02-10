@@ -1,11 +1,11 @@
-import SignHeader from "@/components/auth/SignHeader";
-import {ReactNode,JSX} from "react"
-export default function SignLayout({ children }:{children:ReactNode}):JSX.Element {
+import SignHeader from '@/components/auth/SignHeader';
+import { ReactNode, JSX } from 'react';
+export default function SignLayout({ children }: { children: ReactNode }): JSX.Element {
   return (
     <>
       <SignHeader />
-      <main className="w-11/12 m-auto">
-        <div className="font-bold md:hidden text-xl my-4 max-w-[400px] m-auto">Welcome</div>
+      <main className="m-auto w-11/12">
+        <div className="m-auto my-4 max-w-[400px] text-xl font-bold md:hidden">Welcome</div>
         {children}
       </main>
     </>

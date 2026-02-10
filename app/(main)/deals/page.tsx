@@ -4,7 +4,6 @@ import type { Product } from '@/types/index';
 import type { JSX } from 'react';
 
 export default async function DealsPage(): Promise<JSX.Element> {
-
   const res = await fetchProducts('https://dummyjson.com/products?limit=100');
   const products: Product[] = Array.isArray(res) ? (res as Product[]) : [];
 

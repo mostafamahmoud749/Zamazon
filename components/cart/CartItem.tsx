@@ -1,16 +1,16 @@
-"use client"
+'use client';
 import Image from 'next/image';
 import { useContext } from 'react';
 import { CartContext } from '@/components/cart/CartProvider';
 import type { CartProduct } from '@/types/index';
-import Counter from "@/components/cart/Counter"
+import Counter from '@/components/cart/Counter';
 
-type CartItemProps={
-  product:CartProduct
-}
+type CartItemProps = {
+  product: CartProduct;
+};
 
-export default function CartItem({ product }:CartItemProps){
-  const {addToCart,removeFromCart}=useContext(CartContext)
+export default function CartItem({ product }: CartItemProps) {
+  const { addToCart, removeFromCart } = useContext(CartContext);
   return (
     <div className="my-2 flex gap-4 rounded-b-sm px-2 pt-1">
       <Image

@@ -6,7 +6,6 @@ type ProductCardProps = {
   el: Product;
 };
 
-
 export default function ProductCard({ el }: ProductCardProps) {
   return (
     <Link

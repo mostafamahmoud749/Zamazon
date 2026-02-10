@@ -1,6 +1,6 @@
 'use client';
 import { createContext, useEffect, useMemo, useState } from 'react';
-import type {  ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import type { CartContextValue, CartProduct, Product } from '@/types';
 
 const defaultCartContextValue: CartContextValue = {
@@ -69,7 +69,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (!isInitialized) return;
     localStorage.setItem('cart', JSON.stringify(products));
   }, [isInitialized, products]);
-  
+
   return (
     <CartContext.Provider
       value={{ products, addToCart, removeFromCart, totalProductsCount, totalProductsPrice }}

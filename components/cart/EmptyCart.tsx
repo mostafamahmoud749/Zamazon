@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import Button from "@/components/common/Button"
+import Button from '@/components/common/Button';
 
-export default function EmptyCart(){
+export default function EmptyCart() {
   return (
     <div className="mb-5 flex min-h-[300px] flex-col items-center bg-white md:flex-row md:gap-4">
       <Image width={400} height={400} src="/pngwing.com.png" alt="cart" />
@@ -19,18 +19,19 @@ export default function EmptyCart(){
             href={'/sign?s=signin'}
             className="md:text-md block w-full text-sm md:w-fit md:py-1"
           >
-            <Button color="bg-amber-300" hoverdColor="hover:bg-amber-400" padding='p-2 md:py-1'>
+            <Button color="bg-amber-300" hoverdColor="hover:bg-amber-400" padding="p-2 md:py-1">
               Sign in to your account
             </Button>
           </Link>
-          <Link
-            href={'/sign?s=signup'}
-            className="md:text-md block w-full text-sm md:w-fit "
-          >
-            <Button color="" hoverdColor="hover:bg-gray-200" padding='p-2 md:py-1' extraStyling="border-1 border-gray-500">
+          <Link href={'/sign?s=signup'} className="md:text-md block w-full text-sm md:w-fit">
+            <Button
+              color=""
+              hoverdColor="hover:bg-gray-200"
+              padding="p-2 md:py-1"
+              extraStyling="border-1 border-gray-500"
+            >
               Sign up now
             </Button>
-            
           </Link>
         </div>
       </div>

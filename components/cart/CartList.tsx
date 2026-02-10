@@ -1,11 +1,11 @@
 import Button from '@/components/common/Button';
 
-type CartList={
-  totalProductsCount:number
-  totalProductsPrice:number
-}
+type CartList = {
+  totalProductsCount: number;
+  totalProductsPrice: number;
+};
 
-export default function CartList({ totalProductsCount, totalProductsPrice }:CartList){
+export default function CartList({ totalProductsCount, totalProductsPrice }: CartList) {
   return (
     <div className="px-3 md:flex md:flex-row-reverse md:justify-between">
       <div className="flex items-center gap-2 border-b-1 border-b-amber-100 md:my-2 md:justify-end md:border-none">

@@ -8,7 +8,9 @@ type DUserNavProps = {
 };
 
 export default function DUserNav({ big, session }: DUserNavProps) {
-  const text: string = session?.user ? `Hello, ${session.user.name?.split(" ")[0]}` : 'Hello, Sign in';
+  const text: string = session?.user
+    ? `Hello, ${session.user.name?.split(' ')[0]}`
+    : 'Hello, Sign in';
   return (
     <>
       {big ? (

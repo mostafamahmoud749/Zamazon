@@ -1,16 +1,16 @@
 import { X } from 'lucide-react';
-import {JSX} from "react"
+import { JSX } from 'react';
 import type { Session } from 'next-auth';
 
-type SidebarProps={
-  header:JSX.Element
-  main:JSX.Element
-  toggle:()=>void
-  open:boolean
-  border?:boolean,  
-}
+type SidebarProps = {
+  header: JSX.Element;
+  main: JSX.Element;
+  toggle: () => void;
+  open: boolean;
+  border?: boolean;
+};
 
-export default function Sidebar({ header, main, toggle, open, border }:SidebarProps) {
+export default function Sidebar({ header, main, toggle, open, border }: SidebarProps) {
   return (
     <>
       <div
@@ -20,12 +20,12 @@ export default function Sidebar({ header, main, toggle, open, border }:SidebarPr
         onClick={toggle}
       ></div>
       <nav
-        className={`fixed z-50  h-full w-4/5 max-w-md bg-white transition-all duration-300 ease-in-out ${
+        className={`fixed z-50 h-full w-4/5 max-w-md bg-white transition-all duration-300 ease-in-out ${
           open ? 'top-0 left-0' : 'top-0 -left-full'
         }`}
       >
         <div
-          className={`absolute top-4 -right-12 p-1 ${border ? ' rounded-md border-2 border-white' : ''}`}
+          className={`absolute top-4 -right-12 p-1 ${border ? 'rounded-md border-2 border-white' : ''}`}
         >
           <X className={`h-8 w-8 cursor-pointer`} onClick={toggle} />
         </div>

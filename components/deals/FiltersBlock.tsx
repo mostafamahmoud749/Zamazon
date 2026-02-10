@@ -4,13 +4,9 @@ type FiltersBlockProps = {
   name: string;
   toggle: (name: string) => void;
 };
-export default function FiltersBlock({
-  filtersState,
-  name,
-  toggle,
-}: FiltersBlockProps){
+export default function FiltersBlock({ filtersState, name, toggle }: FiltersBlockProps) {
   const showFilters = Object.entries(filtersState ?? {}).map(([key, value]) => (
-    <Filter key={key} name={key} value={value} toggle={toggle} />         
+    <Filter key={key} name={key} value={value} toggle={toggle} />
   ));
   return (
     <div className="p-2">

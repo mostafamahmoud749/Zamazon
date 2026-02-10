@@ -1,29 +1,42 @@
-"use client"
-import { useState,useEffect } from "react"
-import { Search } from "lucide-react";
+'use client';
+import { useState, useEffect } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { Search } from 'lucide-react';
 
 export default function SearchBlock() {
-  const [query, setQuery] = useState<string>("");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState<string>(searchParams.get('search') ?? '');
+
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (query) {
-      params.set("search", query);
-    } else {
-      params.delete("search");
+    const urlSearch = searchParams.get('search') ?? '';
+    if (urlSearch !== query) {
+      setQuery(urlSearch);
     }
-    window.history.replaceState(null, '', `${window.location.pathname}?${params.toString()}`);
-  }, [query]);
+  }, [searchParams]);
+
+  // Sync state → URL: update URL when user types
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (query) {
+      params.set('search', query);
+    } else {
+      params.delete('search');
+    }
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [query, router, pathname]);
 
   return (
-    <div className="flex items-center my-2 flex-1 ">
+    <div className="my-2 flex flex-1 items-center">
       <input
-        className="flex-1 bg-white text-black  placeholder:text-gray-400 p-2 rounded-l-md"
+        className="flex-1 rounded-l-md bg-white p-2 text-black placeholder:text-gray-400"
         type="search"
         placeholder="Search Zamazon"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
-      <div className="bg-orange text-black rounded-r-md p-2 ">
+      <div className="bg-orange rounded-r-md p-2 text-black">
         <Search className="stroke-[2.3]" />
       </div>
     </div>

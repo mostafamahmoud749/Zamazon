@@ -6,8 +6,10 @@ type MUserNavProps = {
   session: Session | null;
 };
 
-export default function MUserNav({session}:MUserNavProps){
-  const text: string = session?.user ? `Hello, ${session.user.name?.split(" ")[0]}` : 'Hello, Sign in';
+export default function MUserNav({ session }: MUserNavProps) {
+  const text: string = session?.user
+    ? `Hello, ${session.user.name?.split(' ')[0]}`
+    : 'Hello, Sign in';
 
   return (
     <Link href="/sign?s=signin" className="flex items-center">

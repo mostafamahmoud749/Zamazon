@@ -4,23 +4,23 @@ import { useContext, useState } from 'react';
 import { CartContext } from '@/components/cart/CartProvider';
 import type { Product } from '@/types/index';
 
-type BuyProps={
-  product:Product
-}
-export default function Buy({ product }:BuyProps) {
+type BuyProps = {
+  product: Product;
+};
+export default function Buy({ product }: BuyProps) {
   const { addToCart } = useContext(CartContext);
 
   const [addState, setAddState] = useState<string>('idle');
   const [buyState, setBuyState] = useState<string>('idle');
 
-  async function handleAddToCart():Promise<void> {
+  async function handleAddToCart(): Promise<void> {
     if (addState !== 'idle') return;
     setAddState('loading');
     addToCart(product);
     window.setTimeout(() => setAddState('idle'), 300);
   }
 
-  async function handleBuyNow():Promise<void> {
+  async function handleBuyNow(): Promise<void> {
     if (buyState !== 'idle') return;
     setBuyState('loading');
     window.setTimeout(() => setBuyState('idle'), 300);

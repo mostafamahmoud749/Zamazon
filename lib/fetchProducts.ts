@@ -1,4 +1,3 @@
-
 import type { Product, ProductRating } from '@/types/index';
 
 // DummyJSON raw types

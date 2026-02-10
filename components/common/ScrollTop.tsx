@@ -1,12 +1,10 @@
-"use client";
-import { useState, useEffect } from "react";
+'use client';
+import { useState, useEffect } from 'react';
 
-
-export default function ScrollTop(){
-
+export default function ScrollTop() {
   const [visible, setVisible] = useState<boolean>(false);
 
-  const checkY = ():void => {
+  const checkY = (): void => {
     if (window.scrollY > 200) {
       setVisible(true);
     } else {
@@ -15,16 +13,18 @@ export default function ScrollTop(){
   };
 
   useEffect(() => {
-    window.addEventListener("scroll", checkY);
-    return ():void => window.removeEventListener("scroll", checkY);
+    window.addEventListener('scroll', checkY);
+    return (): void => window.removeEventListener('scroll', checkY);
   }, []);
 
   return visible ? (
-    <div
-      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className="cursor-pointer text-white text-center py-2 bg-light_blue w-full"
+    <button
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      className="bg-light_blue w-full cursor-pointer py-2 text-center text-white"
     >
       Back to top
-    </div>
-  ) : <></>;
+    </button>
+  ) : (
+    <></>
+  );
 }

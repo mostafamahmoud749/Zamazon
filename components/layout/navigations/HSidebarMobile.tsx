@@ -2,10 +2,10 @@ import MUserNav from '@/components/layout/user/MUserNav';
 import Link from 'next/link';
 import type { Session } from 'next-auth';
 
-type HSidebarMobileProps={
+type HSidebarMobileProps = {
   session: Session | null;
-}
-export default function HSidebarMobile({session}:HSidebarMobileProps) {
+};
+export default function HSidebarMobile({ session }: HSidebarMobileProps) {
   return (
     <>
       <div className="flex justify-end">

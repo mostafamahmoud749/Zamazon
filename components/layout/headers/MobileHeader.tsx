@@ -18,7 +18,7 @@ type MobileHeaderProps = {
   session: Session | null;
 };
 
-export default function MobileHeader({ navs , session }: MobileHeaderProps): JSX.Element {
+export default function MobileHeader({ navs, session }: MobileHeaderProps): JSX.Element {
   const [open, setOpen] = useState<boolean>(false);
   function toggle(): void {
     setOpen((prev: boolean): boolean => !prev);
@@ -28,9 +28,9 @@ export default function MobileHeader({ navs , session }: MobileHeaderProps): JSX
     <header className="bg-dark_blue p-2 text-white">
       <nav className="flex items-center justify-between">
         <div className="flex items-center">
-          <div className="cursor-pointer text-2xl" onClick={() => toggle()}>
+          <button className="cursor-pointer text-2xl" onClick={() => toggle()}>
             ☰
-          </div>
+          </button>
           <Logo />
         </div>
         <div className="flex">
@@ -47,7 +47,7 @@ export default function MobileHeader({ navs , session }: MobileHeaderProps): JSX
       </div>
       <Sidebar
         main={<MSidebar navs={navs} toggle={() => toggle()} session={session} />}
-        header={<HSidebarMobile session={session}/>}
+        header={<HSidebarMobile session={session} />}
         toggle={() => toggle()}
         open={open}
       />
