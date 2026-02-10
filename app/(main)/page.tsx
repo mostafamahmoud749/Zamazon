@@ -1,4 +1,4 @@
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/authOptions';
 import { getServerSession } from 'next-auth';
 import SeeSign from '@/components/auth/SeeSign';
 import { fetchProducts } from '@/lib/fetchProducts';

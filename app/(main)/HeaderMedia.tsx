@@ -5,9 +5,8 @@ import type { JSX } from 'react';
 
 import type { NavItem } from '@/types/index';
 import type { Session } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/authOptions';
 import { getServerSession } from 'next-auth';
-
 
 export default async function HeaderMedia({
   userAgent,
@@ -26,7 +25,6 @@ export default async function HeaderMedia({
   const navs: NavItem[] = (
     categories.length ? categories.sort() : ['Home', 'Health & Household', 'Books', 'PC', 'clothes']
   ).map((category) => ({ group: 'departments', key: category }));
-
 
   return isMobile ? (
     <MobileHeader navs={navs} session={session} />
