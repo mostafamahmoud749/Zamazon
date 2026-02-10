@@ -6,16 +6,16 @@ import type { Product } from '@/types/product';
 import type { JSX } from 'react';
 
 type DealsDetailsPageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export default async function DealsDetailsPage({
   params,
 }: DealsDetailsPageProps): Promise<JSX.Element> {
-
-  const res = await fetchProducts(`https://dummyjson.com/products/${params.id}`);
+  const { id } = await params;
+  const res = await fetchProducts(`https://dummyjson.com/products/${id}`);
   if (!res || Array.isArray(res)) notFound();
 
   const product = res as Product;
