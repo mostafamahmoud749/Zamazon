@@ -14,11 +14,8 @@ type DealsDetailsPageProps = {
 export default async function DealsDetailsPage({
   params,
 }: DealsDetailsPageProps): Promise<JSX.Element> {
-<<<<<<< HEAD
-  const res = await fetchProducts(`https://fakestoreapi.com/products/${params.id}`);
-=======
+
   const res = await fetchProducts(`https://dummyjson.com/products/${params.id}`);
->>>>>>> 6809f93 (changed api from fakestore to dummyjson)
   if (!res || Array.isArray(res)) notFound();
 
   const product = res as Product;

@@ -27,6 +27,8 @@ export default function MainDeals({ products }: MainDealsProps) {
   const [open, setOpen] = useState<boolean>(false);
   const [filtersReady, setFiltersReady] = useState<boolean>(false);
 
+  const searchQuery = searchParams.get('search')?.toLowerCase() ?? '';
+
   const activeFilters = useMemo<DealsActiveFilter[]>(
     () =>
       Object.entries(filtersState).flatMap(([group, items]) =>
@@ -65,9 +67,7 @@ export default function MainDeals({ products }: MainDealsProps) {
             initial.departments[key] = true;
           }
         });
-      } catch {
-        // ignore parse errors
-      }
+      } catch {}
     }
 
     setFiltersState((prev: DealsFiltersState): DealsFiltersState => {
@@ -77,11 +77,11 @@ export default function MainDeals({ products }: MainDealsProps) {
     });
 
     setFiltersReady(true);
-  }, [products, searchParams]); // runs once per navigation / products change
+  }, [products, searchParams]);
 
   // 2) sync URL ONLY after filters are ready
   useEffect((): void => {
-    if (!filtersReady) return; // don't touch URL while initializing
+    if (!filtersReady) return;
 
     const newFiltersString: string = JSON.stringify(activeFilters);
     const params = new URLSearchParams(window.location.search);
@@ -101,20 +101,36 @@ export default function MainDeals({ products }: MainDealsProps) {
   const filteredProducts = useMemo((): Product[] => {
     if (!filtersReady) return products;
 
-    if (activeFilters.length === 0) return products;
+    let result = products;
+
+    // Apply search query filter
+    if (searchQuery) {
+      result = result.filter((product: Product): boolean => {
+        const title = product.title?.toLowerCase() ?? '';
+        const description = product.description?.toLowerCase() ?? '';
+        const category = product.category?.toLowerCase() ?? '';
+        return (
+          title.includes(searchQuery) ||
+          description.includes(searchQuery) ||
+          category.includes(searchQuery)
+        );
+      });
+    }
+
+    if (activeFilters.length === 0) return result;
 
     const has4Up: boolean = activeFilters.some((f) => f.group === 'rating' && f.key === '4_up');
     const departmentFilters: DealsActiveFilter[] = activeFilters.filter(
       (f) => f.group === 'departments',
     );
 
-    return products.filter((product: Product): boolean | void => {
+    return result.filter((product: Product): boolean | void => {
       if (!product.rating?.rate) return;
       if (has4Up && product.rating?.rate < 4) return false;
       if (departmentFilters.length === 0) return true;
       return departmentFilters.some((f) => f.key === product.category);
     });
-  }, [products, activeFilters, filtersReady]);
+  }, [products, activeFilters, filtersReady, searchQuery]);
   const showProducts: JSX.Element[] = filteredProducts.map((el) => (
     <ProductCard key={el.id} el={el} />
   ));
@@ -180,7 +196,6 @@ export default function MainDeals({ products }: MainDealsProps) {
       </div>
 
       <div className="mx-auto grid w-199/200 grid-cols-2 gap-5 px-6 py-2 sm:w-full sm:bg-white sm:p-0 lg:grid-cols-3 xl:grid-cols-4">
-        {/* optional: small loading/flicker guard */}
         {!filtersReady ? <p>Loading filters…</p> : showProducts}
       </div>
     </div>

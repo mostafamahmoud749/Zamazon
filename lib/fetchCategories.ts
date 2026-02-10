@@ -5,16 +5,15 @@ export async function fetchCategories(url: string): Promise<string[]> {
 
     const data: unknown = await res.json();
 
-
     // DummyJSON categories: [{ slug, name, url }]
     if (
       Array.isArray(data) &&
       data.length > 0 &&
       typeof data[0] === 'object' &&
       data[0] !== null &&
-      'name' in data[0]
+      'slug' in data[0]
     ) {
-      return data.map((c: { name: string }) => c.name);
+      return data.map((c: { slug: string }) => c.slug);
     }
 
     // Plain string array (original fakestoreapi format)
