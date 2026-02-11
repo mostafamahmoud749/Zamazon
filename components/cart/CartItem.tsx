@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { useContext } from 'react';
 import { CartContext } from '@/components/cart/CartProvider';
 import type { CartProduct } from '@/types/index';
-import Counter from '@/components/cart/Counter';
+import Counter from '@/components/common/Counter';
 
 type CartItemProps = {
   product: CartProduct;

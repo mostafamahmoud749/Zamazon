@@ -133,7 +133,7 @@ export default function MainDeals({ products }: MainDealsProps) {
     });
   }, [products, activeFilters, filtersReady, searchQuery]);
   const showProducts: JSX.Element[] = filteredProducts.map((el) => (
-    <ProductCard key={el.id} el={el} />
+    <ProductCard key={el.id} deals={true} el={el} />
   ));
 
   const showActiveFilters: JSX.Element[] = activeFilters.map(({ group, key }) => (

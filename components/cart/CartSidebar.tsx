@@ -5,7 +5,7 @@ import CartSidebarItem from '@/components/cart/CartSidebarItem';
 import Button from '@/components/common/Button';
 import Link from 'next/link';
 import Image from 'next/image';
-import Counter from '@/components/cart/Counter';
+import Counter from '@/components/common/Counter';
 import type { CartProduct } from '@/types/index';
 import { JSX } from 'react';
 
