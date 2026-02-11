@@ -3,19 +3,19 @@ import { JSX } from 'react';
 import type { NavItem } from '@/types/index';
 
 type NavigationsProps = {
-  my: boolean;
+  py: boolean;
   H: boolean;
   navs: NavItem[];
   toggle: () => void;
 };
 
-export default function Navigations({ my, H, navs = [], toggle }: Partial<NavigationsProps>) {
+export default function Navigations({ py, H, navs = [], toggle }: Partial<NavigationsProps>) {
   const showNavs: JSX.Element[] = navs.map((el) => (
     <Link
       key={el.key}
       onClick={toggle}
       href={`/deals?filters=${encodeURIComponent(JSON.stringify(el))}`}
-      className={`${my ? 'my-4' : ''} block transition-all duration-200 ${H ? '' : 'hover:ml-1'} pl-4 text-sm ${H ? 'flex-shrink-0 first:pl-0' : 'w-full'}`}
+      className={`${py ? 'py-2' : ''} block transition-all hover:bg-gray-100 duration-200 ${H ? '' : 'hover:translate-x-1'} pl-4 text-sm ${H ? 'flex-shrink-0 first:pl-0' : 'w-full'}`}
     >
       {el.key}
     </Link>
@@ -24,12 +24,14 @@ export default function Navigations({ my, H, navs = [], toggle }: Partial<Naviga
   return (
     <div
       className={`p-1 ${
-        H ? 'scrollbar-hide flex w-full max-w-full gap-3 overflow-x-auto scroll-smooth' : ''
+        H
+          ? 'scrollbar-hide flex w-full hover:bg-gray-100 max-w-full gap-3 overflow-x-auto scroll-smooth'
+          : 'max-h-[70vh] overflow-y-auto'
       }`}
     >
       <Link
         href="/deals"
-        className={`${my ? 'my-4' : ''} block pl-4 text-sm transition-all duration-200 ${H ? 'flex-shrink-0 first:pl-0' : 'w-full hover:ml-1'}`}
+        className={`${py ? 'py-2' : ''} block pl-4 text-sm transition-all duration-200 ${H ? 'flex-shrink-0 first:pl-0' : 'w-full hover:translate-x-1'}`}
       >
         Todays Deals
       </Link>

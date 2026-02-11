@@ -62,12 +62,12 @@ export default function DesktopHeader({ navs, session }: DesktopHeaderProps): JS
           ☰<span className="ml-1 text-sm font-bold">All</span>
         </button>
         <div className="min-w-0 flex-1">
-          <Navigations H={true} navs={navs} my={false} />
+          <Navigations H={true} navs={navs} py={false} />
         </div>
       </div>
       <Sidebar
         border={true}
-        main={<MSidebar my={true} navs={navs} toggle={() => toggle()} session={session} />}
+        main={<MSidebar py={true} navs={navs} toggle={() => toggle()} session={session} />}
         header={<HSidebarDesktop session={session} />}
         toggle={() => toggle()}
         open={open}
