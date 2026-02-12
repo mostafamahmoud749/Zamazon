@@ -18,7 +18,7 @@ export default function Navigations({ py, H, navs = [], toggle }: Partial<Naviga
       key={el.key}
       onClick={toggle}
       href={`/deals?filters=${encodeURIComponent(JSON.stringify(el))}`}
-      className={`${py ? 'py-2' : ''} block transition-all duration-200  ${H ? '' : 'hover:translate-x-1 hover:bg-gray-100'} pl-4 text-sm ${H ? 'flex-shrink-0 first:pl-0' : 'w-full'}`}
+      className={`${py ? 'py-2' : ''} block transition-all duration-200 ${H ? 'items-center flex justify-center border-1 border-transparent hover:border-white px-2 h-8 flex-shrink-0 first:pl-0' : 'pl-4 w-full hover:translate-x-1 hover:bg-gray-100'} text-sm`}
     >
       {el.key}
     </Link>
@@ -31,22 +31,25 @@ export default function Navigations({ py, H, navs = [], toggle }: Partial<Naviga
   return (
     <div className="">
       <div
-        className={`p-1 ${
+        className={` ${
           H
-            ? 'scrollbar-hide flex w-full max-w-full gap-3 overflow-x-auto scroll-smooth '
-            : `overflow-y-auto ${showMore ? 'max-h-[60vh]' : 'max-h-[20vh]'}`
+            ? ' scrollbar-hide flex h-8 w-full max-w-full gap-3 overflow-x-auto scroll-smooth'
+            : `overflow-y-auto p-1 ${showMore ? 'max-h-[60vh]' : 'max-h-[20vh]'}`
         }`}
       >
         <Link
           href="/deals"
-          className={`${py ? 'py-2' : ''} block pl-4 text-sm transition-all duration-200 ${H ? 'flex-shrink-0 first:pl-0' : 'w-full hover:translate-x-1'}`}
+          className={`${py ? 'py-2' : ''} block  text-sm transition-all duration-200 ${H ? 'items-center flex justify-center border-1 border-transparent hover:border-white h-8 px-2 flex-shrink-0' : 'pl-4 w-full hover:translate-x-1'}`}
         >
           Todays Deals
         </Link>
         {showNavs}
       </div>
       {!H ? (
-        <button onClick={toggleShowMore} className="mt-2 flex justify-end w-full my-2 px-4 text-sm text-blue-500 cursor-pointer hover:underline">
+        <button
+          onClick={toggleShowMore}
+          className="my-2 mt-2 flex w-full cursor-pointer justify-end px-4 text-sm text-blue-500 hover:underline"
+        >
           {showMore ? 'Show Less' : 'Show More'}
         </button>
       ) : null}

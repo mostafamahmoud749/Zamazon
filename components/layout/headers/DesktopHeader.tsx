@@ -14,6 +14,7 @@ import { JSX } from 'react';
 import type { NavItem } from '@/types/index';
 import type { Session } from 'next-auth';
 import { CartContext } from '@/components/cart/CartProvider';
+import Holder from '@/components/layout/headers/Holder';
 
 type DesktopHeaderProps = {
   navs: NavItem[];
@@ -29,35 +30,44 @@ export default function DesktopHeader({ navs, session }: DesktopHeaderProps): JS
   }
   return (
     <header className="bg-dark text-white">
-      <nav className="flex items-center justify-between gap-4 px-4 py-0.5">
-        <Logo />
+      <nav className="flex h-15 items-center justify-between gap-2 px-4 py-0.5">
+        <Holder>
+          <Logo />
+        </Holder>
 
-        <div className="flex items-end gap-1">
-          <MapPin className="h-5 w-5" />
-          <MergeText top="Deliver to" bottom="Egypt" />
-        </div>
+        <Holder>
+          <div className="flex items-end gap-1">
+            <MapPin className="h-5 w-5" />
+            <MergeText top="Deliver to" bottom="Egypt" />
+          </div>
+        </Holder>
 
         <Search />
+        <Holder>
+          <DUserNav session={session} />
+        </Holder>
 
-        <DUserNav session={session} />
+        <Holder>
+          <Link href="/orders">
+            <MergeText top="Returns" bottom="& Orders" />
+          </Link>
+        </Holder>
 
-        <Link href="/orders">
-          <MergeText top="Returns" bottom="& Orders" />
-        </Link>
-
-        <Link href="/cart" className="-mt-4 flex items-end gap-1">
-          <div className="flex flex-col items-center justify-center">
-            <div className="relative top-3 font-bold text-amber-400">{totalProductsCount}</div>
-            <ShoppingCart className="h-8 w-8" />
-          </div>
-          <span className="text-sm font-bold">Cart</span>
-        </Link>
+        <Holder>
+          <Link href="/cart" className="-mt-4 flex items-end gap-1">
+            <div className="flex flex-col items-center justify-center">
+              <div className="relative top-3 font-bold text-amber-400">{totalProductsCount}</div>
+              <ShoppingCart className="h-8 w-8" />
+            </div>
+            <span className="flex h-full items-end text-sm font-bold">Cart</span>
+          </Link>
+        </Holder>
       </nav>
 
-      <div className="bg-dark_blue flex items-center gap-1 overflow-hidden py-1 pl-4">
+      <div className="bg-dark_blue flex items-center gap-1 overflow-hidden py-[1px] pl-4">
         <button
           onClick={() => toggle()}
-          className="mr-4 flex flex-shrink-0 cursor-pointer items-center text-xl"
+          className=" flex flex-shrink-0 cursor-pointer items-center border border-transparent px-2 text-xl hover:border-white"
         >
           ☰<span className="ml-1 text-sm font-bold">All</span>
         </button>

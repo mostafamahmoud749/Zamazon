@@ -23,7 +23,6 @@ export default async function RootLayout({
             <div className="flex flex-1 flex-col">{children}</div>
             <Footer />
           </div>
-          {/* cart items sidebar */}
           <CartSidebar />
         </div>
       </CartProvider>

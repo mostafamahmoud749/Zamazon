@@ -196,7 +196,7 @@ export default function MainDeals({ products }: MainDealsProps) {
         </div>
       </div>
 
-      <div className="mx-auto grid w-199/200 grid-cols-2 gap-5 px-6 py-2 sm:w-full sm:bg-white sm:p-0 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="mx-auto grid bg-white w-199/200 grid-cols-2 gap-5 px-2 py-2 sm:w-full sm:bg-white  lg:grid-cols-3 xl:grid-cols-4">
         {!filtersReady ? <p>Loading filters…</p> : showProducts}
       </div>
     </div>

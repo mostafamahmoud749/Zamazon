@@ -27,8 +27,8 @@ export default function MobileHeader({ navs, session }: MobileHeaderProps): JSX.
   return (
     <header className="bg-dark_blue p-2 text-white">
       <nav className="flex items-center justify-between">
-        <div className="flex items-center">
-          <button className="cursor-pointer text-2xl" onClick={() => toggle()}>
+        <div className="flex items-center gap-1">
+          <button className="cursor-pointer -mb-1 text-2xl" onClick={() => toggle()}>
             ☰
           </button>
           <Logo />
