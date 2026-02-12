@@ -30,7 +30,7 @@ export default function SearchBlock() {
   return (
     <div className="my-2 flex flex-1 items-center">
       <input
-        className="flex-1 rounded-l-md bg-white p-2 text-black placeholder:text-gray-400"
+        className="flex-1 rounded-l-md bg-white cursor-pointer p-2 text-black placeholder:text-gray-400"
         type="search"
         placeholder="Search Zamazon"
         value={query}
