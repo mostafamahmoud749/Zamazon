@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import passport from 'passport';
 import { User } from '../mongoose/schemas/users.mjs';
+import { hashPassword } from '../utils/helpers.mjs';
 
 const router = Router();
 
@@ -10,6 +11,7 @@ router.post('/api/auth/login', passport.authenticate('local'), (request, respons
 
 router.post('/api/auth/register', async (request, response) => {
   try {
+    request.body.password = hashPassword(request.body.password)
     const savedUser = await User.create(request.body);
 
     response.status(201).send(savedUser);
