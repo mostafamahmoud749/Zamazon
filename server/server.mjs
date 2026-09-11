@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import './stratiges/local-stratigy.mjs';
 import authRouter from './routes/auth.mjs';
 import "dotenv/config";
+import MongoStore from 'connect-mongo';
 
 const app = express();
 mongoose
@@ -22,6 +23,12 @@ app.use(
     secret: process.env.SESSION_SECRET || "",
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      maxAge: 60000 * 60 * 24 * 7
+    },
+    store: MongoStore.create({
+      client: mongoose.connection.getClient()
+    })
   }),
 );
 app.use(passport.initialize());
