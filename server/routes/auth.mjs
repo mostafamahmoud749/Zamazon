@@ -24,4 +24,10 @@ router.get('/api/auth/status', (request, response) => {
   request.isAuthenticated() ? response.send({user:request.user,session:request.session}) : response.sendStatus(401);
 });
 
+router.get('/api/auth/github', passport.authenticate("github"))
+
+router.get('/api/auth/github/callback', passport.authenticate("github"), (request, response) => {
+  response.sendStatus(200)
+});
+
 export default router;

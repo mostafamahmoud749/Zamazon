@@ -1,6 +1,7 @@
 import passport from 'passport';
 import { Strategy } from 'passport-local';
 import { User } from '../mongoose/schemas/users.mjs';
+import { GithubUser } from '../mongoose/schemas/githubUsers.mjs';
 import { compareHased } from '../utils/helpers.mjs';
 
 passport.serializeUser((user, done) => {
@@ -9,9 +10,9 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
   try {
-    const findUser = await User.findById(id);
+    const findUser = (await User.findById(id)) || (await GithubUser.findById(id));
 
-    if (!findUser) throw new Error('User not found!');
+    if (!findUser) return done(null, false);
 
     done(null, findUser);
   } catch (err) {
