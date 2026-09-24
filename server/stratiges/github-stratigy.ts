@@ -1,22 +1,35 @@
 import passport from 'passport';
-import { Strategy } from 'passport-github';
+import { Strategy, type Profile } from 'passport-github';
+import type { VerifyCallback } from 'passport-oauth2';
 import { GithubUser } from '../mongoose/schemas/githubUsers.mjs';
+
+const clientID = process.env.GITHUB_CLIENT_ID;
+const clientSecret = process.env.GITHUB_CLIENT_SECRET;
+
+if (!clientID || !clientSecret) {
+  throw new Error('GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET are required');
+}
 
 export default passport.use(
   new Strategy(
     {
-      clientID: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      clientID,
+      clientSecret,
       callbackURL: 'http://localhost:9000/api/auth/github/callback',
       scope: ['identify'],
     },
-    async function (accessToken, refreshToken, profile, done) {
+    async function (
+      accessToken: string,
+      refreshToken: string,
+      profile: Profile,
+      done: VerifyCallback,
+    ) {
       let findUser;
 
       try {
         findUser = await GithubUser.findOne({ githubID: profile.id });
       } catch (err) {
-        done(err, null);
+        return done(err);
       }
 
       try {
@@ -28,7 +41,7 @@ export default passport.use(
         }
         return done(null, findUser);
       } catch (err) {
-        done(err, null);
+        return done(err);
       }
     },
   ),
