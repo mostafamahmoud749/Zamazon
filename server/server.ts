@@ -37,6 +37,6 @@ app.use(passport.session());
 
 app.use(authRouter);
 
-app.listen(PORT, (request, response) => {
+app.listen(PORT, () => {
   console.log(`the server started on port ${PORT}!`);
 });
