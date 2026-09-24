@@ -1,0 +1,36 @@
+import { Request, Router } from 'express';
+import passport from 'passport';
+import { User } from '../mongoose/schemas/users.js';
+import { hashPassword } from '../utils/helpers.mjs';
+import { createUserDto } from '../dtos/createUser.dto';
+
+const router = Router();
+
+router.post('/api/auth/login', passport.authenticate('local'), (request, response) => {
+  response.sendStatus(200);
+});
+
+router.post('/api/auth/register', async (request: Request<{}, {}, createUserDto>, response) => {
+  try {
+    request.body.password = hashPassword(request.body.password);
+    const savedUser = await User.create(request.body);
+
+    response.status(201).send(savedUser);
+  } catch (err) {
+    response.sendStatus(400);
+  }
+});
+
+router.get('/api/auth/status', (request, response) => {
+  request.isAuthenticated()
+    ? response.send({ user: request.user, session: request.session })
+    : response.sendStatus(401);
+});
+
+router.get('/api/auth/github', passport.authenticate('github'));
+
+router.get('/api/auth/github/callback', passport.authenticate('github'), (request, response) => {
+  response.sendStatus(200);
+});
+
+export default router;

@@ -1,7 +1,7 @@
 import passport from 'passport';
 import { Strategy } from 'passport-local';
-import { User } from '../mongoose/schemas/users.mjs';
-import { GithubUser } from '../mongoose/schemas/githubUsers.mjs';
+import { User } from '../mongoose/schemas/users.js';
+import { GithubUser } from '../mongoose/schemas/githubUsers.js';
 import { compareHased } from '../utils/helpers.mjs';
 
 passport.serializeUser((user, done) => {

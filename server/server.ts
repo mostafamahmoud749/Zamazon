@@ -6,7 +6,7 @@ import mongoose from 'mongoose';
 import 'dotenv/config';
 import './stratiges/local-stratigy.js';
 import './stratiges/github-stratigy.js';
-import authRouter from './routes/auth.mjs';
+import authRouter from './routes/auth.js';
 import MongoStore from 'connect-mongo';
 
 const app = express();

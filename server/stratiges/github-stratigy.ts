@@ -1,7 +1,7 @@
 import passport from 'passport';
 import { Strategy, type Profile } from 'passport-github';
 import type { VerifyCallback } from 'passport-oauth2';
-import { GithubUser } from '../mongoose/schemas/githubUsers.mjs';
+import { GithubUser } from '../mongoose/schemas/githubUsers.js';
 
 const clientID = process.env.GITHUB_CLIENT_ID;
 const clientSecret = process.env.GITHUB_CLIENT_SECRET;
