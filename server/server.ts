@@ -7,7 +7,7 @@ import 'dotenv/config';
 import './stratiges/local-stratigy.js';
 import './stratiges/github-stratigy.js';
 import authRouter from './routes/auth.js';
-import MongoStore from 'connect-mongo';
+import connectPgSimple from 'connect-pg-simple';
 
 const app = express();
 mongoose
@@ -16,6 +16,7 @@ mongoose
   .catch((err) => console.log(`Error: ${err}`));
 
 const PORT = process.env.PORT || 9000;
+const PgStore = connectPgSimple(session);
 
 app.use(express.json());
 app.use(cookieParser(process.env.SESSION_SECRET || ''));
@@ -25,16 +26,19 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 60000 * 60 * 24 * 7,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      httpOnly: true,
+      secure: false,
     },
-    store: MongoStore.create({
-      client: mongoose.connection.getClient(),
+    store: new PgStore({
+      conString: process.env.DATABASE_URL,
+      createTableIfMissing: true,
     }),
   }),
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.use(authRouter);
 
 app.listen(PORT, () => {
