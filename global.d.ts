@@ -6,11 +6,11 @@ declare module '*.less';
 declare global {
   namespace Express {
     interface User {
-      id: string;
+      id: number;
       email?: string;
       password?: string;
-      name?: string | null;
-      githubID?: string;
+      name?: string ;
+      githubID?: number;
       userName?: string;
     }
   }

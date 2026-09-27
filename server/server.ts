@@ -8,6 +8,7 @@ import './stratiges/local-stratigy.js';
 import './stratiges/github-stratigy.js';
 import authRouter from './routes/auth.js';
 import connectPgSimple from 'connect-pg-simple';
+import { prisma } from '../prisma/lib/prisma.js';
 
 const app = express();
 mongoose
@@ -41,6 +42,16 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(authRouter);
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`the server started on port ${PORT}!`);
 });
+
+async function shutdown() {
+  server.close(async () => {
+    await prisma.$disconnect();
+    process.exit(0);
+  });
+}
+
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);

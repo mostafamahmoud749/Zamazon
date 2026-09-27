@@ -1,8 +1,7 @@
 import passport from 'passport';
 import { Strategy } from 'passport-local';
-import { User } from '../mongoose/schemas/users.js';
-import { GithubUser } from '../mongoose/schemas/githubUsers.js';
-import { compareHased } from '../utils/helpers.mjs';
+import { compareHased } from '../utils/helpers.js';
+import { prisma } from '@/prisma/lib/prisma.js';
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -10,11 +9,25 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
   try {
-    const findUser = (await User.findById(id)) || (await GithubUser.findById(id));
+    const userId = Number(id);
+
+    if (!Number.isInteger(userId)) return done(null, false);
+
+    const findUser =
+      (await prisma.user.findUnique({ where: { id: userId } })) ||
+      (await prisma.githubUser.findUnique({ where: { githubID: userId } }));
 
     if (!findUser) return done(null, false);
 
-    done(null, findUser);
+    if ('email' in findUser) {
+      return done(null, findUser);
+    }
+
+    return done(null, {
+      id: findUser.githubID,
+      githubID: findUser.githubID,
+      userName: findUser.userName,
+    });
   } catch (err) {
     done(err, undefined);
   }
@@ -23,7 +36,7 @@ passport.deserializeUser(async (id, done) => {
 export default passport.use(
   new Strategy({ usernameField: 'email' }, async (username, password, done) => {
     try {
-      const findUser = await User.findOne({ email: username });
+      const findUser = await prisma.user.findUnique({ where: { email: username } });
 
       if (!findUser) throw new Error('User not found!');
 

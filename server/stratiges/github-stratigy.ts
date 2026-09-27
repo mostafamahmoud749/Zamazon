@@ -1,7 +1,7 @@
 import passport from 'passport';
 import { Strategy, type Profile } from 'passport-github';
 import type { VerifyCallback } from 'passport-oauth2';
-import { GithubUser } from '../mongoose/schemas/githubUsers.js';
+import { prisma } from '@/prisma/lib/prisma.js';
 
 const clientID = process.env.GITHUB_CLIENT_ID;
 const clientSecret = process.env.GITHUB_CLIENT_SECRET;
@@ -27,19 +27,34 @@ export default passport.use(
       let findUser;
 
       try {
-        findUser = await GithubUser.findOne({ githubID: profile.id });
+        const githubID = Number(profile.id);
+        findUser = await prisma.githubUser.findUnique({ where: { githubID } });
       } catch (err) {
         return done(err);
       }
 
       try {
         if (!findUser) {
-          const newUser = new GithubUser({ userName: profile.username, githubID: profile.id });
-          const savedUser = await newUser.save();
+          const userName = profile.username ?? profile.displayName ?? `github-${profile.id}`;
+          const newUser = await prisma.githubUser.create({
+            data: {
+              id: Number(profile.id),
+              githubID: Number(profile.id),
+              userName,
+            },
+          });
 
-          return done(null, savedUser);
+          return done(null, {
+            id: newUser.githubID,
+            githubID: newUser.githubID,
+            userName: newUser.userName,
+          });
         }
-        return done(null, findUser);
+        return done(null, {
+          id: findUser.githubID,
+          githubID: findUser.githubID,
+          userName: findUser.userName,
+        });
       } catch (err) {
         return done(err);
       }

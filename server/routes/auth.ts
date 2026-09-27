@@ -1,19 +1,21 @@
 import { Request, Router } from 'express';
 import passport from 'passport';
-import { User } from '../mongoose/schemas/users.js';
-import { hashPassword } from '../utils/helpers.mjs';
+import { hashPassword } from '../utils/helpers.js';
 import { createUserDto } from '../dtos/createUser.dto';
+import { prisma } from '../../prisma/lib/prisma.js';
 
 const router = Router();
 
-router.post('/api/auth/login', passport.authenticate('local'), (request, response) => {
+router.post('/api/auth/login', passport.authenticate('local'), (_, response) => {
   response.sendStatus(200);
 });
 
 router.post('/api/auth/register', async (request: Request<{}, {}, createUserDto>, response) => {
   try {
     request.body.password = hashPassword(request.body.password);
-    const savedUser = await User.create(request.body);
+    const savedUser = await prisma.user.create({
+      data: request.body,
+    });
 
     response.status(201).send(savedUser);
   } catch (err) {
@@ -29,7 +31,7 @@ router.get('/api/auth/status', (request, response) => {
 
 router.get('/api/auth/github', passport.authenticate('github'));
 
-router.get('/api/auth/github/callback', passport.authenticate('github'), (request, response) => {
+router.get('/api/auth/github/callback', passport.authenticate('github'), (_, response) => {
   response.sendStatus(200);
 });
 
