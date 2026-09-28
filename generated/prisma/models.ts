@@ -9,5 +9,5 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User'
-export type * from './models/GithubUser'
+export type * from './models/Account'
 export type * from './commonInputTypes'

@@ -13,21 +13,11 @@ passport.deserializeUser(async (id, done) => {
 
     if (!Number.isInteger(userId)) return done(null, false);
 
-    const findUser =
-      (await prisma.user.findUnique({ where: { id: userId } })) ||
-      (await prisma.githubUser.findUnique({ where: { githubID: userId } }));
+    const findUser = await prisma.user.findUnique({ where: { id: userId } });
 
     if (!findUser) return done(null, false);
 
-    if ('email' in findUser) {
-      return done(null, findUser);
-    }
-
-    return done(null, {
-      id: findUser.githubID,
-      githubID: findUser.githubID,
-      userName: findUser.userName,
-    });
+    return done(null, findUser);
   } catch (err) {
     done(err, undefined);
   }
@@ -40,7 +30,8 @@ export default passport.use(
 
       if (!findUser) throw new Error('User not found!');
 
-      if (!compareHased(password, findUser.password)) throw new Error('Bad Credentials');
+      if (!findUser.password || !compareHased(password, findUser.password))
+        throw new Error('Bad Credentials');
 
       done(null, findUser);
     } catch (err) {

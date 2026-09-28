@@ -24,40 +24,37 @@ export default passport.use(
       profile: Profile,
       done: VerifyCallback,
     ) {
-      let findUser;
+      const account = await prisma.account.findUnique({
+        where: {
+          provider_providerAccountId: {
+            provider: profile.provider,
+            providerAccountId: profile.id,
+          },
+        },
+        include: {
+          user: true,
+        },
+      });
 
-      try {
-        const githubID = Number(profile.id);
-        findUser = await prisma.githubUser.findUnique({ where: { githubID } });
-      } catch (err) {
-        return done(err);
+      if (account) {
+        return done(null, account.user);
       }
 
-      try {
-        if (!findUser) {
-          const userName = profile.username ?? profile.displayName ?? `github-${profile.id}`;
-          const newUser = await prisma.githubUser.create({
-            data: {
-              id: Number(profile.id),
-              githubID: Number(profile.id),
-              userName,
+      const newUser = await prisma.user.create({
+        data: {
+          email: profile.emails?.[0]?.value || null,
+          name: profile.displayName || null,
+          accounts: {
+            create: {
+              provider: 'github',
+              providerAccountId: profile.id,
+              username: profile.username || null,
             },
-          });
+          },
+        },
+      });
 
-          return done(null, {
-            id: newUser.githubID,
-            githubID: newUser.githubID,
-            userName: newUser.userName,
-          });
-        }
-        return done(null, {
-          id: findUser.githubID,
-          githubID: findUser.githubID,
-          userName: findUser.userName,
-        });
-      } catch (err) {
-        return done(err);
-      }
+      return done(null, newUser);
     },
   ),
 );

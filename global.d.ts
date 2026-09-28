@@ -7,11 +7,11 @@ declare global {
   namespace Express {
     interface User {
       id: number;
-      email?: string;
-      password?: string;
-      name?: string ;
-      githubID?: number;
-      userName?: string;
+      email: string | null;
+      password: string | null;
+      name: string | null;
+      createdAt: Date;
+      updatedAt: Date;
     }
   }
 }
