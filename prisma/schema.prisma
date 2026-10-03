@@ -64,6 +64,7 @@ model Product {
   orderItems          orderItem[]
   reviews             Review[]
   
+  @@index([categoryId])
 }
 
 model CartItem {
@@ -140,6 +141,8 @@ model Review {
   user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([productId, userId])
+  @@index([productId])
+  @@index([userId])
 }
 
 model Category {
