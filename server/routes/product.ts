@@ -3,54 +3,30 @@ import { prisma } from '../../prisma/lib/prisma.js';
 
 const router = Router();
 
-router.get('/api/products', async (request, response) => {
+router.get('/api/products/:id', async (request, response) => {
+  const id = Number(request.params.id);
+  if (!Number.isInteger(id) || id <= 0) {
+    response.sendStatus(400);
+    return;
+  }
+
   try {
-    const page = Number(request.query.page ?? 1);
-    const rating = Number(request.query.rating ?? 0);
-    const search = typeof request.query.search === 'string' ? request.query.search.trim() : '';
-
-    const filters = request.query.filters ? JSON.parse(String(request.query.filters)) : [];
-    const catagoryIds = Array.isArray(filters)
-      ? filters.map(Number).filter((id: number) => !isNaN(id))
-      : [];
-
-    const products = await prisma.product.findMany({
+    const product = await prisma.product.findUnique({
       where: {
-        AND: [
-          search
-            ? {
-                OR: [
-                  { title: { contains: search, mode: 'insensitive' } },
-                  { description: { contains: search, mode: 'insensitive' } },
-                ],
-              }
-            : {},
-          rating > 0
-            ? {
-                reviews: {
-                  some: {
-                    rating: {
-                      gte: rating,
-                    },
-                  },
-                },
-              }
-            : {},
-          catagoryIds.length > 0
-            ? {
-                categoryId: {
-                  in: catagoryIds,
-                },
-              }
-            : {},
-        ],
+        id: id,
       },
-      skip: (page - 1) * 20,
-      take: 20,
     });
 
-    response.status(200).send(products);
-  } catch (err) {
-    response.sendStatus(400);
+    if (!product) {
+      response.sendStatus(404);
+      return;
+    }
+
+    response.status(200).send(product);
+  } catch (error) {
+    console.error(error);
+    response.sendStatus(500);
   }
 });
+
+export default router;

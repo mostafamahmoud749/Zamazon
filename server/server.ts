@@ -2,19 +2,16 @@ import express from 'express';
 import passport from 'passport';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
-import mongoose from 'mongoose';
 import 'dotenv/config';
 import './stratiges/local-stratigy.js';
 import './stratiges/github-stratigy.js';
 import authRouter from './routes/auth.js';
+import productsRouter from './routes/products.js';
+import productRouter from './routes/product.js';
 import connectPgSimple from 'connect-pg-simple';
 import { prisma } from '../prisma/lib/prisma.js';
 
 const app = express();
-mongoose
-  .connect('mongodb://localhost/zamazon')
-  .then(() => console.log('Connected to the database!'))
-  .catch((err) => console.log(`Error: ${err}`));
 
 const PORT = process.env.PORT || 9000;
 const PgStore = connectPgSimple(session);
@@ -41,6 +38,8 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(authRouter);
+app.use(productsRouter);
+app.use(productRouter);
 
 const server = app.listen(PORT, () => {
   console.log(`the server started on port ${PORT}!`);
