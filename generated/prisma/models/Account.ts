@@ -434,10 +434,6 @@ export type AccountUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.AccountScalarWhereInput | Prisma.AccountScalarWhereInput[]
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
-}
-
 export type AccountCreateWithoutUserInput = {
   provider: string
   providerAccountId: string

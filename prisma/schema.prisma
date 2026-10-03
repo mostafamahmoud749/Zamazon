@@ -17,10 +17,16 @@ model User {
   email               String?       @unique
   password            String?       
   name                String?
+  role                String        @default("USER")
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
 
+  products            Product[]
   accounts            Account[]
+  cartItems           CartItem[]
+  orders              Order[]
+  addresses           Address[]
+  reviews             Review[]
 }
 
 model Account {
@@ -31,8 +37,119 @@ model Account {
   username            String?
   createdAt           DateTime      @default(now())
 
-  user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                User          @relation(fields: [userId], references: [id], onDelete: Restrict)
 
   @@unique([provider, providerAccountId])
   @@index([userId])
+}
+
+model Product {
+  id                  Int           @id        @default(autoincrement())
+  userId              Int
+  categoryId           Int?
+
+  stock               Int
+  title               String
+  description         String
+  price               Decimal       @db.Decimal(10, 2)
+  image               String
+  discount            Decimal?      @db.Decimal(10, 2)
+  slug                String        @unique
+  isActive            Boolean       @default(true)
+  createdAt           DateTime      @default(now())
+
+  user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category            Category?     @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  cartItems           CartItem[]
+  orderItems          orderItem[]
+  reviews             Review[]
+  
+}
+
+model CartItem {
+  id                  Int           @id        @default(autoincrement())
+  productId           Int
+  userId              Int
+  quantity            Int
+  createdAt           DateTime      @default(now())
+
+  product             Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id                  Int           @id        @default(autoincrement())
+  userId              Int
+  addressId           Int
+  totalAmount         Decimal       @db.Decimal(10, 2)
+  status              String        @default("PENDING")
+  createdAt           DateTime      @default(now())
+  paymentMethod       String        @default("CREDIT_CARD")
+
+  address             Address       @relation(fields: [addressId], references: [id], onDelete: Restrict)
+  user                User          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  orderItems          orderItem[]
+  payment             Payment?
+}
+
+model orderItem {
+  id                  Int           @id        @default(autoincrement())
+  orderId             Int
+  productId           Int
+  quantity            Int
+  price               Decimal       @db.Decimal(10, 2)
+
+  order               Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product             Product       @relation(fields: [productId], references: [id], onDelete: Restrict)
+}
+
+model Payment {
+  id                  Int           @id        @default(autoincrement())
+  transactionId       String        @unique
+  orderId             Int           @unique
+  amount              Decimal       @db.Decimal(10, 2)
+  status              String        @default("PENDING")
+  createdAt           DateTime      @default(now())
+
+  order               Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+} 
+
+model Address {
+  id                  Int           @id        @default(autoincrement())
+  userId              Int
+  street              String
+  city                String
+  state               String
+  postalCode          String
+  country             String
+  createdAt           DateTime      @default(now())
+
+  user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders              Order[]
+}
+
+model Review {
+  id                  Int           @id        @default(autoincrement())
+  productId           Int
+  userId              Int
+  rating              Int
+  comment             String?
+  createdAt           DateTime      @default(now())
+
+  product             Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, userId])
+}
+
+model Category {
+  id                  Int           @id        @default(autoincrement())
+  parentId            Int?
+  name                String        @unique
+  slug                String        @unique
+  createdAt           DateTime      @default(now())
+
+  parent              Category?   @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children            Category[]  @relation("CategoryHierarchy")
+  products            Product[]
 }
