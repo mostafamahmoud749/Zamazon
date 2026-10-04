@@ -25,7 +25,7 @@ router.post('/api/auth/register', async (request: Request<{}, {}, createUserDto>
 
 router.get('/api/auth/status', (request, response) => {
   request.isAuthenticated()
-    ? response.send({ user: request.user, session: request.session })
+    ? response.send({ user: request.user.id, session: request.session })
     : response.sendStatus(401);
 });
 
