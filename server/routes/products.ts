@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { prisma } from '../../prisma/lib/prisma.js';
+import { getCategoryIdsIncludingChildren } from '../utils/category.js';
 
 const router = Router();
 
@@ -10,9 +11,10 @@ router.get('/api/products', async (request, response) => {
     const search = typeof request.query.search === 'string' ? request.query.search.trim() : '';
 
     const filters = request.query.filters ? JSON.parse(String(request.query.filters)) : [];
-    const catagoryIds = Array.isArray(filters)
+    const selectedCategoryIds = Array.isArray(filters)
       ? filters.map(Number).filter((id: number) => !isNaN(id))
       : [];
+    const categoryIds = await getCategoryIdsIncludingChildren(selectedCategoryIds);
 
     const products = await prisma.product.findMany({
       where: {
@@ -36,10 +38,10 @@ router.get('/api/products', async (request, response) => {
                 },
               }
             : {},
-          catagoryIds.length > 0
+          categoryIds.length > 0
             ? {
                 categoryId: {
-                  in: catagoryIds,
+                  in: categoryIds,
                 },
               }
             : {},

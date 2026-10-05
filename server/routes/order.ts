@@ -1,41 +1,39 @@
 import { Router } from 'express';
 import { prisma } from '../../prisma/lib/prisma.js';
+import { requireAuth } from '../middleware/requireAuth.js';
 
 const router = Router();
 
-router.get('/api/orders', async (request, response) => {
-  if (!request.isAuthenticated()) {
-    return response.sendStatus(401);
+router.get('/api/order/:id',requireAuth, async (request, response) => {
+
+  const orderId = Number(request.params.id);
+  if (isNaN(orderId) || orderId <= 0) {
+    return response.sendStatus(400);
   }
 
   try {
-    const orders = await prisma.order.findMany({
-      where: { userId: request.user.id },
+    const order = await prisma.orderItem.findUnique({
+      where: { id: orderId },
       select: {
         id: true,
-        totalAmount: true,
-        status: true,
-        createdAt: true,
-        paymentMethod: true,
-        orderItems: {
+        quantity: true,
+        price: true,
+        product: {
           select: {
             id: true,
-            quantity: true,
-            price: true,
-            product: {
-              select: {
-                id: true,
-                title: true,
-                description: true,
-                image: true,
-              },
-            },
+            title: true,
+            description: true,
+            image: true,
           },
         },
       },
     });
 
-    response.status(200).json(orders);
+    if (!order) {
+      return response.sendStatus(404);
+    }
+
+    response.status(200).json(order);
   } catch (error) {
     console.error(error);
     response.sendStatus(500);

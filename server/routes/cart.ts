@@ -1,16 +1,13 @@
 import { Router } from 'express';
 import { prisma } from '../../prisma/lib/prisma.js';
+import { requireAuth } from '../middleware/requireAuth.js';
 
 const router = Router();
 
-router.get('/api/cart', async (request, response) => {
-  if (!request.isAuthenticated()) {
-    return response.sendStatus(401);
-  }
-
+router.get('/api/cart', requireAuth, async (request, response) => {
   try {
     const cart = await prisma.cartItem.findMany({
-      where: { userId: request.user.id },
+      where: { userId: request.user!.id },
       select: {
         id: true,
         quantity: true,
@@ -34,7 +31,5 @@ router.get('/api/cart', async (request, response) => {
     response.sendStatus(500);
   }
 });
-
-
 
 export default router;

@@ -1,16 +1,13 @@
 import { Router } from 'express';
 import { prisma } from '../../prisma/lib/prisma.js';
+import { requireAuth } from '../middleware/requireAuth.js';
 
 const router = Router();
 
-router.get('api/addresses', async (request, response) => {
-  if (!request.isAuthenticated()) {
-    return response.sendStatus(401);
-  }
-
+router.get('/api/addresses', requireAuth, async (request, response) => {
   try {
     const addresses = await prisma.address.findMany({
-      where: { userId: request.user.id },
+      where: { userId: request.user!.id },
       select: {
         id: true,
         street: true,
