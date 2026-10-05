@@ -22,7 +22,7 @@ router.get('/api/products/:id', async (request, response) => {
       return;
     }
 
-    response.status(200).send(product);
+    response.status(200).json(product);
   } catch (error) {
     console.error(error);
     response.sendStatus(500);

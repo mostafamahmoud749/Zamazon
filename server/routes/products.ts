@@ -49,7 +49,7 @@ router.get('/api/products', async (request, response) => {
       take: 20,
     });
 
-    response.status(200).send(products);
+    response.status(200).json(products);
   } catch (err) {
     response.sendStatus(400);
   }

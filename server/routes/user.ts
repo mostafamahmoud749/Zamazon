@@ -24,7 +24,7 @@ router.get('/api/users/me', async (request, response) => {
       return response.sendStatus(404);
     }
 
-    response.status(200).send(user);
+    response.status(200).json(user);
   } catch (err) {
     response.sendStatus(500);
   }
