@@ -10,7 +10,7 @@ router.get('/api/orders', requireAuth, async (request, response) => {
   try {
     const orders = await prisma.order.findMany({
       where: { userId: request.user!.id },
-      take: 5 * page,
+      take: 5,
       skip: 5 * (page - 1),
       orderBy: {
         createdAt: 'desc',
@@ -21,21 +21,6 @@ router.get('/api/orders', requireAuth, async (request, response) => {
         status: true,
         createdAt: true,
         paymentMethod: true,
-        orderItems: {
-          select: {
-            id: true,
-            quantity: true,
-            price: true,
-            product: {
-              select: {
-                id: true,
-                title: true,
-                description: true,
-                image: true,
-              },
-            },
-          },
-        },
       },
     });
 

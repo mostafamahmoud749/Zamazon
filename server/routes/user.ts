@@ -1,16 +1,13 @@
 import { Router } from 'express';
 import { prisma } from '../../prisma/lib/prisma.js';
+import { requireAuth } from '../middleware/requireAuth.js';
 
 const router = Router();
 
-router.get('/api/users/me', async (request, response) => {
-  if (!request.isAuthenticated()) {
-    return response.sendStatus(401);
-  }
-
+router.get('/api/users/me', requireAuth, async (request, response) => {
   try {
     const user = await prisma.user.findUnique({
-      where: { id: request.user.id },
+      where: { id: request.user!.id },
       select: {
         id: true,
         email: true,

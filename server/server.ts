@@ -8,6 +8,12 @@ import './stratiges/github-stratigy.js';
 import authRouter from './routes/auth.js';
 import productsRouter from './routes/products.js';
 import productRouter from './routes/product.js';
+import orderRouter from './routes/order.js';
+import ordersRouter from './routes/orders.js';
+import userRouter from './routes/user.js';
+import cartRouter from './routes/cart.js';
+import addressesRouter from './routes/addresses.js';
+import reviewsRouter from './routes/reviews.js';
 import connectPgSimple from 'connect-pg-simple';
 import { prisma } from '../prisma/lib/prisma.js';
 
@@ -37,9 +43,16 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use(authRouter);
 app.use(productsRouter);
 app.use(productRouter);
+app.use(userRouter);
+app.use(cartRouter);
+app.use(ordersRouter);
+app.use(orderRouter);
+app.use(addressesRouter);
+app.use(reviewsRouter);
 
 const server = app.listen(PORT, () => {
   console.log(`the server started on port ${PORT}!`);

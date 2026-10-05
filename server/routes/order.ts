@@ -4,26 +4,34 @@ import { requireAuth } from '../middleware/requireAuth.js';
 
 const router = Router();
 
-router.get('/api/order/:id',requireAuth, async (request, response) => {
-
+router.get('/api/orders/:id', requireAuth, async (request, response) => {
   const orderId = Number(request.params.id);
   if (isNaN(orderId) || orderId <= 0) {
     return response.sendStatus(400);
   }
 
   try {
-    const order = await prisma.orderItem.findUnique({
-      where: { id: orderId },
+    const order = await prisma.order.findFirst({
+      where: { id: orderId, userId: request.user!.id },
       select: {
         id: true,
-        quantity: true,
-        price: true,
-        product: {
+        totalAmount: true,
+        status: true,
+        createdAt: true,
+        paymentMethod: true,
+        orderItems: {
           select: {
             id: true,
-            title: true,
-            description: true,
-            image: true,
+            quantity: true,
+            price: true,
+            product: {
+              select: {
+                id: true,
+                title: true,
+                description: true,
+                image: true,
+              },
+            },
           },
         },
       },
