@@ -1,7 +1,7 @@
 import { Request, Router } from 'express';
 import passport from 'passport';
 import { hashPassword } from '../utils/helpers.js';
-import { createUserDto } from '../dtos/createUser.dto';
+import { CreateUserDto } from '../dtos/createUser.dto';
 import { prisma } from '../../prisma/lib/prisma.js';
 
 const router = Router();
@@ -10,7 +10,7 @@ router.post('/api/auth/login', passport.authenticate('local'), (_, response) => 
   response.sendStatus(200);
 });
 
-router.post('/api/auth/register', async (request: Request<{}, {}, createUserDto>, response) => {
+router.post('/api/auth/register', async (request: Request<{}, {}, CreateUserDto>, response) => {
   try {
     request.body.password = hashPassword(request.body.password);
     const savedUser = await prisma.user.create({
