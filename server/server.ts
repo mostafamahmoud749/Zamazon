@@ -8,7 +8,6 @@ import './stratiges/github-stratigy.js';
 import authRouter from './routes/auth.js';
 import productsRouter from './routes/products.js';
 import productRouter from './routes/product.js';
-import orderRouter from './routes/order.js';
 import ordersRouter from './routes/orders.js';
 import userRouter from './routes/user.js';
 import cartRouter from './routes/cart.js';
@@ -50,7 +49,6 @@ app.use(productRouter);
 app.use(userRouter);
 app.use(cartRouter);
 app.use(ordersRouter);
-app.use(orderRouter);
 app.use(addressesRouter);
 app.use(reviewsRouter);
 
