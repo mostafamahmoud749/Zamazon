@@ -45,6 +45,7 @@ router.get('/api/products', async (request, response) => {
                 },
               }
             : {},
+          { isActive: true },
         ],
       },
       skip: (page - 1) * 20,

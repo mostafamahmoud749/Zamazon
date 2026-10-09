@@ -46,14 +46,14 @@ model Account {
 model Product {
   id                  Int           @id        @default(autoincrement())
   userId              Int
-  categoryId          Int?
+  categoryId          Int?          @default(0) // 0 for other category
 
   stock               Int
   title               String
   description         String
   price               Decimal       @db.Decimal(10, 2)
   image               String
-  discount            Decimal?      @db.Decimal(10, 2)
+  discount            Decimal?      @db.Decimal(10, 2)   @default(0.00)
   slug                String        @unique
   isActive            Boolean       @default(true)
   createdAt           DateTime      @default(now())
