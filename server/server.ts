@@ -13,6 +13,7 @@ import userRouter from './routes/user.js';
 import cartRouter from './routes/cart.js';
 import addressesRouter from './routes/addresses.js';
 import reviewsRouter from './routes/reviews.js';
+import categoriesRouter from './routes/category.js';
 import connectPgSimple from 'connect-pg-simple';
 import { prisma } from '../prisma/lib/prisma.js';
 
@@ -51,6 +52,7 @@ app.use(cartRouter);
 app.use(ordersRouter);
 app.use(addressesRouter);
 app.use(reviewsRouter);
+app.use(categoriesRouter);
 
 const server = app.listen(PORT, () => {
   console.log(`the server started on port ${PORT}!`);
