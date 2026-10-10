@@ -3,6 +3,11 @@ import { prisma } from '../../prisma/lib/prisma.js';
 import { Prisma } from '../../generated/prisma/client.js';
 import { requireAuth } from '../middleware/requireAuth.js';
 import { CreateAddressDto, PatchAddressDto } from '../dtos/Address.dto.js';
+import {
+  CreateAddressSchema,
+  PatchAddressSchema,
+  AddressIdParamsSchema,
+} from '../schemas/Address.schema.js';
 
 const router = Router();
 
@@ -31,7 +36,16 @@ router.post(
   '/api/addresses',
   requireAuth,
   async (request: Request<{}, {}, CreateAddressDto>, response) => {
-    const { street, city, state, postalCode, country } = request.body;
+    const bodyResult = CreateAddressSchema.safeParse(request.body);
+
+    if (!bodyResult.success) {
+      return response.status(400).json({
+        error: 'Invalid request',
+        details: bodyResult.error.flatten(),
+      });
+    }
+
+    const { street, city, state, postalCode, country } = bodyResult.data;
     const userId = request.user!.id;
 
     try {
@@ -58,13 +72,22 @@ router.patch(
   '/api/addresses/:id',
   requireAuth,
   async (request: Request<{ id: string }, {}, PatchAddressDto>, response) => {
-    const addressId = Number(request.params.id);
-    const userId = request.user!.id;
-    const { street, city, state, postalCode, country } = request.body;
+    const paramsResult = AddressIdParamsSchema.safeParse(request.params);
+    const bodyResult = PatchAddressSchema.safeParse(request.body);
 
-    if (!Number.isInteger(addressId) || addressId <= 0 || Object.keys(request.body).length === 0) {
-      return response.sendStatus(400);
+    if (!paramsResult.success || !bodyResult.success) {
+      return response.status(400).json({
+        error: 'Invalid request',
+        details: {
+          params: paramsResult.success ? undefined : paramsResult.error.flatten(),
+          body: bodyResult.success ? undefined : bodyResult.error.flatten(),
+        },
+      });
     }
+
+    const addressId = paramsResult.data.id;
+    const userId = request.user!.id;
+    const { street, city, state, postalCode, country } = bodyResult.data;
 
     try {
       const existingAddress = await prisma.address.findFirst({
@@ -100,12 +123,17 @@ router.delete(
   '/api/addresses/:id',
   requireAuth,
   async (request: Request<{ id: string }>, response) => {
-    const addressId = Number(request.params.id);
-    const userId = request.user!.id;
+    const paramsResult = AddressIdParamsSchema.safeParse(request.params);
 
-    if (!Number.isInteger(addressId) || addressId <= 0) {
-      return response.sendStatus(400);
+    if (!paramsResult.success) {
+      return response.status(400).json({
+        error: 'Invalid request',
+        details: paramsResult.error.flatten(),
+      });
     }
+
+    const addressId = paramsResult.data.id;
+    const userId = request.user!.id;
 
     try {
       const result = await prisma.address.deleteMany({
