@@ -1,7 +1,7 @@
 import { Router, Request } from 'express';
 import { prisma } from '../../prisma/lib/prisma.js';
 import { requireAuth } from '../middleware/requireAuth.js';
-import { CreateCartDto } from '../dtos/createCart.dto.js';
+import { CreateCartDto } from '../dtos/Cart.dto.js';
 
 const router = Router();
 

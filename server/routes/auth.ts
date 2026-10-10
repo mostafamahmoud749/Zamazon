@@ -1,7 +1,7 @@
 import { Request, Router } from 'express';
 import passport from 'passport';
 import { hashPassword } from '../utils/helpers.js';
-import { CreateUserDto } from '../dtos/createUser.dto';
+import { CreateUserDto } from '../dtos/User.dto.js';
 import { prisma } from '../../prisma/lib/prisma.js';
 
 const router = Router();

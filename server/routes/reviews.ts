@@ -2,7 +2,7 @@ import { Router, Request } from 'express';
 import { prisma } from '../../prisma/lib/prisma.js';
 import { Prisma } from '../../generated/prisma/client.js';
 import { requireAuth } from '../middleware/requireAuth.js';
-import { CreateReviewDto, PatchReviewDto } from '../dtos/reviews.dto.js';
+import { CreateReviewDto, PatchReviewDto } from '../dtos/Reviews.dto.js';
 
 const router = Router();
 
