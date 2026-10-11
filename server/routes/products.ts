@@ -1,19 +1,14 @@
 import { Router } from 'express';
 import { prisma } from '../../prisma/lib/prisma.js';
 import { getCategoryIdsIncludingChildren } from '../utils/category.js';
+import { validateQuery } from '../middleware/validateQuery.js';
+import { ProductsQuerySchema } from '../schemas/Product.schema.js';
 
 const router = Router();
 
-router.get('/api/products', async (request, response) => {
+router.get('/api/products', validateQuery(ProductsQuerySchema), async (request, response) => {
   try {
-    const page = Number(request.query.page ?? 1);
-    const rating = Number(request.query.rating ?? 0);
-    const search = typeof request.query.search === 'string' ? request.query.search.trim() : '';
-
-    const filters = request.query.filters ? JSON.parse(String(request.query.filters)) : [];
-    const selectedCategoryIds = Array.isArray(filters)
-      ? filters.map(Number).filter((id: number) => !isNaN(id))
-      : [];
+    const { page, rating, search, filters: selectedCategoryIds } = response.locals.query;
     const categoryIds = await getCategoryIdsIncludingChildren(selectedCategoryIds);
 
     const products = await prisma.product.findMany({

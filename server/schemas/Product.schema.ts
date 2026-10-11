@@ -4,6 +4,25 @@ export const ProducIdParamsSchema = Z.object({
   id: Z.coerce.number().int().positive('Product ID must be a positive integer'),
 });
 
+export const ProductsQuerySchema = Z.object({
+  page: Z.coerce.number().int().min(1).default(1),
+  rating: Z.coerce.number().min(0).max(5).default(0),
+  search: Z.string().trim().max(100, 'Search must be at most 100 characters').default(''),
+  filters: Z.preprocess(
+    (value) => {
+      if (value === undefined || value === '') return [];
+      if (typeof value !== 'string') return value;
+
+      try {
+        return JSON.parse(value);
+      } catch {
+        return value;
+      }
+    },
+    Z.array(Z.coerce.number().int().positive()).default([]),
+  ),
+}).strict();
+
 export const CreateProductSchema = Z.object({
   categoryId: Z.coerce.number().int().positive('Category ID must be a positive integer').optional(),
   stock: Z.coerce.number().int().nonnegative('Stock must be a non-negative integer'),

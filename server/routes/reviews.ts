@@ -3,45 +3,52 @@ import { prisma } from '../../prisma/lib/prisma.js';
 import { Prisma } from '../../generated/prisma/client.js';
 import { requireAuth } from '../middleware/requireAuth.js';
 import { CreateReviewDto, PatchReviewDto } from '../dtos/Reviews.dto.js';
+import { validateParams } from '../middleware/validateParams.js';
+import { ProducIdParamsSchema } from '../schemas/Product.schema.js';
+import {
+  CreateReviewSchema,
+  ReviewRouteParamsSchema,
+  UpdateReviewSchema,
+} from '../schemas/reviews.schema.js';
+import { validateBody } from '../middleware/validateBody.js';
 
 const router = Router();
 
-router.get('/api/products/:id/reviews', async (request, response) => {
-  try {
-    const productId = Number(request.params.id);
-    if (isNaN(productId) || productId <= 0) {
-      return response.status(400).json({ error: 'Invalid product ID' });
+router.get(
+  '/api/products/:id/reviews',
+  validateParams(ProducIdParamsSchema),
+  async (request, response) => {
+    const productId = response.locals.params.id;
+    try {
+      const reviews = await prisma.review.findMany({
+        where: {
+          productId: productId,
+        },
+        select: {
+          id: true,
+          productId: true,
+          rating: true,
+          comment: true,
+          createdAt: true,
+        },
+      });
+      response.json(reviews);
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+      response.sendStatus(500);
     }
-    const reviews = await prisma.review.findMany({
-      where: {
-        productId: productId,
-      },
-      select: {
-        id: true,
-        productId: true,
-        rating: true,
-        comment: true,
-        createdAt: true,
-      },
-    });
-    response.json(reviews);
-  } catch (error) {
-    console.error('Error fetching reviews:', error);
-    response.sendStatus(500);
-  }
-});
+  },
+);
 
 router.post(
   '/api/products/:id/reviews',
   requireAuth,
+  validateParams(ProducIdParamsSchema),
+  validateBody(CreateReviewSchema),
   async (request: Request<{ id: string }, {}, CreateReviewDto>, response) => {
-    const productId = Number(request.params.id);
+    const productId = response.locals.params.id;
     const { rating, comment } = request.body;
     const userId = request.user!.id;
-
-    if (!Number.isInteger(productId) || productId <= 0) {
-      return response.status(400).json({ error: 'Invalid product ID' });
-    }
 
     try {
       const review = await prisma.review.create({
@@ -71,25 +78,13 @@ router.post(
 
 router.patch(
   '/api/products/:id/reviews/:reviewId',
+  validateParams(ReviewRouteParamsSchema),
+  validateBody(UpdateReviewSchema),
   requireAuth,
   async (request: Request<{ id: string; reviewId: string }, {}, PatchReviewDto>, response) => {
-    const productId = Number(request.params.id);
-    const reviewId = Number(request.params.reviewId);
+    const { id: productId, reviewId } = response.locals.params;
     const { rating, comment } = request.body;
     const userId = request.user!.id;
-
-    if (
-      !Number.isInteger(productId) ||
-      productId <= 0 ||
-      !Number.isInteger(reviewId) ||
-      reviewId <= 0
-    ) {
-      return response.status(400).json({ error: 'Invalid product ID or review ID' });
-    }
-
-    if (Object.keys(request.body).length === 0) {
-      return response.status(400).json({ error: 'No update data provided' });
-    }
 
     try {
       const existingReview = await prisma.review.findFirst({
@@ -123,19 +118,10 @@ router.patch(
 router.delete(
   '/api/products/:id/reviews/:reviewId',
   requireAuth,
+  validateParams(ReviewRouteParamsSchema),
   async (request: Request<{ id: string; reviewId: string }>, response) => {
-    const productId = Number(request.params.id);
-    const reviewId = Number(request.params.reviewId);
+    const { id: productId, reviewId } = response.locals.params;
     const userId = request.user!.id;
-
-    if (
-      !Number.isInteger(productId) ||
-      productId <= 0 ||
-      !Number.isInteger(reviewId) ||
-      reviewId <= 0
-    ) {
-      return response.status(400).json({ error: 'Invalid product ID or review ID' });
-    }
 
     try {
       const result = await prisma.review.deleteMany({
