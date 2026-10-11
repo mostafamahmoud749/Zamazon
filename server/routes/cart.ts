@@ -2,6 +2,13 @@ import { Router, Request } from 'express';
 import { prisma } from '../../prisma/lib/prisma.js';
 import { requireAuth } from '../middleware/requireAuth.js';
 import { CreateCartDto } from '../dtos/Cart.dto.js';
+import {
+  CreateCartItemSchema,
+  CartIDParamsSchema,
+  UpdateCartItemSchema,
+} from '../schemas/Cart.schema.js';
+import { validateBody } from '../middleware/validateBody.js';
+import { validateParams } from '../middleware/validateParams.js';
 
 const router = Router();
 
@@ -36,6 +43,7 @@ router.get('/api/cart/items', requireAuth, async (request, response) => {
 router.post(
   '/api/cart/items',
   requireAuth,
+  validateBody(CreateCartItemSchema),
   async (request: Request<{}, {}, CreateCartDto>, response) => {
     const { productId, quantity } = request.body;
     const userId = request.user!.id;
@@ -60,14 +68,11 @@ router.post(
 router.patch(
   '/api/cart/items/:id',
   requireAuth,
+  validateParams(CartIDParamsSchema),
+  validateBody(UpdateCartItemSchema),
   async (request: Request<{ id: string }, {}, { quantity: number }>, response) => {
-    const id = Number(request.params.id);
+    const id = response.locals.params.id;
     const { quantity } = request.body;
-
-    if (!Number.isInteger(quantity) || quantity < 1 || !Number.isInteger(id)) {
-      response.sendStatus(400);
-      return;
-    }
 
     try {
       const updatedCartItem = await prisma.cartItem.update({
@@ -85,13 +90,9 @@ router.patch(
 router.delete(
   '/api/cart/items/:id',
   requireAuth,
+  validateParams(CartIDParamsSchema),
   async (request: Request<{ id: string }>, response) => {
-    const id = Number(request.params.id);
-
-    if (!Number.isInteger(id)) {
-      response.sendStatus(400);
-      return;
-    }
+    const id = response.locals.params.id;
 
     try {
       await prisma.cartItem.delete({
