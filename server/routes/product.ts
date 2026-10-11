@@ -2,15 +2,18 @@ import { Router, Request } from 'express';
 import { prisma } from '../../prisma/lib/prisma.js';
 import { requireAuth } from '../middleware/requireAuth.js';
 import { CreateProductDto, PatchProductDto } from '../dtos/Product.dto.js';
+import { validateParams } from '../middleware/validateParams.js';
+import {
+  CreateProductSchema,
+  ProducIdParamsSchema,
+  UpdateProductSchema,
+} from '../schemas/Product.schema.js';
+import { validateBody } from '../middleware/validateBody.js';
 
 const router = Router();
 
-router.get('/api/products/:id', async (request, response) => {
-  const id = Number(request.params.id);
-  if (!Number.isInteger(id) || id <= 0) {
-    response.sendStatus(400);
-    return;
-  }
+router.get('/api/products/:id', validateParams(ProducIdParamsSchema), async (request, response) => {
+  const id = response.locals.params.id;
 
   try {
     const product = await prisma.product.findUnique({
@@ -35,6 +38,7 @@ router.get('/api/products/:id', async (request, response) => {
 router.post(
   '/api/products',
   requireAuth,
+  validateBody(CreateProductSchema),
   async (request: Request<{}, {}, CreateProductDto>, response) => {
     const { categoryId, stock, title, description, price, discount, image, slug } = request.body;
     const userId = request.user!.id;
@@ -43,12 +47,12 @@ router.post(
       const product = await prisma.product.create({
         data: {
           userId,
-          categoryId: categoryId ?? 0,
+          categoryId: categoryId ?? null,
           stock,
           title,
           description,
           price,
-          discount: discount ?? 0.0,
+          discount: discount ?? 0,
           image,
           slug,
         },
@@ -65,20 +69,12 @@ router.post(
 router.patch(
   '/api/products/:id',
   requireAuth,
+  validateParams(ProducIdParamsSchema),
+  validateBody(UpdateProductSchema),
   async (request: Request<{ id: string }, {}, PatchProductDto>, response) => {
-    const id = Number(request.params.id);
+    const id = response.locals.params.id;
     const { categoryId, stock, title, description, price, discount, image, slug } = request.body;
     const userId = request.user!.id;
-
-    if (!Number.isInteger(id) || id <= 0) {
-      response.sendStatus(400);
-      return;
-    }
-
-    if (Object.keys(request.body).length === 0) {
-      response.sendStatus(400);
-      return;
-    }
 
     try {
       const savedProduct = await prisma.product.findUnique({
@@ -115,14 +111,10 @@ router.patch(
 router.delete(
   '/api/products/:id',
   requireAuth,
+  validateParams(ProducIdParamsSchema),
   async (request: Request<{ id: string }>, response) => {
-    const id = Number(request.params.id);
+    const id = response.locals.params.id;
     const userId = request.user!.id;
-
-    if (!Number.isInteger(id) || id <= 0) {
-      response.sendStatus(400);
-      return;
-    }
 
     try {
       const savedProduct = await prisma.product.findUnique({

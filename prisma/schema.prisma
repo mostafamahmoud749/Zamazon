@@ -46,7 +46,7 @@ model Account {
 model Product {
   id                  Int           @id        @default(autoincrement())
   userId              Int
-  categoryId          Int?          @default(0) // 0 for other category
+  categoryId          Int?          
 
   stock               Int
   title               String
