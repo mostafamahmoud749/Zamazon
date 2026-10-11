@@ -3,18 +3,35 @@ import passport from 'passport';
 import { hashPassword } from '../utils/helpers.js';
 import { CreateUserDto } from '../dtos/User.dto.js';
 import { prisma } from '../../prisma/lib/prisma.js';
+import { RegisterSchema } from '../schemas/Auth.schema.js';
+import { validateLogin } from '../middleware/validateLogin.js';
 
 const router = Router();
 
-router.post('/api/auth/login', passport.authenticate('local'), (_, response) => {
+router.post('/api/auth/login', validateLogin, passport.authenticate('local'), (_, response) => {
   response.sendStatus(200);
 });
 
 router.post('/api/auth/register', async (request: Request<{}, {}, CreateUserDto>, response) => {
+  const bodyResult = RegisterSchema.safeParse(request.body);
+
+  if (!bodyResult.success) {
+    return response.status(400).json({
+      error: 'Invalid registration data',
+      details: bodyResult.error.flatten(),
+    });
+  }
+
+  const { password, email, name } = bodyResult.data;
+
   try {
-    request.body.password = hashPassword(request.body.password);
+    const hasedpasswrod = hashPassword(password);
     const savedUser = await prisma.user.create({
-      data: request.body,
+      data: {
+        password: hasedpasswrod,
+        email,
+        name,
+      },
     });
 
     response.status(201).send(savedUser);

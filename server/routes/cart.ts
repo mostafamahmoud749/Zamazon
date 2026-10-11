@@ -106,5 +106,3 @@ router.delete(
 );
 
 export default router;
-
-// want to speprate cart and the cart items.

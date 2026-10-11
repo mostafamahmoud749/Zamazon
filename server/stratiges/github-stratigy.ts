@@ -40,9 +40,17 @@ export default passport.use(
         return done(null, account.user);
       }
 
+      const email = profile.emails?.[0]?.value;
+
+      if (!profile.id || !email) {
+        return done(null, false, {
+          message: 'A verified GitHub email is required',
+        });
+      }
+
       const newUser = await prisma.user.create({
         data: {
-          email: profile.emails?.[0]?.value || null,
+          email,
           name: profile.displayName || null,
           accounts: {
             create: {
