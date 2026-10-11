@@ -8,6 +8,8 @@ import {
   PatchAddressSchema,
   AddressIdParamsSchema,
 } from '../schemas/Address.schema.js';
+import { validateBody } from '../middleware/validateBody.js';
+import { validateParams } from '../middleware/validateParams.js';
 
 const router = Router();
 
@@ -35,17 +37,9 @@ router.get('/api/addresses', requireAuth, async (request, response) => {
 router.post(
   '/api/addresses',
   requireAuth,
+  validateBody(CreateAddressSchema),
   async (request: Request<{}, {}, CreateAddressDto>, response) => {
-    const bodyResult = CreateAddressSchema.safeParse(request.body);
-
-    if (!bodyResult.success) {
-      return response.status(400).json({
-        error: 'Invalid request',
-        details: bodyResult.error.flatten(),
-      });
-    }
-
-    const { street, city, state, postalCode, country } = bodyResult.data;
+    const { street, city, state, postalCode, country } = request.body;
     const userId = request.user!.id;
 
     try {
@@ -71,23 +65,12 @@ router.post(
 router.patch(
   '/api/addresses/:id',
   requireAuth,
+  validateParams(AddressIdParamsSchema),
+  validateBody(PatchAddressSchema),
   async (request: Request<{ id: string }, {}, PatchAddressDto>, response) => {
-    const paramsResult = AddressIdParamsSchema.safeParse(request.params);
-    const bodyResult = PatchAddressSchema.safeParse(request.body);
-
-    if (!paramsResult.success || !bodyResult.success) {
-      return response.status(400).json({
-        error: 'Invalid request',
-        details: {
-          params: paramsResult.success ? undefined : paramsResult.error.flatten(),
-          body: bodyResult.success ? undefined : bodyResult.error.flatten(),
-        },
-      });
-    }
-
-    const addressId = paramsResult.data.id;
+    const addressId = response.locals.params.id;
     const userId = request.user!.id;
-    const { street, city, state, postalCode, country } = bodyResult.data;
+    const { street, city, state, postalCode, country } = request.body;
 
     try {
       const existingAddress = await prisma.address.findFirst({
@@ -122,17 +105,9 @@ router.patch(
 router.delete(
   '/api/addresses/:id',
   requireAuth,
+  validateParams(AddressIdParamsSchema),
   async (request: Request<{ id: string }>, response) => {
-    const paramsResult = AddressIdParamsSchema.safeParse(request.params);
-
-    if (!paramsResult.success) {
-      return response.status(400).json({
-        error: 'Invalid request',
-        details: paramsResult.error.flatten(),
-      });
-    }
-
-    const addressId = paramsResult.data.id;
+    const addressId = response.locals.params.id;
     const userId = request.user!.id;
 
     try {
