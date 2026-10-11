@@ -3,104 +3,114 @@ import { prisma } from '../../prisma/lib/prisma.js';
 import { requireAuth } from '../middleware/requireAuth.js';
 import { CreateOrderDto } from '../dtos/Order.dto.js';
 import { Prisma } from '../../generated/prisma/client.js';
+import { validateQuery } from '../middleware/validateQuery.js';
+import {
+  CreateOrderSchema,
+  OrderIdParamsSchema,
+  OrderQuerySchema,
+} from '../schemas/Orders.schema.js';
+import { validateParams } from '../middleware/validateParams.js';
+import { validateBody } from '../middleware/validateBody.js';
 
 const router = Router();
 
-router.get('/api/orders', requireAuth, async (request, response) => {
-  const page = Number(request.query.page) || 1;
+router.get(
+  '/api/orders',
+  requireAuth,
+  validateQuery(OrderQuerySchema),
+  async (request, response) => {
+    const page = response.locals.query.page;
 
-  try {
-    const orders = await prisma.order.findMany({
-      where: { userId: request.user!.id },
-      take: 5,
-      skip: 5 * (page - 1),
-      orderBy: {
-        createdAt: 'desc',
-      },
-      select: {
-        id: true,
-        totalAmount: true,
-        status: true,
-        createdAt: true,
-        paymentMethod: true,
-      },
-    });
+    try {
+      const orders = await prisma.order.findMany({
+        where: { userId: request.user!.id },
+        take: 5,
+        skip: 5 * (page - 1),
+        orderBy: {
+          createdAt: 'desc',
+        },
+        select: {
+          id: true,
+          totalAmount: true,
+          status: true,
+          createdAt: true,
+          paymentMethod: true,
+        },
+      });
 
-    response.status(200).json(orders);
-  } catch (error) {
-    console.error(error);
-    response.sendStatus(500);
-  }
-});
+      response.status(200).json(orders);
+    } catch (error) {
+      console.error(error);
+      response.sendStatus(500);
+    }
+  },
+);
 
-router.get('/api/orders/:id', requireAuth, async (request, response) => {
-  const orderId = Number(request.params.id);
-  if (isNaN(orderId) || orderId <= 0) {
-    return response.sendStatus(400);
-  }
+router.get(
+  '/api/orders/:id',
+  requireAuth,
+  validateParams(OrderIdParamsSchema),
+  async (request, response) => {
+    const orderId = response.locals.params.id;
 
-  try {
-    const order = await prisma.order.findFirst({
-      where: { id: orderId, userId: request.user!.id },
-      select: {
-        id: true,
-        totalAmount: true,
-        status: true,
-        createdAt: true,
-        paymentMethod: true,
-        orderItems: {
-          select: {
-            id: true,
-            quantity: true,
-            price: true,
-            product: {
-              select: {
-                id: true,
-                title: true,
-                description: true,
-                image: true,
+    try {
+      const order = await prisma.order.findFirst({
+        where: { id: orderId, userId: request.user!.id },
+        select: {
+          id: true,
+          totalAmount: true,
+          status: true,
+          createdAt: true,
+          paymentMethod: true,
+          orderItems: {
+            select: {
+              id: true,
+              quantity: true,
+              price: true,
+              product: {
+                select: {
+                  id: true,
+                  title: true,
+                  description: true,
+                  image: true,
+                },
               },
             },
           },
         },
-      },
-    });
+      });
 
-    if (!order) {
-      return response.sendStatus(404);
+      if (!order) {
+        return response.sendStatus(404);
+      }
+
+      response.status(200).json(order);
+    } catch (error) {
+      console.error(error);
+      response.sendStatus(500);
     }
-
-    response.status(200).json(order);
-  } catch (error) {
-    console.error(error);
-    response.sendStatus(500);
-  }
-});
+  },
+);
 
 router.post(
   '/api/orders',
   requireAuth,
+  validateBody(CreateOrderSchema),
   async (request: Request<{}, {}, CreateOrderDto>, response) => {
     const { paymentMethod, addressId } = request.body;
 
-    const parsedAddressId = Number(addressId);
-
-    if (!Number.isInteger(parsedAddressId) || parsedAddressId <= 0) {
-      return response.sendStatus(400);
-    }
-
-    const validateAddressId = await prisma.address.findFirst({
-      where: {
-        id: parsedAddressId,
-        userId: request.user!.id,
-      },
-    });
-
-    if (!validateAddressId) {
-      return response.sendStatus(400);
-    }
-
     try {
+      const validateAddress = await prisma.address.findFirst({
+        where: {
+          id: addressId,
+          userId: request.user!.id,
+        },
+      });
+
+      if (!validateAddress) {
+        return response.sendStatus(400);
+      }
+
       const cartItems = await prisma.cartItem.findMany({
         where: { userId: request.user!.id },
         select: {
@@ -135,7 +145,7 @@ router.post(
         const createdOrder = await transaction.order.create({
           data: {
             userId: request.user!.id,
-            addressId: parsedAddressId,
+            addressId,
             totalAmount,
             paymentMethod,
             orderItems: {
@@ -173,35 +183,37 @@ router.post(
   },
 );
 
-router.patch('/api/orders/:id/cancel', requireAuth, async (request, response) => {
-  const orderId = Number(request.params.id);
-  if (!Number.isInteger(orderId) || orderId <= 0) {
-    return response.sendStatus(400);
-  }
+router.patch(
+  '/api/orders/:id/cancel',
+  requireAuth,
+  validateParams(OrderIdParamsSchema),
+  async (request, response) => {
+    const orderId = response.locals.params.id;
 
-  try {
-    const order = await prisma.order.findFirst({
-      where: { id: orderId, userId: request.user!.id },
-    });
+    try {
+      const order = await prisma.order.findFirst({
+        where: { id: orderId, userId: request.user!.id },
+      });
 
-    if (!order) {
-      return response.sendStatus(404);
+      if (!order) {
+        return response.sendStatus(404);
+      }
+
+      if (order.status !== 'PENDING') {
+        return response.sendStatus(400);
+      }
+
+      const updatedOrder = await prisma.order.update({
+        where: { id: orderId },
+        data: { status: 'CANCELED' },
+      });
+
+      response.status(200).json(updatedOrder);
+    } catch (error) {
+      console.error(error);
+      response.sendStatus(500);
     }
-
-    if (order.status !== 'PENDING') {
-      return response.sendStatus(400);
-    }
-
-    const updatedOrder = await prisma.order.update({
-      where: { id: orderId },
-      data: { status: 'CANCELED' },
-    });
-
-    response.status(200).json(updatedOrder);
-  } catch (error) {
-    console.error(error);
-    response.sendStatus(500);
-  }
-});
+  },
+);
 
 export default router;
