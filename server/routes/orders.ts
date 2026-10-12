@@ -41,7 +41,7 @@ router.get(
       response.status(200).json(orders);
     } catch (error) {
       console.error(error);
-      response.sendStatus(500);
+      throw error;
     }
   },
 );
@@ -87,7 +87,7 @@ router.get(
       response.status(200).json(order);
     } catch (error) {
       console.error(error);
-      response.sendStatus(500);
+      throw error;
     }
   },
 );
@@ -201,7 +201,7 @@ router.post(
         return response.status(409).json({ error: 'Some products are out of stock' });
       }
 
-      response.sendStatus(500);
+      throw error;
     }
   },
 );
@@ -234,7 +234,7 @@ router.patch(
       response.status(200).json(updatedOrder);
     } catch (error) {
       console.error(error);
-      response.sendStatus(500);
+      throw error;
     }
   },
 );

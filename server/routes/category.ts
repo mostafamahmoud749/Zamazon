@@ -13,7 +13,7 @@ router.get('/api/categories', async (request, response) => {
     response.json(categories);
   } catch (error) {
     console.error('Error fetching categories:', error);
-    response.status(500).json({ error: 'Internal Server Error' });
+    throw error;
   }
 });
 
@@ -27,7 +27,7 @@ router.get('/api/categories/ansestors', async (request, response) => {
     response.json(categories);
   } catch (error) {
     console.error('Error fetching categories:', error);
-    response.status(500).json({ error: 'Internal Server Error' });
+    throw error;
   }
 });
 
@@ -49,7 +49,7 @@ router.get(
       response.json(categoryChildrens);
     } catch (error) {
       console.error('Error fetching category:', error);
-      response.status(500).json({ error: 'Internal Server Error' });
+      throw error;
     }
   },
 );

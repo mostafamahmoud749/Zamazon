@@ -1,6 +1,5 @@
 import { Router, Request } from 'express';
 import { prisma } from '../../prisma/lib/prisma.js';
-import { Prisma } from '../../generated/prisma/client.js';
 import { requireAuth } from '../middleware/requireAuth.js';
 import { CreateReviewDto, PatchReviewDto } from '../dtos/Reviews.dto.js';
 import { validateParams } from '../middleware/validateParams.js';
@@ -35,7 +34,7 @@ router.get(
       response.json(reviews);
     } catch (error) {
       console.error('Error fetching reviews:', error);
-      response.sendStatus(500);
+      throw error;
     }
   },
 );
@@ -63,15 +62,7 @@ router.post(
       response.status(201).json(review);
     } catch (error) {
       console.error('Error creating review:', error);
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-        return response.status(409).json({ error: 'You have already reviewed this product' });
-      }
-
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2003') {
-        return response.status(404).json({ error: 'this product does not exist' });
-      }
-
-      response.sendStatus(500);
+      throw error;
     }
   },
 );
@@ -110,7 +101,7 @@ router.patch(
       response.status(200).json(updatedReview);
     } catch (error) {
       console.error('Error updating review:', error);
-      response.sendStatus(500);
+      throw error;
     }
   },
 );
@@ -139,7 +130,7 @@ router.delete(
       response.status(200).json({ message: 'Review deleted successfully' });
     } catch (error) {
       console.error('Error deleting review:', error);
-      response.sendStatus(500);
+      throw error;
     }
   },
 );

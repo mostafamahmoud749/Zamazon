@@ -22,8 +22,8 @@ router.get('/api/users/me', requireAuth, async (request, response) => {
     }
 
     response.status(200).json(user);
-  } catch (err) {
-    response.sendStatus(500);
+  } catch (error) {
+    throw error;
   }
 });
 

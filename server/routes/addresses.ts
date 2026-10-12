@@ -1,6 +1,5 @@
 import { Router, Request } from 'express';
 import { prisma } from '../../prisma/lib/prisma.js';
-import { Prisma } from '../../generated/prisma/client.js';
 import { requireAuth } from '../middleware/requireAuth.js';
 import { CreateAddressDto, PatchAddressDto } from '../dtos/Address.dto.js';
 import {
@@ -30,7 +29,7 @@ router.get('/api/addresses', requireAuth, async (request, response) => {
     response.status(200).json(addresses);
   } catch (error) {
     console.error(error);
-    response.sendStatus(500);
+    throw error;
   }
 });
 
@@ -57,7 +56,7 @@ router.post(
       response.status(201).json(address);
     } catch (error) {
       console.error(error);
-      response.sendStatus(500);
+      throw error;
     }
   },
 );
@@ -97,7 +96,7 @@ router.patch(
       response.status(200).json(address);
     } catch (error) {
       console.error(error);
-      response.sendStatus(500);
+      throw error;
     }
   },
 );
@@ -123,11 +122,7 @@ router.delete(
     } catch (error) {
       console.error(error);
 
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2003') {
-        return response.status(409).json({ error: 'Address is used by an order' });
-      }
-
-      response.sendStatus(500);
+      throw error;
     }
   },
 );

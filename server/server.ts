@@ -16,6 +16,7 @@ import reviewsRouter from './routes/reviews.js';
 import categoriesRouter from './routes/category.js';
 import connectPgSimple from 'connect-pg-simple';
 import { prisma } from '../prisma/lib/prisma.js';
+import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
 
@@ -53,6 +54,7 @@ app.use(ordersRouter);
 app.use(addressesRouter);
 app.use(reviewsRouter);
 app.use(categoriesRouter);
+app.use(errorHandler);
 
 const server = app.listen(PORT, () => {
   console.log(`the server started on port ${PORT}!`);

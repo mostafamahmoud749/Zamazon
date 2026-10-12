@@ -31,7 +31,7 @@ router.get('/api/products/:id', validateParams(ProducIdParamsSchema), async (req
     response.status(200).json(product);
   } catch (error) {
     console.error(error);
-    response.sendStatus(500);
+    throw error;
   }
 });
 
@@ -61,7 +61,7 @@ router.post(
       response.status(201).json(product);
     } catch (error) {
       console.error(error);
-      response.sendStatus(500);
+      throw error;
     }
   },
 );
@@ -103,7 +103,7 @@ router.patch(
       response.status(200).json(product);
     } catch (error) {
       console.error(error);
-      response.sendStatus(500);
+      throw error;
     }
   },
 );
@@ -136,7 +136,7 @@ router.delete(
       response.status(200).json(product);
     } catch (error) {
       console.error(error);
-      response.sendStatus(500);
+      throw error;
     }
   },
 );

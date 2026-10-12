@@ -39,7 +39,7 @@ router.get('/api/cart/items', requireAuth, async (request, response) => {
     response.status(200).json(cart);
   } catch (error) {
     console.error(error);
-    response.sendStatus(500);
+    throw error;
   }
 });
 
@@ -109,12 +109,7 @@ router.post(
         return response.status(409).json({ error: 'Not enough stock available' });
       }
 
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2034') {
-        return response.status(409).json({ error: 'Cart changed; please try again' });
-      }
-
-      console.error(error);
-      response.sendStatus(500);
+      throw error;
     }
   },
 );
@@ -149,7 +144,7 @@ router.patch(
       response.status(200).json(updatedCartItem);
     } catch (error) {
       console.error(error);
-      response.sendStatus(500);
+      throw error;
     }
   },
 );
@@ -168,7 +163,7 @@ router.delete(
       response.sendStatus(200);
     } catch (error) {
       console.error(error);
-      response.sendStatus(500);
+      throw error;
     }
   },
 );

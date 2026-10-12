@@ -48,8 +48,8 @@ router.get('/api/products', validateQuery(ProductsQuerySchema), async (request, 
     });
 
     response.status(200).json(products);
-  } catch (err) {
-    response.sendStatus(400);
+  } catch (error) {
+    throw error;
   }
 });
 

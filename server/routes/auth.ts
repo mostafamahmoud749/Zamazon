@@ -5,7 +5,6 @@ import { CreateUserDto } from '../dtos/User.dto.js';
 import { prisma } from '../../prisma/lib/prisma.js';
 import { RegisterSchema, LoginSchema } from '../schemas/Auth.schema.js';
 import { validateBody } from '../middleware/validateBody.js';
-import { Prisma } from '@/generated/prisma/client.js';
 
 const router = Router();
 
@@ -36,11 +35,7 @@ router.post(
 
       response.status(201).send({ name: savedUser.name, email: savedUser.email });
     } catch (err) {
-      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
-        return response.status(409).send({ error: 'Email already exists' });
-      }
-
-      response.sendStatus(500);
+      throw err;
     }
   },
 );
