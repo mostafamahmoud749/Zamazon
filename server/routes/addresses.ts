@@ -9,6 +9,7 @@ import {
 } from '../schemas/Address.schema.js';
 import { validateBody } from '../middleware/validateBody.js';
 import { validateParams } from '../middleware/validateParams.js';
+import { isPrismaError } from '../utils/isPrismaError.js';
 
 const router = Router();
 
@@ -121,6 +122,10 @@ router.delete(
       response.sendStatus(204);
     } catch (error) {
       console.error(error);
+
+      if (isPrismaError(error, 'P2003')) {
+        return response.status(409).json({ error: 'Address is used by an order' });
+      }
 
       throw error;
     }

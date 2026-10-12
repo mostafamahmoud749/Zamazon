@@ -12,6 +12,7 @@ import { validateParams } from '../middleware/validateParams.js';
 import { checkAvailableProductQuantity } from '../utils/checkAvilableProductQuantity.js';
 import { Prisma } from '../../generated/prisma/client.js';
 import { MAX_CART_QUANTITY } from '../schemas/Cart.schema.js';
+import { isPrismaError } from '../utils/isPrismaError.js';
 
 const router = Router();
 
@@ -107,6 +108,10 @@ router.post(
 
       if (error instanceof Error && error.message === 'INSUFFICIENT_STOCK') {
         return response.status(409).json({ error: 'Not enough stock available' });
+      }
+
+      if (isPrismaError(error, 'P2034')) {
+        return response.status(409).json({ error: 'Cart changed; please try again' });
       }
 
       throw error;

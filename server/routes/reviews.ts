@@ -10,6 +10,7 @@ import {
   UpdateReviewSchema,
 } from '../schemas/reviews.schema.js';
 import { validateBody } from '../middleware/validateBody.js';
+import { isPrismaError } from '../utils/isPrismaError.js';
 
 const router = Router();
 
@@ -62,6 +63,14 @@ router.post(
       response.status(201).json(review);
     } catch (error) {
       console.error('Error creating review:', error);
+      if (isPrismaError(error, 'P2002')) {
+        return response.status(409).json({ error: 'You have already reviewed this product' });
+      }
+
+      if (isPrismaError(error, 'P2003')) {
+        return response.status(404).json({ error: 'This product does not exist' });
+      }
+
       throw error;
     }
   },

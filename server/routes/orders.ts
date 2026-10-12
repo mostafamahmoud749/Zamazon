@@ -11,6 +11,7 @@ import {
 } from '../schemas/Orders.schema.js';
 import { validateParams } from '../middleware/validateParams.js';
 import { validateBody } from '../middleware/validateBody.js';
+import { isPrismaError } from '../utils/isPrismaError.js';
 
 const router = Router();
 
@@ -199,6 +200,16 @@ router.post(
 
       if (error instanceof Error && error.message === 'INSUFFICIENT_STOCK') {
         return response.status(409).json({ error: 'Some products are out of stock' });
+      }
+
+      if (isPrismaError(error, 'P2003')) {
+        return response.status(400).json({ error: 'Address does not exist' });
+      }
+
+      if (isPrismaError(error, 'P2034')) {
+        return response
+          .status(409)
+          .json({ error: 'Order could not be completed; please try again' });
       }
 
       throw error;

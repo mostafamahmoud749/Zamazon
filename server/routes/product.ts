@@ -9,6 +9,7 @@ import {
   UpdateProductSchema,
 } from '../schemas/Product.schema.js';
 import { validateBody } from '../middleware/validateBody.js';
+import { isPrismaError } from '../utils/isPrismaError.js';
 
 const router = Router();
 
@@ -61,6 +62,14 @@ router.post(
       response.status(201).json(product);
     } catch (error) {
       console.error(error);
+      if (isPrismaError(error, 'P2002')) {
+        return response.status(409).json({ error: 'A product with this slug already exists' });
+      }
+
+      if (isPrismaError(error, 'P2003')) {
+        return response.status(404).json({ error: 'Category does not exist' });
+      }
+
       throw error;
     }
   },
@@ -103,6 +112,14 @@ router.patch(
       response.status(200).json(product);
     } catch (error) {
       console.error(error);
+      if (isPrismaError(error, 'P2002')) {
+        return response.status(409).json({ error: 'A product with this slug already exists' });
+      }
+
+      if (isPrismaError(error, 'P2003')) {
+        return response.status(404).json({ error: 'Category does not exist' });
+      }
+
       throw error;
     }
   },
