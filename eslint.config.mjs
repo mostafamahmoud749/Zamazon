@@ -17,6 +17,9 @@ const eslintConfig = [
     plugins: {
       '@typescript-eslint': typescriptEslint,
     },
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'warn',
+    },
   },
 ];
 
