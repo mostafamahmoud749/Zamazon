@@ -9,6 +9,9 @@ import {
 } from '../schemas/Cart.schema.js';
 import { validateBody } from '../middleware/validateBody.js';
 import { validateParams } from '../middleware/validateParams.js';
+import { checkAvailableProductQuantity } from '../utils/checkAvilableProductQuantity.js';
+import { Prisma } from '../../generated/prisma/client.js';
+import { MAX_CART_QUANTITY } from '../schemas/Cart.schema.js';
 
 const router = Router();
 
@@ -49,16 +52,67 @@ router.post(
     const userId = request.user!.id;
 
     try {
-      const cartitem = await prisma.cartItem.create({
-        data: {
-          userId,
-          productId,
-          quantity,
-        },
-      });
+      const result = await prisma.$transaction(
+        async (transaction) => {
+          const product = await transaction.product.findUnique({
+            where: { id: productId },
+            select: { stock: true, isActive: true },
+          });
 
-      response.status(201).json(cartitem);
+          if (!product || !product.isActive) {
+            throw new Error('PRODUCT_UNAVAILABLE');
+          }
+
+          const existingItem = await transaction.cartItem.findUnique({
+            where: {
+              productId_userId: { productId, userId },
+            },
+            select: { quantity: true },
+          });
+
+          const mergedQuantity = (existingItem?.quantity ?? 0) + quantity;
+
+          if (mergedQuantity > MAX_CART_QUANTITY) {
+            throw new Error('CART_QUANTITY_LIMIT');
+          }
+
+          if (mergedQuantity > product.stock) {
+            throw new Error('INSUFFICIENT_STOCK');
+          }
+
+          const cartItem = await transaction.cartItem.upsert({
+            where: {
+              productId_userId: { productId, userId },
+            },
+            create: { userId, productId, quantity },
+            update: { quantity: mergedQuantity },
+          });
+
+          return { cartItem, created: !existingItem };
+        },
+        { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
+      );
+
+      response.status(result.created ? 201 : 200).json(result.cartItem);
     } catch (error) {
+      if (error instanceof Error && error.message === 'PRODUCT_UNAVAILABLE') {
+        return response.status(404).json({ error: 'Product is unavailable' });
+      }
+
+      if (error instanceof Error && error.message === 'CART_QUANTITY_LIMIT') {
+        return response.status(400).json({
+          error: `Cart quantity cannot exceed ${MAX_CART_QUANTITY}`,
+        });
+      }
+
+      if (error instanceof Error && error.message === 'INSUFFICIENT_STOCK') {
+        return response.status(409).json({ error: 'Not enough stock available' });
+      }
+
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2034') {
+        return response.status(409).json({ error: 'Cart changed; please try again' });
+      }
+
       console.error(error);
       response.sendStatus(500);
     }
@@ -75,6 +129,19 @@ router.patch(
     const { quantity } = request.body;
 
     try {
+      const cartItem = await prisma.cartItem.findFirst({
+        where: { id, userId: request.user!.id },
+        select: { productId: true },
+      });
+
+      if (!cartItem) {
+        return response.sendStatus(404);
+      }
+
+      if (!(await checkAvailableProductQuantity(cartItem.productId, quantity))) {
+        return response.status(400).send({ error: 'Not enough stock available' });
+      }
+
       const updatedCartItem = await prisma.cartItem.update({
         where: { id, userId: request.user!.id },
         data: { quantity },

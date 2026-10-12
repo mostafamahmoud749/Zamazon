@@ -111,37 +111,63 @@ router.post(
         return response.sendStatus(400);
       }
 
-      const cartItems = await prisma.cartItem.findMany({
-        where: { userId: request.user!.id },
-        select: {
-          quantity: true,
-          product: {
-            select: {
-              id: true,
-              price: true,
-              discount: true,
-              title: true,
-              description: true,
-              image: true,
+      const order = await prisma.$transaction(async (transaction) => {
+        const cartItems = await transaction.cartItem.findMany({
+          where: { userId: request.user!.id },
+          select: {
+            quantity: true,
+            product: {
+              select: {
+                id: true,
+                price: true,
+                discount: true,
+                stock: true,
+                isActive: true,
+              },
             },
           },
-        },
-      });
+        });
 
-      if (cartItems.length === 0) {
-        return response.sendStatus(400);
-      }
+        if (cartItems.length === 0) {
+          throw new Error('EMPTY_CART');
+        }
 
-      const totalAmount = cartItems.reduce((total, item) => {
-        const discount = item.product.discount ?? new Prisma.Decimal(0);
-        const discountedPrice = item.product.price.mul(
-          new Prisma.Decimal(1).sub(discount.div(100)),
-        );
+        const orderItems = [];
+        let totalAmount = new Prisma.Decimal(0);
 
-        return total.add(discountedPrice.mul(item.quantity));
-      }, new Prisma.Decimal(0));
+        for (const item of cartItems) {
+          if (!item.product.isActive || item.product.stock < item.quantity) {
+            throw new Error('INSUFFICIENT_STOCK');
+          }
 
-      const order = await prisma.$transaction(async (transaction) => {
+          const discount = item.product.discount ?? new Prisma.Decimal(0);
+          const discountedPrice = item.product.price.mul(
+            new Prisma.Decimal(1).sub(discount.div(100)),
+          );
+
+          await transaction.product
+            .updateMany({
+              where: {
+                id: item.product.id,
+                isActive: true,
+                stock: { gte: item.quantity },
+              },
+              data: { stock: { decrement: item.quantity } },
+            })
+            .then((result) => {
+              if (result.count !== 1) {
+                throw new Error('INSUFFICIENT_STOCK');
+              }
+            });
+
+          totalAmount = totalAmount.add(discountedPrice.mul(item.quantity));
+          orderItems.push({
+            productId: item.product.id,
+            quantity: item.quantity,
+            price: discountedPrice,
+          });
+        }
+
         const createdOrder = await transaction.order.create({
           data: {
             userId: request.user!.id,
@@ -149,18 +175,7 @@ router.post(
             totalAmount,
             paymentMethod,
             orderItems: {
-              create: cartItems.map((item) => {
-                const discount = item.product.discount ?? new Prisma.Decimal(0);
-                const discountedPrice = item.product.price.mul(
-                  new Prisma.Decimal(1).sub(discount.div(100)),
-                );
-
-                return {
-                  productId: item.product.id,
-                  quantity: item.quantity,
-                  price: discountedPrice,
-                };
-              }),
+              create: orderItems,
             },
           },
           include: {
@@ -178,6 +193,14 @@ router.post(
       response.status(201).json(order);
     } catch (error) {
       console.error(error);
+      if (error instanceof Error && error.message === 'EMPTY_CART') {
+        return response.status(400).json({ error: 'Cart is empty' });
+      }
+
+      if (error instanceof Error && error.message === 'INSUFFICIENT_STOCK') {
+        return response.status(409).json({ error: 'Some products are out of stock' });
+      }
+
       response.sendStatus(500);
     }
   },
