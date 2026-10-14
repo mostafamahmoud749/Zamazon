@@ -6,7 +6,7 @@ const rootDirectory = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   test: {
-    setupFiles: ['./server/e2e/setup.ts'],
+    setupFiles: ['./server/integration/setup.ts'],
   },
   resolve: {
     alias: {

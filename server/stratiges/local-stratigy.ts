@@ -28,12 +28,15 @@ export default passport.use(
     try {
       const findUser = await prisma.user.findUnique({ where: { email: username } });
 
-      if (!findUser) throw new Error('User not found!');
+      if (!findUser || !findUser.password) {
+        return done(null, false);
+      }
 
-      if (!findUser.password || !compareHased(password, findUser.password))
-        throw new Error('Bad Credentials');
+      if (!compareHased(password, findUser.password)) {
+        return done(null, false);
+      }
 
-      done(null, findUser);
+      return done(null, findUser);
     } catch (err) {
       return done(err, false);
     }

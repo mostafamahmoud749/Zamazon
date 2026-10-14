@@ -45,12 +45,6 @@ router.post(
   },
 );
 
-router.get('/api/auth/status', (request, response) => {
-  request.isAuthenticated()
-    ? response.send({ user: request.user.id, session: request.session })
-    : response.sendStatus(401);
-});
-
 router.get('/api/auth/github', passport.authenticate('github'));
 
 router.get('/api/auth/github/callback', passport.authenticate('github'), (_, response) => {
