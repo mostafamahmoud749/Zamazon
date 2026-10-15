@@ -2,15 +2,10 @@ import request from 'supertest';
 import { describe, expect, it, afterAll } from 'vitest';
 import { createApp } from '../app.js';
 import { prisma } from '../../prisma/lib/prisma.js';
+import { mockUser } from './fixtures/user.js';
+import { registerTestUser } from './helpers/auth.js';
 
 const app = createApp();
-
-const mockUser = {
-  email: `user-${crypto.randomUUID()}@example.com`,
-  name: 'Test User',
-  password: 'Password123!',
-};
-
 const deleteTestUser = () => {
   afterAll(async () => {
     await prisma.user.deleteMany({
@@ -18,20 +13,13 @@ const deleteTestUser = () => {
         email: mockUser.email,
       },
     });
+    await prisma.$disconnect();
   });
 };
 
-async function registerTestUser() {
-  const response = await request(app).post('/api/auth/register').send(mockUser);
-
-  expect(response.status).toBe(201);
-  const { email, password } = mockUser;
-  return { email, password };
-}
-
 describe('POST /api/auth/login', () => {
   it('should return 200 for valid credentials', async () => {
-    const validCredentials = await registerTestUser();
+    const validCredentials = await registerTestUser(app, mockUser);
     const response = await request(app).post('/api/auth/login').send(validCredentials);
     expect(response.status).toBe(200);
   });
