@@ -17,7 +17,7 @@ router.get('/api/categories', async (request, response) => {
   }
 });
 
-router.get('/api/categories/ansestors', async (request, response) => {
+router.get('/api/categories/ancestors', async (request, response) => {
   try {
     const categories = await prisma.category.findMany({
       where: {
@@ -32,7 +32,7 @@ router.get('/api/categories/ansestors', async (request, response) => {
 });
 
 router.get(
-  '/api/categories/:id/children',
+  '/api/categories/:id/childrens',
   validateParams(CategoryIdParamsSchema),
   async (request: Request<{ id: string }>, response) => {
     const id = response.locals.params.id;
