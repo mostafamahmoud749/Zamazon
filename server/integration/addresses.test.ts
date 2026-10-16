@@ -2,8 +2,8 @@ import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createApp } from '../app.js';
 import { prisma } from '../../prisma/lib/prisma.js';
-import { mockUser } from './fixtures/user.js';
-import { mockAddress, invalidAddress } from './fixtures/address.js';
+import { mockUser } from './mocks/user.js';
+import { mockAddress, invalidAddress } from './mocks/address.js';
 import { loginTestUser, registerTestUser } from './helpers/auth.js';
 
 const app = createApp();

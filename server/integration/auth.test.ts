@@ -2,7 +2,7 @@ import request from 'supertest';
 import { describe, expect, it, afterAll } from 'vitest';
 import { createApp } from '../app.js';
 import { prisma } from '../../prisma/lib/prisma.js';
-import { mockUser } from './fixtures/user.js';
+import { mockUser } from './mocks/user.js';
 import { registerTestUser } from './helpers/auth.js';
 
 const app = createApp();

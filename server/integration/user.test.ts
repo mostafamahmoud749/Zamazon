@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createApp } from '../app.js';
 import { prisma } from '../../prisma/lib/prisma.js';
 import { loginTestUser, registerTestUser } from './helpers/auth.js';
-import { mockUser } from './fixtures/user.js';
+import { mockUser } from './mocks/user.js';
 
 const app = createApp();
 const agent = request.agent(app);
