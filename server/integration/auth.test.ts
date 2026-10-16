@@ -31,6 +31,34 @@ describe('POST /api/auth/login', () => {
     expect(response.status).toBe(401);
   });
 
+  it('returns 401 for an existing user with the wrong password', async () => {
+    const agent = request.agent(app);
+    const response = await agent.post('/api/auth/login').send({
+      email: mockUser.email,
+      password: 'WrongPassword123!',
+    });
+
+    expect(response.status).toBe(401);
+    expect((await agent.get('/api/orders')).status).toBe(401);
+  });
+
+  it('returns 401 for an account without a local password', async () => {
+    const user = await prisma.user.create({
+      data: { email: `oauth-login-${crypto.randomUUID()}@example.com` },
+    });
+
+    try {
+      const response = await request(app).post('/api/auth/login').send({
+        email: user.email,
+        password: 'Password123!',
+      });
+
+      expect(response.status).toBe(401);
+    } finally {
+      await prisma.user.delete({ where: { id: user.id } });
+    }
+  });
+
   it.each([
     [{ email: '', password: 'password123' }],
     [{ email: 'user@example.com', password: '' }],

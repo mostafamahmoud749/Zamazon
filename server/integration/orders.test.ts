@@ -149,6 +149,53 @@ describe('GET /api/orders/:id', () => {
 });
 
 describe('PATCH /api/orders/:id/cancel', () => {
+  it('restores every ordered quantity once, including inactive products', async () => {
+    const address = await fixture.createAddress();
+    const firstProduct = await fixture.createProduct({ stock: 5 });
+    const secondProduct = await fixture.createProduct({ stock: 8 });
+    await fixture.addToCart(firstProduct.id, 2);
+    await fixture.addToCart(secondProduct.id, 3);
+
+    const created = await fixture.agent
+      .post('/api/orders')
+      .send({ addressId: address.id, paymentMethod: 'paypal' });
+    expect(created.status).toBe(201);
+    await prisma.product.update({ where: { id: secondProduct.id }, data: { isActive: false } });
+
+    const canceled = await fixture.agent.patch(`/api/orders/${created.body.id}/cancel`);
+    const repeated = await fixture.agent.patch(`/api/orders/${created.body.id}/cancel`);
+
+    expect(canceled.status).toBe(200);
+    expect(canceled.body.status).toBe('CANCELED');
+    expect(repeated.status).toBe(400);
+    await expect(prisma.product.findUniqueOrThrow({ where: { id: firstProduct.id } })).resolves.toEqual(
+      expect.objectContaining({ stock: 5 }),
+    );
+    await expect(prisma.product.findUniqueOrThrow({ where: { id: secondProduct.id } })).resolves.toEqual(
+      expect.objectContaining({ stock: 8, isActive: false }),
+    );
+  });
+
+  it('restores stock only once when cancellation requests arrive together', async () => {
+    const address = await fixture.createAddress();
+    const product = await fixture.createProduct({ stock: 5 });
+    await fixture.addToCart(product.id, 2);
+    const created = await fixture.agent
+      .post('/api/orders')
+      .send({ addressId: address.id, paymentMethod: 'paypal' });
+    expect(created.status).toBe(201);
+
+    const responses = await Promise.all([
+      fixture.agent.patch(`/api/orders/${created.body.id}/cancel`),
+      fixture.agent.patch(`/api/orders/${created.body.id}/cancel`),
+    ]);
+
+    expect(responses.map((response) => response.status).sort()).toEqual([200, 400]);
+    await expect(prisma.product.findUniqueOrThrow({ where: { id: product.id } })).resolves.toEqual(
+      expect.objectContaining({ stock: 5 }),
+    );
+  });
+
   it('cancels a pending order and rejects a completed order', async () => {
     const address = await fixture.createAddress();
     const pendingOrder = await prisma.order.create({

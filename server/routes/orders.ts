@@ -223,25 +223,51 @@ router.patch(
     const orderId = response.locals.params.id;
 
     try {
-      const order = await prisma.order.findFirst({
-        where: { id: orderId, userId: request.user!.id },
-      });
+      const updatedOrder = await prisma.$transaction(async (transaction) => {
+        const order = await transaction.order.findFirst({
+          where: { id: orderId, userId: request.user!.id },
+        });
 
-      if (!order) {
-        return response.sendStatus(404);
-      }
+        if (!order) {
+          throw new Error('ORDER_NOT_FOUND');
+        }
 
-      if (order.status !== 'PENDING') {
-        return response.sendStatus(400);
-      }
+        // Only the request that changes a pending order may restore its stock.
+        const canceled = await transaction.order.updateMany({
+          where: { id: orderId, userId: request.user!.id, status: 'PENDING' },
+          data: { status: 'CANCELED' },
+        });
 
-      const updatedOrder = await prisma.order.update({
-        where: { id: orderId },
-        data: { status: 'CANCELED' },
+        if (canceled.count !== 1) {
+          throw new Error('ORDER_NOT_PENDING');
+        }
+
+        const orderItems = await transaction.orderItem.findMany({
+          where: { orderId },
+          select: { productId: true, quantity: true },
+          orderBy: { productId: 'asc' },
+        });
+
+        for (const item of orderItems) {
+          await transaction.product.update({
+            where: { id: item.productId },
+            data: { stock: { increment: item.quantity } },
+          });
+        }
+
+        return { ...order, status: 'CANCELED' };
       });
 
       response.status(200).json(updatedOrder);
     } catch (error) {
+      if (error instanceof Error && error.message === 'ORDER_NOT_FOUND') {
+        return response.sendStatus(404);
+      }
+
+      if (error instanceof Error && error.message === 'ORDER_NOT_PENDING') {
+        return response.sendStatus(400);
+      }
+
       console.error(error);
       throw error;
     }
