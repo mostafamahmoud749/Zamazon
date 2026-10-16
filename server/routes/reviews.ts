@@ -30,8 +30,20 @@ router.get(
           rating: true,
           comment: true,
           createdAt: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
         },
       });
+
+      if (reviews.length === 0) {
+        response.sendStatus(404);
+        return;
+      }
+
       response.json(reviews);
     } catch (error) {
       console.error('Error fetching reviews:', error);
@@ -136,7 +148,7 @@ router.delete(
         return response.status(404).json({ error: 'Review not found or not owned by user' });
       }
 
-      response.status(200).json({ message: 'Review deleted successfully' });
+      response.sendStatus(204);
     } catch (error) {
       console.error('Error deleting review:', error);
       throw error;
