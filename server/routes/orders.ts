@@ -27,9 +27,7 @@ router.get(
         where: { userId: request.user!.id },
         take: 5,
         skip: 5 * (page - 1),
-        orderBy: {
-          createdAt: 'desc',
-        },
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
         select: {
           id: true,
           totalAmount: true,

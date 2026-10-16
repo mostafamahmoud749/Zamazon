@@ -13,7 +13,6 @@ const deleteTestUser = () => {
         email: mockUser.email,
       },
     });
-    await prisma.$disconnect();
   });
 };
 

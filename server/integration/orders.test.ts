@@ -39,6 +39,7 @@ describe('GET /api/orders', () => {
         addressId: address.id,
         totalAmount: index + 1,
         paymentMethod: 'credit_card',
+        createdAt: new Date(Date.now() + index),
       })),
     });
 
@@ -49,7 +50,7 @@ describe('GET /api/orders', () => {
     expect(response.body).toHaveLength(1);
     expect(response.body[0]).toEqual(
       expect.objectContaining({
-        totalAmount: '6',
+        totalAmount: '1',
         status: 'PENDING',
         paymentMethod: 'credit_card',
       }),

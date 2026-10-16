@@ -1,7 +1,7 @@
 import { prisma } from '../../../prisma/lib/prisma.js';
 
 export async function createMockProducts() {
-  const suffix = Date.now().toString();
+  const suffix = crypto.randomUUID();
   const [userOne, userTwo] = await Promise.all([
     prisma.user.create({
       data: { email: `products-one-${suffix}@example.com` },
@@ -29,7 +29,7 @@ export async function createMockProducts() {
         price: 10.0,
         discount: 0.0,
         stock: 100,
-        slug: 'product-1',
+        slug: `product-1-${suffix}`,
         image: 'image1.jpg',
         isActive: true,
       },
@@ -41,7 +41,7 @@ export async function createMockProducts() {
         price: 20.0,
         discount: 0.0,
         stock: 200,
-        slug: 'product-2',
+        slug: `product-2-${suffix}`,
         image: 'image2.jpg',
         isActive: true,
       },
@@ -53,7 +53,7 @@ export async function createMockProducts() {
         price: 30.0,
         discount: 0.0,
         stock: 300,
-        slug: 'product-3',
+        slug: `product-3-${suffix}`,
         image: 'image3.jpg',
         isActive: true,
       },

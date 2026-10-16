@@ -120,12 +120,14 @@ describe('DELETE /api/addresses/:id', () => {
       },
     });
 
-    const response = await agent.delete(`/api/addresses/${address}`);
+    try {
+      const response = await agent.delete(`/api/addresses/${address}`);
 
-    expect(response.status).toBe(409);
-    expect(response.body).toEqual({ error: 'Address is used by an order' });
-
-    await prisma.order.deleteMany({ where: { addressId: address } });
+      expect(response.status).toBe(409);
+      expect(response.body).toEqual({ error: 'Address is used by an order' });
+    } finally {
+      await prisma.order.deleteMany({ where: { addressId: address } });
+    }
   });
 
   it('should return 401 for unauthenticated requests', async () => {
