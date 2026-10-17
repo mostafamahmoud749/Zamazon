@@ -1,5 +1,6 @@
 import { Request, Router } from 'express';
 import passport from 'passport';
+import { rateLimit } from 'express-rate-limit';
 import { hashPassword } from '../utils/helpers.js';
 import { CreateUserDto } from '../dtos/User.dto.js';
 import { prisma } from '../../prisma/lib/prisma.js';
@@ -9,8 +10,18 @@ import { isPrismaError } from '../utils/isPrismaError.js';
 
 const router = Router();
 
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  skipSuccessfulRequests: true,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  message: { error: 'Too many login attempts. Please try again later.' },
+});
+
 router.post(
   '/api/auth/login',
+  loginLimiter,
   validateBody(LoginSchema),
   passport.authenticate('local'),
   (_, response) => {

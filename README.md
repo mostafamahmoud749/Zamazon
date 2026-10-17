@@ -2,6 +2,23 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+### Express backend security
+
+Run the API with `npm run backend`. Helmet adds security response headers.
+CORS allows credentialed requests from `http://localhost:3000` by default.
+Set `FRONTEND_ORIGIN` in `.env` to your frontend's exact origin when deploying
+(for example, `https://zamazon.example`, without a trailing slash).
+Frontend requests using session cookies also need `credentials: 'include'`.
+
+All `/api` routes share a limit of 300 requests per IP per 15 minutes. CORS
+preflight requests are handled before the limiter and do not consume the quota.
+This is a starting limit to adjust based on normal application traffic.
+Login requests also have a stricter limit of 10 unsuccessful attempts per IP per 15 minutes;
+successful responses do not count toward the limit. Excess requests receive 429.
+The limiter stores counts in memory, so restarting the API resets them. Multiple
+API instances need a shared store. When deploying behind a proxy, configure
+Express `trust proxy` for that hosting setup so client IPs are identified correctly.
+
 First, run the development server:
 
 ```bash
