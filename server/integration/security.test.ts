@@ -1,4 +1,5 @@
 import request from 'supertest';
+import { csrfAgent } from './helpers/csrf.js';
 import { describe, expect, it } from 'vitest';
 import { createApp } from '../app.js';
 
@@ -67,13 +68,14 @@ describe('API security middleware', () => {
   });
 
   it('blocks excess login attempts before authentication, without limiting other routes', async () => {
-    // Invalid bodies exercise the real login limiter without querying the database.
+    // Invalid bodies exercise validation after passing CSRF protection.
+    const agent = await csrfAgent(app);
     for (let attempt = 0; attempt < 10; attempt++) {
-      const response = await request(app).post('/api/auth/login').send({});
+      const response = await agent.post('/api/auth/login').send({});
       expect(response.status).toBe(400);
     }
 
-    const blocked = await request(app)
+    const blocked = await agent
       .post('/api/auth/login')
       .set('Origin', frontendOrigin)
       .send({});

@@ -1,3 +1,4 @@
+import { csrfAgent } from './helpers/csrf.js';
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createApp } from '../app.js';
@@ -56,7 +57,7 @@ describe('POST /api/addresses', () => {
   });
 
   it('should return 401 for unauthenticated requests', async () => {
-    const response = await request(app).post('/api/addresses').send(mockAddress[2]);
+    const response = await (await csrfAgent(app)).post('/api/addresses').send(mockAddress[2]);
 
     expect(response.status).toBe(401);
   });
@@ -85,7 +86,7 @@ describe('PATCH /api/addresses/:id', () => {
   });
 
   it('should return 401 for unauthenticated requests', async () => {
-    const response = await request(app).patch('/api/addresses/999999').send({ city: 'New City' });
+    const response = await (await csrfAgent(app)).patch('/api/addresses/999999').send({ city: 'New City' });
 
     expect(response.status).toBe(401);
   });
@@ -131,7 +132,7 @@ describe('DELETE /api/addresses/:id', () => {
   });
 
   it('should return 401 for unauthenticated requests', async () => {
-    const response = await request(app).delete('/api/addresses/999999');
+    const response = await (await csrfAgent(app)).delete('/api/addresses/999999');
 
     expect(response.status).toBe(401);
   });

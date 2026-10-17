@@ -17,6 +17,8 @@ export default passport.use(
       clientSecret,
       callbackURL: 'http://localhost:9000/api/auth/github/callback',
       scope: ['identify'],
+      // @ts-expect-error passport-github types restrict OAuth2's boolean state option to strings.
+      state: true,
     },
     async function (
       accessToken: string,

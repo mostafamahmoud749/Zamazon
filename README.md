@@ -19,6 +19,33 @@ The limiter stores counts in memory, so restarting the API resets them. Multiple
 API instances need a shared store. When deploying behind a proxy, configure
 Express `trust proxy` for that hosting setup so client IPs are identified correctly.
 
+All API methods except GET, HEAD, and OPTIONS require a session-bound CSRF token
+in the `X-CSRF-Token` header, including login and registration. Obtain it with
+`GET /api/auth/csrf-token` using `credentials: 'include'`. The response is
+`{ "csrfToken": "..." }` and must not be cached. Keep the token in frontend memory.
+
+```ts
+const api = 'http://localhost:9000';
+const response = await fetch(`${api}/api/auth/csrf-token`, {
+  credentials: 'include',
+  cache: 'no-store',
+});
+const { csrfToken } = await response.json();
+
+await fetch(`${api}/api/orders`, {
+  method: 'POST',
+  credentials: 'include',
+  headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+  body: JSON.stringify({ addressId: 1, paymentMethod: 'credit_card' }),
+});
+```
+
+Fetch a fresh token after successful login (including GitHub login), because
+Passport regenerates the session. Missing, incorrect, or stale tokens return
+403 with `code: 'EBADCSRFTOKEN'` before route handlers run. If the frontend loses
+its token, fetch it again using the same session cookie. GitHub OAuth GET routes
+use OAuth `state` verification rather than an API CSRF header.
+
 First, run the development server:
 
 ```bash

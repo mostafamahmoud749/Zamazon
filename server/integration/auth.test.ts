@@ -1,3 +1,4 @@
+import { csrfAgent } from './helpers/csrf.js';
 import request from 'supertest';
 import { describe, expect, it, afterAll } from 'vitest';
 import { createApp } from '../app.js';
@@ -19,12 +20,12 @@ const deleteTestUser = () => {
 describe('POST /api/auth/login', () => {
   it('should return 200 for valid credentials', async () => {
     const validCredentials = await registerTestUser(app, mockUser);
-    const response = await request(app).post('/api/auth/login').send(validCredentials);
+    const response = await (await csrfAgent(app)).post('/api/auth/login').send(validCredentials);
     expect(response.status).toBe(200);
   });
 
   it('should return 401 for invalid credentials', async () => {
-    const response = await request(app).post('/api/auth/login').send({
+    const response = await (await csrfAgent(app)).post('/api/auth/login').send({
       email: 'invalid@example.com',
       password: 'invalidpassword',
     });
@@ -32,7 +33,7 @@ describe('POST /api/auth/login', () => {
   });
 
   it('returns 401 for an existing user with the wrong password', async () => {
-    const agent = request.agent(app);
+    const agent = await csrfAgent(app);
     const response = await agent.post('/api/auth/login').send({
       email: mockUser.email,
       password: 'WrongPassword123!',
@@ -48,7 +49,7 @@ describe('POST /api/auth/login', () => {
     });
 
     try {
-      const response = await request(app).post('/api/auth/login').send({
+      const response = await (await csrfAgent(app)).post('/api/auth/login').send({
         email: user.email,
         password: 'Password123!',
       });
@@ -65,7 +66,7 @@ describe('POST /api/auth/login', () => {
     [{ email: 'invalid-email', password: 'password123' }],
     [{ email: 'user@example.com', password: '123' }],
   ])('rejects invalid credentials: %o', async (credentials) => {
-    const response = await request(app).post('/api/auth/login').send(credentials);
+    const response = await (await csrfAgent(app)).post('/api/auth/login').send(credentials);
 
     expect(response.status).toBe(400);
   });
@@ -75,7 +76,7 @@ describe('POST /api/auth/login', () => {
 
 describe('POST /api/auth/register', () => {
   it('should return 201 for valid registration', async () => {
-    const response = await request(app).post('/api/auth/register').send(mockUser);
+    const response = await (await csrfAgent(app)).post('/api/auth/register').send(mockUser);
 
     expect(response.status).toBe(201);
     expect(response.body).toEqual({
@@ -85,9 +86,9 @@ describe('POST /api/auth/register', () => {
   });
 
   it('should return 409 for duplicate email', async () => {
-    await request(app).post('/api/auth/register').send(mockUser);
+    await (await csrfAgent(app)).post('/api/auth/register').send(mockUser);
 
-    const response = await request(app).post('/api/auth/register').send(mockUser);
+    const response = await (await csrfAgent(app)).post('/api/auth/register').send(mockUser);
     expect(response.status).toBe(409);
     expect(response.body).toEqual({ error: 'Email already exists' });
   });
@@ -98,7 +99,7 @@ describe('POST /api/auth/register', () => {
     [{ email: 'user@example.com', password: '', name: 'Test User' }],
     [{ email: 'user@example.com', password: '123', name: 'Test User' }],
   ])('rejects invalid registration data: %o', async (data) => {
-    const response = await request(app).post('/api/auth/register').send(data);
+    const response = await (await csrfAgent(app)).post('/api/auth/register').send(data);
     expect(response.status).toBe(400);
   });
 

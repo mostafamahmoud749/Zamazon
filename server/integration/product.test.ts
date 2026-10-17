@@ -1,3 +1,4 @@
+import { csrfAgent } from './helpers/csrf.js';
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createApp } from '../app.js';
@@ -49,7 +50,7 @@ describe('GET /api/products/:id', () => {
 
 describe('POST /api/products', () => {
   it('requires authentication', async () => {
-    const response = await request(app)
+    const response = await (await csrfAgent(app))
       .post('/api/products')
       .send({ ...productPayload, slug: `unauthenticated-${crypto.randomUUID()}` });
 
@@ -112,7 +113,7 @@ describe('POST /api/products', () => {
 
 describe('PATCH /api/products/:id', () => {
   it('requires authentication', async () => {
-    const response = await request(app)
+    const response = await (await csrfAgent(app))
       .patch(`/api/products/${fixture.productId}`)
       .send({ title: 'Unauthenticated update' });
 
@@ -156,7 +157,7 @@ describe('PATCH /api/products/:id', () => {
 
 describe('DELETE /api/products/:id', () => {
   it('requires authentication', async () => {
-    const response = await request(app).delete(`/api/products/${fixture.productId}`);
+    const response = await (await csrfAgent(app)).delete(`/api/products/${fixture.productId}`);
 
     expect(response.status).toBe(401);
   });

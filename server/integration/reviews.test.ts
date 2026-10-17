@@ -1,3 +1,4 @@
+import { csrfAgent } from './helpers/csrf.js';
 import request from 'supertest';
 import { describe, expect, it, afterAll, beforeAll } from 'vitest';
 import { createApp } from '../app.js';
@@ -121,7 +122,7 @@ describe('GET /api/products/:id/reviews', () => {
 
 describe('POST /api/products/:id/reviews', () => {
   it('requires authentication', async () => {
-    const response = await request(app)
+    const response = await (await csrfAgent(app))
       .post(`/api/products/${fixture.productId}/reviews`)
       .send({ rating: 5, comment: 'Excellent product!' });
 
@@ -177,7 +178,7 @@ describe('POST /api/products/:id/reviews', () => {
 
 describe('PATCH /api/products/:id/reviews/:reviewId', () => {
   it('requires authentication', async () => {
-    const response = await request(app)
+    const response = await (await csrfAgent(app))
       .patch(`/api/products/${fixture.productId}/reviews/${reviewId}`)
       .send({ rating: 3, comment: 'Updated review!' });
 
@@ -219,7 +220,7 @@ describe('PATCH /api/products/:id/reviews/:reviewId', () => {
 
 describe('DELETE /api/products/:id/reviews/:reviewId', () => {
   it('requires authentication', async () => {
-    const response = await request(app).delete(
+    const response = await (await csrfAgent(app)).delete(
       `/api/products/${fixture.productId}/reviews/${reviewId}`,
     );
 

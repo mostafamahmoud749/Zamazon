@@ -19,6 +19,7 @@ import reviewsRouter from './routes/reviews.js';
 import categoriesRouter from './routes/category.js';
 import connectPgSimple from 'connect-pg-simple';
 import { errorHandler } from './middleware/errorHandler.js';
+import { csrfSynchronisedProtection, generateToken } from './middleware/csrf.js';
 
 export const createApp = () => {
   const app = express();
@@ -63,6 +64,17 @@ export const createApp = () => {
 
   app.use(passport.initialize());
   app.use(passport.session());
+
+  app.get('/api/auth/csrf-token', (request, response, next) => {
+    response.set('Cache-Control', 'no-store');
+    const csrfToken = generateToken(request);
+
+    request.session.save((error) => {
+      if (error) return next(error);
+      response.json({ csrfToken });
+    });
+  });
+  app.use('/api', csrfSynchronisedProtection);
 
   app.use(authRouter);
   app.use(productsRouter);
