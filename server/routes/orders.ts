@@ -110,84 +110,89 @@ router.post(
         return response.sendStatus(400);
       }
 
-      const order = await prisma.$transaction(async (transaction) => {
-        const cartItems = await transaction.cartItem.findMany({
-          where: { userId: request.user!.id },
-          select: {
-            quantity: true,
-            product: {
-              select: {
-                id: true,
-                price: true,
-                discount: true,
-                stock: true,
-                isActive: true,
+      const order = await prisma.$transaction(
+        async (transaction) => {
+          const cartItems = await transaction.cartItem.findMany({
+            where: { userId: request.user!.id },
+            select: {
+              quantity: true,
+              product: {
+                select: {
+                  id: true,
+                  price: true,
+                  discount: true,
+                  stock: true,
+                  isActive: true,
+                },
               },
             },
-          },
-        });
+          });
 
-        if (cartItems.length === 0) {
-          throw new Error('EMPTY_CART');
-        }
-
-        const orderItems = [];
-        let totalAmount = new Prisma.Decimal(0);
-
-        for (const item of cartItems) {
-          if (!item.product.isActive || item.product.stock < item.quantity) {
-            throw new Error('INSUFFICIENT_STOCK');
+          if (cartItems.length === 0) {
+            throw new Error('EMPTY_CART');
           }
 
-          const discount = item.product.discount ?? new Prisma.Decimal(0);
-          const discountedPrice = item.product.price.mul(
-            new Prisma.Decimal(1).sub(discount.div(100)),
-          );
+          const orderItems = [];
+          let totalAmount = new Prisma.Decimal(0);
 
-          await transaction.product
-            .updateMany({
-              where: {
-                id: item.product.id,
-                isActive: true,
-                stock: { gte: item.quantity },
-              },
-              data: { stock: { decrement: item.quantity } },
-            })
-            .then((result) => {
-              if (result.count !== 1) {
-                throw new Error('INSUFFICIENT_STOCK');
-              }
+          for (const item of cartItems) {
+            if (!item.product.isActive || item.product.stock < item.quantity) {
+              throw new Error('INSUFFICIENT_STOCK');
+            }
+
+            const discount = item.product.discount ?? new Prisma.Decimal(0);
+            const discountedPrice = item.product.price.mul(
+              new Prisma.Decimal(1).sub(discount.div(100)),
+            );
+
+            await transaction.product
+              .updateMany({
+                where: {
+                  id: item.product.id,
+                  isActive: true,
+                  stock: { gte: item.quantity },
+                },
+                data: { stock: { decrement: item.quantity } },
+              })
+              .then((result) => {
+                if (result.count !== 1) {
+                  throw new Error('INSUFFICIENT_STOCK');
+                }
+              });
+
+            totalAmount = totalAmount.add(discountedPrice.mul(item.quantity));
+            orderItems.push({
+              productId: item.product.id,
+              quantity: item.quantity,
+              price: discountedPrice,
             });
+          }
 
-          totalAmount = totalAmount.add(discountedPrice.mul(item.quantity));
-          orderItems.push({
-            productId: item.product.id,
-            quantity: item.quantity,
-            price: discountedPrice,
-          });
-        }
-
-        const createdOrder = await transaction.order.create({
-          data: {
-            userId: request.user!.id,
-            addressId,
-            totalAmount,
-            paymentMethod,
-            orderItems: {
-              create: orderItems,
+          const createdOrder = await transaction.order.create({
+            data: {
+              userId: request.user!.id,
+              addressId,
+              totalAmount,
+              paymentMethod,
+              orderItems: {
+                create: orderItems,
+              },
             },
-          },
-          include: {
-            orderItems: true,
-          },
-        });
+            include: {
+              orderItems: true,
+            },
+          });
 
-        await transaction.cartItem.deleteMany({
-          where: { userId: request.user!.id },
-        });
+          await transaction.cartItem.deleteMany({
+            where: { userId: request.user!.id },
+          });
 
-        return createdOrder;
-      });
+          return createdOrder;
+        },
+        {
+          isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+        },
+      );
 
       response.status(201).json(order);
     } catch (error) {

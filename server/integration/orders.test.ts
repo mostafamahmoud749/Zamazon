@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createApp } from '../app.js';
 import { prisma } from '../../prisma/lib/prisma.js';
 import {
@@ -65,6 +65,87 @@ describe('GET /api/orders', () => {
 });
 
 describe('POST /api/orders', () => {
+  it('checks out the same cart only once when requests arrive together', async () => {
+    const address = await fixture.createAddress();
+    // Enough stock for both requests: stock checks alone cannot prevent duplicates.
+    const product = await fixture.createProduct({ stock: 10 });
+    await fixture.addToCart(product.id, 2);
+
+    // Hold each cart read until both real database transactions have read it.
+    // This forces the race instead of relying on request timing.
+    let readCount = 0;
+    let releaseReads!: () => void;
+    const bothHaveRead = new Promise<void>((resolve) => {
+      releaseReads = resolve;
+    });
+    const runTransaction = prisma.$transaction.bind(prisma);
+    const transactionSpy = vi
+      .spyOn(prisma, '$transaction')
+      .mockImplementation(async (operation, options) => {
+        if (typeof operation !== 'function') throw new Error('Expected interactive transaction');
+        return runTransaction(async (transaction) => {
+          const cartItem = new Proxy(transaction.cartItem, {
+            get(delegate, property, receiver) {
+              if (property === 'findMany') {
+                return async (...args: Parameters<typeof delegate.findMany>) => {
+                  const items = await delegate.findMany(...args);
+                  if (++readCount === 2) releaseReads();
+                  await bothHaveRead;
+                  return items;
+                };
+              }
+              return Reflect.get(delegate, property, receiver);
+            },
+          });
+          return operation(
+            new Proxy(transaction, {
+              get(target, property, receiver) {
+                return property === 'cartItem' ? cartItem : Reflect.get(target, property, receiver);
+              },
+            }),
+          );
+        }, options);
+      });
+
+    let responses;
+    try {
+      responses = await Promise.all(
+        Array.from({ length: 2 }, () =>
+          fixture.agent
+            .post('/api/orders')
+            .send({ addressId: address.id, paymentMethod: 'credit_card' }),
+        ),
+      );
+    } finally {
+      releaseReads();
+      transactionSpy.mockRestore();
+    }
+
+    expect(responses.filter(({ status }) => status === 201)).toHaveLength(1);
+    const rejected = responses.filter(({ status }) => status !== 201);
+    expect(rejected).toHaveLength(1);
+    for (const response of rejected) {
+      expect([400, 409]).toContain(response.status);
+    }
+
+    await expectOrderCount(fixture.userId, 1);
+    await expect(
+      prisma.orderItem.count({
+        where: { order: { userId: fixture.userId } },
+      }),
+    ).resolves.toBe(1);
+    await expect(
+      prisma.cartItem.count({
+        where: { userId: fixture.userId },
+      }),
+    ).resolves.toBe(0);
+    await expect(
+      prisma.product.findUniqueOrThrow({
+        where: { id: product.id },
+      }),
+    ).resolves.toEqual(expect.objectContaining({ stock: 8 }));
+  });
+
   it('creates an order, applies discounts, decrements stock, and clears the cart', async () => {
     const address = await fixture.createAddress();
     const product = await fixture.createProduct({ price: 20, discount: 10, stock: 5 });
@@ -168,12 +249,12 @@ describe('PATCH /api/orders/:id/cancel', () => {
     expect(canceled.status).toBe(200);
     expect(canceled.body.status).toBe('CANCELED');
     expect(repeated.status).toBe(400);
-    await expect(prisma.product.findUniqueOrThrow({ where: { id: firstProduct.id } })).resolves.toEqual(
-      expect.objectContaining({ stock: 5 }),
-    );
-    await expect(prisma.product.findUniqueOrThrow({ where: { id: secondProduct.id } })).resolves.toEqual(
-      expect.objectContaining({ stock: 8, isActive: false }),
-    );
+    await expect(
+      prisma.product.findUniqueOrThrow({ where: { id: firstProduct.id } }),
+    ).resolves.toEqual(expect.objectContaining({ stock: 5 }));
+    await expect(
+      prisma.product.findUniqueOrThrow({ where: { id: secondProduct.id } }),
+    ).resolves.toEqual(expect.objectContaining({ stock: 8, isActive: false }));
   });
 
   it('restores stock only once when cancellation requests arrive together', async () => {
