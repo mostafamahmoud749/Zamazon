@@ -1,6 +1,6 @@
 import passport from 'passport';
 import { Strategy } from 'passport-local';
-import { compareHased } from '../utils/helpers.js';
+import { compareHashed } from '../utils/helpers.js';
 import { prisma } from '@/prisma/lib/prisma.js';
 
 passport.serializeUser((user, done) => {
@@ -32,7 +32,7 @@ export default passport.use(
         return done(null, false);
       }
 
-      if (!compareHased(password, findUser.password)) {
+      if (!(await compareHashed(password, findUser.password))) {
         return done(null, false);
       }
 

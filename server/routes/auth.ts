@@ -36,10 +36,10 @@ router.post(
     const { password, email, name } = request.body;
 
     try {
-      const hasedpasswrod = hashPassword(password);
+      const hashedPassword = await hashPassword(password);
       const savedUser = await prisma.user.create({
         data: {
-          password: hasedpasswrod,
+          password: hashedPassword,
           email,
           name,
         },
