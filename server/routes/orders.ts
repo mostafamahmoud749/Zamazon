@@ -141,9 +141,9 @@ router.post(
             }
 
             const discount = item.product.discount ?? new Prisma.Decimal(0);
-            const discountedPrice = item.product.price.mul(
-              new Prisma.Decimal(1).sub(discount.div(100)),
-            );
+            const discountedPrice = item.product.price
+              .mul(new Prisma.Decimal(1).sub(discount.div(100)))
+              .toDecimalPlaces(2, Prisma.Decimal.ROUND_HALF_UP);
 
             await transaction.product
               .updateMany({
@@ -161,6 +161,7 @@ router.post(
               });
 
             totalAmount = totalAmount.add(discountedPrice.mul(item.quantity));
+
             orderItems.push({
               productId: item.product.id,
               quantity: item.quantity,
@@ -237,7 +238,6 @@ router.patch(
           throw new Error('ORDER_NOT_FOUND');
         }
 
-        // Only the request that changes a pending order may restore its stock.
         const canceled = await transaction.order.updateMany({
           where: { id: orderId, userId: request.user!.id, status: 'PENDING' },
           data: { status: 'CANCELED' },

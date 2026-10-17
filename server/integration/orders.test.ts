@@ -172,6 +172,29 @@ describe('POST /api/orders', () => {
     );
   });
 
+  it.each([
+    { price: 9.99, discount: 15, quantity: 4, unitPrice: '8.49', total: '33.96' },
+    { price: 10, discount: 12.34, quantity: 3, unitPrice: '8.77', total: '26.31' },
+    { price: 0.05, discount: 10, quantity: 3, unitPrice: '0.05', total: '0.15' },
+  ])(
+    'rounds the discounted unit price before calculating the total: %o',
+    async ({ price, discount, quantity, unitPrice, total }) => {
+      const address = await fixture.createAddress();
+      const product = await fixture.createProduct({ price, discount, stock: 10 });
+      await fixture.addToCart(product.id, quantity);
+
+      const response = await fixture.agent
+        .post('/api/orders')
+        .send({ addressId: address.id, paymentMethod: 'credit_card' });
+
+      expect(response.status).toBe(201);
+      expect(response.body.totalAmount).toBe(total);
+      expect(response.body.orderItems).toEqual([
+        expect.objectContaining({ productId: product.id, quantity, price: unitPrice }),
+      ]);
+    },
+  );
+
   it('rejects an empty cart, an invalid address, and insufficient stock', async () => {
     const address = await fixture.createAddress();
     const emptyResponse = await fixture.agent
