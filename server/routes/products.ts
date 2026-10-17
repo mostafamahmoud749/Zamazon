@@ -10,6 +10,12 @@ router.get('/api/products', validateQuery(ProductsQuerySchema), async (request, 
   try {
     const { page, rating, search, filters: selectedCategoryIds } = response.locals.query;
     const categoryIds = await getCategoryIdsIncludingChildren(selectedCategoryIds);
+    const ratedProducts = rating > 0
+      ? await prisma.review.groupBy({
+          by: ['productId'],
+          having: { rating: { _avg: { gte: rating } } },
+        })
+      : [];
 
     const products = await prisma.product.findMany({
       where: {
@@ -24,13 +30,7 @@ router.get('/api/products', validateQuery(ProductsQuerySchema), async (request, 
             : {},
           rating > 0
             ? {
-                reviews: {
-                  some: {
-                    rating: {
-                      gte: rating,
-                    },
-                  },
-                },
+                id: { in: ratedProducts.map(({ productId }) => productId) },
               }
             : {},
           categoryIds.length > 0

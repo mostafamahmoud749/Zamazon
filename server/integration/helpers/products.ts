@@ -59,13 +59,13 @@ export async function createMockProducts() {
       },
     ],
   });
-  await prisma.review.create({
-    data: {
-      productId: products[0].id,
-      userId: userOne.id,
-      rating: 5,
-      comment: 'Test review',
-    },
+  await prisma.review.createMany({
+    data: [
+      { productId: products[0].id, userId: userOne.id, rating: 5 },
+      { productId: products[0].id, userId: userTwo.id, rating: 3 },
+      { productId: products[1].id, userId: userOne.id, rating: 5 },
+      { productId: products[1].id, userId: userTwo.id, rating: 1 },
+    ],
   });
 
   return {

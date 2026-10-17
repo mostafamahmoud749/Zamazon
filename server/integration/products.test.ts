@@ -41,11 +41,37 @@ describe('GET /api/products', () => {
     expect(response.body[0].title).toContain('Product 1');
   });
 
-  it('should return products filtered by rating', async () => {
-    const response = await request(app).get('/api/products').query({ page: 1, rating: 4 });
+  it('should filter by average rating, including averages equal to the threshold', async () => {
+    const response = await request(app).get('/api/products').query({
+      page: 1,
+      rating: 4,
+      filters: JSON.stringify([fixture.categoryOneId, fixture.categoryTwoId]),
+    });
 
     expect(response.status).toBe(200);
-    expect(response.body).toBeInstanceOf(Array);
+    expect(response.body.map(({ id }: { id: number }) => id)).toEqual([fixture.productIds[0]]);
+  });
+
+  it('should return no products when no average meets the rating threshold', async () => {
+    const response = await request(app).get('/api/products').query({
+      rating: 4.5,
+      filters: JSON.stringify([fixture.categoryOneId, fixture.categoryTwoId]),
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([]);
+  });
+
+  it('should include unrated products when the rating filter is disabled', async () => {
+    const response = await request(app).get('/api/products').query({
+      rating: 0,
+      filters: JSON.stringify([fixture.categoryOneId, fixture.categoryTwoId]),
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.body.map(({ id }: { id: number }) => id)).toEqual(
+      expect.arrayContaining(fixture.productIds),
+    );
   });
 
   it('should return products filtered by category', async () => {
