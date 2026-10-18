@@ -89,11 +89,14 @@ model Order {
   status              String        @default("PENDING")
   createdAt           DateTime      @default(now())
   paymentMethod       String        @default("CREDIT_CARD")
+  idempotencyKey      String?       @db.VarChar(128)
 
   address             Address       @relation(fields: [addressId], references: [id], onDelete: Restrict)
   user                User          @relation(fields: [userId], references: [id], onDelete: Restrict)
   orderItems          orderItem[]
   payment             Payment?
+
+  @@unique([userId, idempotencyKey])
 }
 
 model orderItem {

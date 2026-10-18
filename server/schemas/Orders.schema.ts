@@ -1,5 +1,10 @@
 import Z from 'zod';
 
+export const IdempotencyKeySchema = Z.string()
+  .min(1)
+  .max(128)
+  .regex(/^[A-Za-z0-9_-]+$/);
+
 export const OrderQuerySchema = Z.object({
   page: Z.coerce.number().int().min(1).default(1),
 });

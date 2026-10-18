@@ -31,11 +31,17 @@ const response = await fetch(`${api}/api/auth/csrf-token`, {
   cache: 'no-store',
 });
 const { csrfToken } = await response.json();
+// Retain this value for retries of this purchase.
+const checkoutKey = crypto.randomUUID();
 
 await fetch(`${api}/api/orders`, {
   method: 'POST',
   credentials: 'include',
-  headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+  headers: {
+    'Content-Type': 'application/json',
+    'X-CSRF-Token': csrfToken,
+    'Idempotency-Key': checkoutKey,
+  },
   body: JSON.stringify({ addressId: 1, paymentMethod: 'credit_card' }),
 });
 ```
@@ -45,6 +51,27 @@ Passport regenerates the session. Missing, incorrect, or stale tokens return
 403 with `code: 'EBADCSRFTOKEN'` before route handlers run. If the frontend loses
 its token, fetch it again using the same session cookie. GitHub OAuth GET routes
 use OAuth `state` verification rather than an API CSRF header.
+
+### Checkout retries
+
+Before using this schema change, apply migrations with
+`npx prisma migrate deploy --config prisma7.config.ts` and regenerate the client
+with `npx prisma generate --config prisma7.config.ts`.
+
+Create `const checkoutKey = crypto.randomUUID()` once per intended purchase,
+before the order request above. `POST /api/orders` requires this key in the
+`Idempotency-Key` header (1-128 letters, digits, hyphens, or underscores).
+Keep the same key and request details for retries after timeouts or connection
+failures. Generate a new key only for a new purchase, not for each HTTP attempt.
+
+A new checkout returns 201. A successful retry returns 200 with the existing
+order and does not consume the current cart or stock again. Reusing a key with
+a different address ID or payment method returns 409. Keys are scoped to the
+authenticated user and recorded atomically with successful orders. Failed
+transactions do not consume a key. A replay returns the existing order's current
+status, including if it was canceled. Keys are retained for the life of the order.
+Serialization conflicts are retried up to three total attempts; after that,
+409 asks the client to retry with the same key.
 
 First, run the development server:
 

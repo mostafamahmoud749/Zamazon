@@ -48,6 +48,7 @@ export type OrderMinAggregateOutputType = {
   status: string | null
   createdAt: Date | null
   paymentMethod: string | null
+  idempotencyKey: string | null
 }
 
 export type OrderMaxAggregateOutputType = {
@@ -58,6 +59,7 @@ export type OrderMaxAggregateOutputType = {
   status: string | null
   createdAt: Date | null
   paymentMethod: string | null
+  idempotencyKey: string | null
 }
 
 export type OrderCountAggregateOutputType = {
@@ -68,6 +70,7 @@ export type OrderCountAggregateOutputType = {
   status: number
   createdAt: number
   paymentMethod: number
+  idempotencyKey: number
   _all: number
 }
 
@@ -94,6 +97,7 @@ export type OrderMinAggregateInputType = {
   status?: true
   createdAt?: true
   paymentMethod?: true
+  idempotencyKey?: true
 }
 
 export type OrderMaxAggregateInputType = {
@@ -104,6 +108,7 @@ export type OrderMaxAggregateInputType = {
   status?: true
   createdAt?: true
   paymentMethod?: true
+  idempotencyKey?: true
 }
 
 export type OrderCountAggregateInputType = {
@@ -114,6 +119,7 @@ export type OrderCountAggregateInputType = {
   status?: true
   createdAt?: true
   paymentMethod?: true
+  idempotencyKey?: true
   _all?: true
 }
 
@@ -211,6 +217,7 @@ export type OrderGroupByOutputType = {
   status: string
   createdAt: Date
   paymentMethod: string
+  idempotencyKey: string | null
   _count: OrderCountAggregateOutputType | null
   _avg: OrderAvgAggregateOutputType | null
   _sum: OrderSumAggregateOutputType | null
@@ -244,6 +251,7 @@ export type OrderWhereInput = {
   status?: Prisma.StringFilter<"Order"> | string
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   paymentMethod?: Prisma.StringFilter<"Order"> | string
+  idempotencyKey?: Prisma.StringNullableFilter<"Order"> | string | null
   address?: Prisma.XOR<Prisma.AddressScalarRelationFilter, Prisma.AddressWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   orderItems?: Prisma.OrderItemListRelationFilter
@@ -258,6 +266,7 @@ export type OrderOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   paymentMethod?: Prisma.SortOrder
+  idempotencyKey?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.AddressOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
   orderItems?: Prisma.orderItemOrderByRelationAggregateInput
@@ -266,6 +275,7 @@ export type OrderOrderByWithRelationInput = {
 
 export type OrderWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  userId_idempotencyKey?: Prisma.OrderUserIdIdempotencyKeyCompoundUniqueInput
   AND?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
   OR?: Prisma.OrderWhereInput[]
   NOT?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
@@ -275,11 +285,12 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.StringFilter<"Order"> | string
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   paymentMethod?: Prisma.StringFilter<"Order"> | string
+  idempotencyKey?: Prisma.StringNullableFilter<"Order"> | string | null
   address?: Prisma.XOR<Prisma.AddressScalarRelationFilter, Prisma.AddressWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   orderItems?: Prisma.OrderItemListRelationFilter
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
-}, "id">
+}, "id" | "userId_idempotencyKey">
 
 export type OrderOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -289,6 +300,7 @@ export type OrderOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   paymentMethod?: Prisma.SortOrder
+  idempotencyKey?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.OrderCountOrderByAggregateInput
   _avg?: Prisma.OrderAvgOrderByAggregateInput
   _max?: Prisma.OrderMaxOrderByAggregateInput
@@ -307,6 +319,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   status?: Prisma.StringWithAggregatesFilter<"Order"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
   paymentMethod?: Prisma.StringWithAggregatesFilter<"Order"> | string
+  idempotencyKey?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
 }
 
 export type OrderCreateInput = {
@@ -314,6 +327,7 @@ export type OrderCreateInput = {
   status?: string
   createdAt?: Date | string
   paymentMethod?: string
+  idempotencyKey?: string | null
   address: Prisma.AddressCreateNestedOneWithoutOrdersInput
   user: Prisma.UserCreateNestedOneWithoutOrdersInput
   orderItems?: Prisma.orderItemCreateNestedManyWithoutOrderInput
@@ -328,6 +342,7 @@ export type OrderUncheckedCreateInput = {
   status?: string
   createdAt?: Date | string
   paymentMethod?: string
+  idempotencyKey?: string | null
   orderItems?: Prisma.orderItemUncheckedCreateNestedManyWithoutOrderInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutOrderInput
 }
@@ -337,6 +352,7 @@ export type OrderUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.AddressUpdateOneRequiredWithoutOrdersNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   orderItems?: Prisma.orderItemUpdateManyWithoutOrderNestedInput
@@ -351,6 +367,7 @@ export type OrderUncheckedUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderItems?: Prisma.orderItemUncheckedUpdateManyWithoutOrderNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutOrderNestedInput
 }
@@ -363,6 +380,7 @@ export type OrderCreateManyInput = {
   status?: string
   createdAt?: Date | string
   paymentMethod?: string
+  idempotencyKey?: string | null
 }
 
 export type OrderUpdateManyMutationInput = {
@@ -370,6 +388,7 @@ export type OrderUpdateManyMutationInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type OrderUncheckedUpdateManyInput = {
@@ -380,6 +399,7 @@ export type OrderUncheckedUpdateManyInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type OrderListRelationFilter = {
@@ -392,6 +412,11 @@ export type OrderOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type OrderUserIdIdempotencyKeyCompoundUniqueInput = {
+  userId: number
+  idempotencyKey: string
+}
+
 export type OrderCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -400,6 +425,7 @@ export type OrderCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   paymentMethod?: Prisma.SortOrder
+  idempotencyKey?: Prisma.SortOrder
 }
 
 export type OrderAvgOrderByAggregateInput = {
@@ -417,6 +443,7 @@ export type OrderMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   paymentMethod?: Prisma.SortOrder
+  idempotencyKey?: Prisma.SortOrder
 }
 
 export type OrderMinOrderByAggregateInput = {
@@ -427,6 +454,7 @@ export type OrderMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   paymentMethod?: Prisma.SortOrder
+  idempotencyKey?: Prisma.SortOrder
 }
 
 export type OrderSumOrderByAggregateInput = {
@@ -558,6 +586,7 @@ export type OrderCreateWithoutUserInput = {
   status?: string
   createdAt?: Date | string
   paymentMethod?: string
+  idempotencyKey?: string | null
   address: Prisma.AddressCreateNestedOneWithoutOrdersInput
   orderItems?: Prisma.orderItemCreateNestedManyWithoutOrderInput
   payment?: Prisma.PaymentCreateNestedOneWithoutOrderInput
@@ -570,6 +599,7 @@ export type OrderUncheckedCreateWithoutUserInput = {
   status?: string
   createdAt?: Date | string
   paymentMethod?: string
+  idempotencyKey?: string | null
   orderItems?: Prisma.orderItemUncheckedCreateNestedManyWithoutOrderInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutOrderInput
 }
@@ -611,6 +641,7 @@ export type OrderScalarWhereInput = {
   status?: Prisma.StringFilter<"Order"> | string
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   paymentMethod?: Prisma.StringFilter<"Order"> | string
+  idempotencyKey?: Prisma.StringNullableFilter<"Order"> | string | null
 }
 
 export type OrderCreateWithoutOrderItemsInput = {
@@ -618,6 +649,7 @@ export type OrderCreateWithoutOrderItemsInput = {
   status?: string
   createdAt?: Date | string
   paymentMethod?: string
+  idempotencyKey?: string | null
   address: Prisma.AddressCreateNestedOneWithoutOrdersInput
   user: Prisma.UserCreateNestedOneWithoutOrdersInput
   payment?: Prisma.PaymentCreateNestedOneWithoutOrderInput
@@ -631,6 +663,7 @@ export type OrderUncheckedCreateWithoutOrderItemsInput = {
   status?: string
   createdAt?: Date | string
   paymentMethod?: string
+  idempotencyKey?: string | null
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutOrderInput
 }
 
@@ -655,6 +688,7 @@ export type OrderUpdateWithoutOrderItemsInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.AddressUpdateOneRequiredWithoutOrdersNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutOrderNestedInput
@@ -668,6 +702,7 @@ export type OrderUncheckedUpdateWithoutOrderItemsInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutOrderNestedInput
 }
 
@@ -676,6 +711,7 @@ export type OrderCreateWithoutPaymentInput = {
   status?: string
   createdAt?: Date | string
   paymentMethod?: string
+  idempotencyKey?: string | null
   address: Prisma.AddressCreateNestedOneWithoutOrdersInput
   user: Prisma.UserCreateNestedOneWithoutOrdersInput
   orderItems?: Prisma.orderItemCreateNestedManyWithoutOrderInput
@@ -689,6 +725,7 @@ export type OrderUncheckedCreateWithoutPaymentInput = {
   status?: string
   createdAt?: Date | string
   paymentMethod?: string
+  idempotencyKey?: string | null
   orderItems?: Prisma.orderItemUncheckedCreateNestedManyWithoutOrderInput
 }
 
@@ -713,6 +750,7 @@ export type OrderUpdateWithoutPaymentInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.AddressUpdateOneRequiredWithoutOrdersNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   orderItems?: Prisma.orderItemUpdateManyWithoutOrderNestedInput
@@ -726,6 +764,7 @@ export type OrderUncheckedUpdateWithoutPaymentInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderItems?: Prisma.orderItemUncheckedUpdateManyWithoutOrderNestedInput
 }
 
@@ -734,6 +773,7 @@ export type OrderCreateWithoutAddressInput = {
   status?: string
   createdAt?: Date | string
   paymentMethod?: string
+  idempotencyKey?: string | null
   user: Prisma.UserCreateNestedOneWithoutOrdersInput
   orderItems?: Prisma.orderItemCreateNestedManyWithoutOrderInput
   payment?: Prisma.PaymentCreateNestedOneWithoutOrderInput
@@ -746,6 +786,7 @@ export type OrderUncheckedCreateWithoutAddressInput = {
   status?: string
   createdAt?: Date | string
   paymentMethod?: string
+  idempotencyKey?: string | null
   orderItems?: Prisma.orderItemUncheckedCreateNestedManyWithoutOrderInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutOrderInput
 }
@@ -783,6 +824,7 @@ export type OrderCreateManyUserInput = {
   status?: string
   createdAt?: Date | string
   paymentMethod?: string
+  idempotencyKey?: string | null
 }
 
 export type OrderUpdateWithoutUserInput = {
@@ -790,6 +832,7 @@ export type OrderUpdateWithoutUserInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.AddressUpdateOneRequiredWithoutOrdersNestedInput
   orderItems?: Prisma.orderItemUpdateManyWithoutOrderNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutOrderNestedInput
@@ -802,6 +845,7 @@ export type OrderUncheckedUpdateWithoutUserInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderItems?: Prisma.orderItemUncheckedUpdateManyWithoutOrderNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutOrderNestedInput
 }
@@ -813,6 +857,7 @@ export type OrderUncheckedUpdateManyWithoutUserInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type OrderCreateManyAddressInput = {
@@ -822,6 +867,7 @@ export type OrderCreateManyAddressInput = {
   status?: string
   createdAt?: Date | string
   paymentMethod?: string
+  idempotencyKey?: string | null
 }
 
 export type OrderUpdateWithoutAddressInput = {
@@ -829,6 +875,7 @@ export type OrderUpdateWithoutAddressInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   orderItems?: Prisma.orderItemUpdateManyWithoutOrderNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutOrderNestedInput
@@ -841,6 +888,7 @@ export type OrderUncheckedUpdateWithoutAddressInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderItems?: Prisma.orderItemUncheckedUpdateManyWithoutOrderNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutOrderNestedInput
 }
@@ -852,6 +900,7 @@ export type OrderUncheckedUpdateManyWithoutAddressInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -893,6 +942,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   status?: boolean
   createdAt?: boolean
   paymentMethod?: boolean
+  idempotencyKey?: boolean
   address?: boolean | Prisma.AddressDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   orderItems?: boolean | Prisma.Order$orderItemsArgs<ExtArgs>
@@ -908,6 +958,7 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   status?: boolean
   createdAt?: boolean
   paymentMethod?: boolean
+  idempotencyKey?: boolean
   address?: boolean | Prisma.AddressDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
@@ -920,6 +971,7 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   status?: boolean
   createdAt?: boolean
   paymentMethod?: boolean
+  idempotencyKey?: boolean
   address?: boolean | Prisma.AddressDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
@@ -932,9 +984,10 @@ export type OrderSelectScalar = {
   status?: boolean
   createdAt?: boolean
   paymentMethod?: boolean
+  idempotencyKey?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "addressId" | "totalAmount" | "status" | "createdAt" | "paymentMethod", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "addressId" | "totalAmount" | "status" | "createdAt" | "paymentMethod" | "idempotencyKey", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   address?: boolean | Prisma.AddressDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -967,6 +1020,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     status: string
     createdAt: Date
     paymentMethod: string
+    idempotencyKey: string | null
   }, ExtArgs["result"]["order"]>
   composites: {}
 }
@@ -1401,6 +1455,7 @@ export interface OrderFieldRefs {
   readonly status: Prisma.FieldRef<"Order", 'String'>
   readonly createdAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly paymentMethod: Prisma.FieldRef<"Order", 'String'>
+  readonly idempotencyKey: Prisma.FieldRef<"Order", 'String'>
 }
     
 

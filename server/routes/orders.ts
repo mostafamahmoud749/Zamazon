@@ -2,10 +2,11 @@ import { Router, Request } from 'express';
 import { prisma } from '../../prisma/lib/prisma.js';
 import { requireAuth } from '../middleware/requireAuth.js';
 import { CreateOrderDto } from '../dtos/Order.dto.js';
-import { Prisma } from '../../generated/prisma/client.js';
+import { checkout } from '../services/checkout.js';
 import { validateQuery } from '../middleware/validateQuery.js';
 import {
   CreateOrderSchema,
+  IdempotencyKeySchema,
   OrderIdParamsSchema,
   OrderQuerySchema,
 } from '../schemas/Orders.schema.js';
@@ -96,108 +97,28 @@ router.post(
   requireAuth,
   validateBody(CreateOrderSchema),
   async (request: Request<{}, {}, CreateOrderDto>, response) => {
-    const { paymentMethod, addressId } = request.body;
+    const key = IdempotencyKeySchema.safeParse(request.get('Idempotency-Key'));
+    if (!key.success) {
+      return response.status(400).json({
+        error: 'Idempotency-Key must contain 1-128 letters, digits, hyphens, or underscores',
+      });
+    }
 
     try {
-      const validateAddress = await prisma.address.findFirst({
-        where: {
-          id: addressId,
-          userId: request.user!.id,
-        },
-      });
+      const result = await checkout(request.user!.id, request.body, key.data);
+      response.status(result.created ? 201 : 200).json(result.order);
+    } catch (error) {
+      console.error(error);
+      if (error instanceof Error && error.message === 'IDEMPOTENCY_KEY_REUSED') {
+        return response.status(409).json({
+          error: 'Idempotency key was already used with different checkout details',
+        });
+      }
 
-      if (!validateAddress) {
+      if (error instanceof Error && error.message === 'INVALID_ADDRESS') {
         return response.sendStatus(400);
       }
 
-      const order = await prisma.$transaction(
-        async (transaction) => {
-          const cartItems = await transaction.cartItem.findMany({
-            where: { userId: request.user!.id },
-            select: {
-              quantity: true,
-              product: {
-                select: {
-                  id: true,
-                  price: true,
-                  discount: true,
-                  stock: true,
-                  isActive: true,
-                },
-              },
-            },
-          });
-
-          if (cartItems.length === 0) {
-            throw new Error('EMPTY_CART');
-          }
-
-          const orderItems = [];
-          let totalAmount = new Prisma.Decimal(0);
-
-          for (const item of cartItems) {
-            if (!item.product.isActive || item.product.stock < item.quantity) {
-              throw new Error('INSUFFICIENT_STOCK');
-            }
-
-            const discount = item.product.discount ?? new Prisma.Decimal(0);
-            const discountedPrice = item.product.price
-              .mul(new Prisma.Decimal(1).sub(discount.div(100)))
-              .toDecimalPlaces(2, Prisma.Decimal.ROUND_HALF_UP);
-
-            await transaction.product
-              .updateMany({
-                where: {
-                  id: item.product.id,
-                  isActive: true,
-                  stock: { gte: item.quantity },
-                },
-                data: { stock: { decrement: item.quantity } },
-              })
-              .then((result) => {
-                if (result.count !== 1) {
-                  throw new Error('INSUFFICIENT_STOCK');
-                }
-              });
-
-            totalAmount = totalAmount.add(discountedPrice.mul(item.quantity));
-
-            orderItems.push({
-              productId: item.product.id,
-              quantity: item.quantity,
-              price: discountedPrice,
-            });
-          }
-
-          const createdOrder = await transaction.order.create({
-            data: {
-              userId: request.user!.id,
-              addressId,
-              totalAmount,
-              paymentMethod,
-              orderItems: {
-                create: orderItems,
-              },
-            },
-            include: {
-              orderItems: true,
-            },
-          });
-
-          await transaction.cartItem.deleteMany({
-            where: { userId: request.user!.id },
-          });
-
-          return createdOrder;
-        },
-        {
-          isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
-        },
-      );
-
-      response.status(201).json(order);
-    } catch (error) {
-      console.error(error);
       if (error instanceof Error && error.message === 'EMPTY_CART') {
         return response.status(400).json({ error: 'Cart is empty' });
       }

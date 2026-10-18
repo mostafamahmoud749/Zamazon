@@ -1,6 +1,6 @@
 import type { Express } from 'express';
 import request from 'supertest';
-import { expect } from 'vitest';
+import { expect, vi } from 'vitest';
 import { prisma } from '../../../prisma/lib/prisma.js';
 import { loginTestUser, registerTestUser } from './auth.js';
 
@@ -82,4 +82,46 @@ export async function createForeignUserAddress() {
 
 export async function expectOrderCount(userId: number, count: number) {
   await expect(prisma.order.count({ where: { userId } })).resolves.toBe(count);
+}
+
+export function synchronizeCartReads() {
+  // Hold each cart read until both real database transactions have read it.
+  // This forces the race instead of relying on request timing.
+  let readCount = 0;
+  let releaseReads!: () => void;
+  const bothHaveRead = new Promise<void>((resolve) => {
+    releaseReads = resolve;
+  });
+  const runTransaction = prisma.$transaction.bind(prisma);
+  const transactionSpy = vi
+    .spyOn(prisma, '$transaction')
+    .mockImplementation(async (operation, options) => {
+      if (typeof operation !== 'function') throw new Error('Expected interactive transaction');
+      return runTransaction(async (transaction) => {
+        const cartItem = new Proxy(transaction.cartItem, {
+          get(delegate, property, receiver) {
+            if (property === 'findMany') {
+              return async (...args: Parameters<typeof delegate.findMany>) => {
+                const items = await delegate.findMany(...args);
+                if (++readCount === 2) releaseReads();
+                await bothHaveRead;
+                return items;
+              };
+            }
+            return Reflect.get(delegate, property, receiver);
+          },
+        });
+        return operation(
+          new Proxy(transaction, {
+            get(target, property, receiver) {
+              return property === 'cartItem' ? cartItem : Reflect.get(target, property, receiver);
+            },
+          }),
+        );
+      }, options);
+    });
+  return () => {
+    releaseReads();
+    transactionSpy.mockRestore();
+  };
 }

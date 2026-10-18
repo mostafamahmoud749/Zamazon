@@ -1,11 +1,12 @@
 import request from 'supertest';
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { createApp } from '../app.js';
 import { prisma } from '../../prisma/lib/prisma.js';
 import {
   createForeignUserAddress,
   createOrderRouteFixture,
   expectOrderCount,
+  synchronizeCartReads,
 } from './helpers/orders.js';
 
 const app = createApp();
@@ -65,47 +66,161 @@ describe('GET /api/orders', () => {
 });
 
 describe('POST /api/orders', () => {
+  it('replays a completed checkout without consuming items added later', async () => {
+    const address = await fixture.createAddress();
+    const product = await fixture.createProduct({ stock: 10 });
+    await fixture.addToCart(product.id, 2);
+    const key = crypto.randomUUID();
+    const payload = { addressId: address.id, paymentMethod: 'credit_card' };
+    const first = await fixture.agent.post('/api/orders').set('Idempotency-Key', key).send(payload);
+    const replay = await fixture.agent
+      .post('/api/orders')
+      .set('Idempotency-Key', key)
+      .send(payload);
+
+    expect(first.status).toBe(201);
+    expect(replay.status).toBe(200);
+    expect(replay.body).toEqual(first.body);
+    await fixture.addToCart(product.id, 1);
+    const laterReplay = await fixture.agent
+      .post('/api/orders')
+      .set('Idempotency-Key', key)
+      .send(payload);
+    expect(laterReplay.status).toBe(200);
+    expect(laterReplay.body).toEqual(first.body);
+    await expectOrderCount(fixture.userId, 1);
+    expect((await prisma.product.findUniqueOrThrow({ where: { id: product.id } })).stock).toBe(8);
+    expect(
+      (await prisma.cartItem.findMany({ where: { userId: fixture.userId } })).map(
+        (item) => item.quantity,
+      ),
+    ).toEqual([1]);
+  });
+
+  it.each([false, true])(
+    'handles simultaneous same-key requests (changed details: %s)',
+    async (changedDetails) => {
+      const address = await fixture.createAddress();
+      const product = await fixture.createProduct({ stock: 10 });
+      await fixture.addToCart(product.id, 2);
+      const key = crypto.randomUUID();
+      const releaseReads = synchronizeCartReads();
+      let responses;
+      try {
+        responses = await Promise.all(
+          Array.from({ length: 2 }, (_, index) =>
+            fixture.agent
+              .post('/api/orders')
+              .set('Idempotency-Key', key)
+              .send({
+                addressId: address.id,
+                paymentMethod: changedDetails && index === 1 ? 'credit_card' : 'paypal',
+              }),
+          ),
+        );
+      } finally {
+        releaseReads();
+      }
+      expect(responses.map(({ status }) => status).sort()).toEqual(
+        changedDetails ? [201, 409] : [200, 201],
+      );
+      if (!changedDetails) expect(responses[0].body).toEqual(responses[1].body);
+      await expectOrderCount(fixture.userId, 1);
+      expect((await prisma.product.findUniqueOrThrow({ where: { id: product.id } })).stock).toBe(8);
+      expect(await prisma.cartItem.count({ where: { userId: fixture.userId } })).toBe(0);
+    },
+  );
+
+  it('rejects reuse of a key with a different address or payment method', async () => {
+    const address = await fixture.createAddress();
+    const otherAddress = await fixture.createAddress();
+    const product = await fixture.createProduct({ stock: 10 });
+    await fixture.addToCart(product.id, 1);
+    const key = crypto.randomUUID();
+    const payload = { addressId: address.id, paymentMethod: 'paypal' };
+    expect(
+      (await fixture.agent.post('/api/orders').set('Idempotency-Key', key).send(payload)).status,
+    ).toBe(201);
+    for (const changed of [
+      { ...payload, addressId: otherAddress.id },
+      { ...payload, paymentMethod: 'credit_card' },
+    ]) {
+      const response = await fixture.agent
+        .post('/api/orders')
+        .set('Idempotency-Key', key)
+        .send(changed);
+      expect(response.status).toBe(409);
+      expect(response.body.error).toContain('different checkout details');
+    }
+    await expectOrderCount(fixture.userId, 1);
+    expect((await prisma.product.findUniqueOrThrow({ where: { id: product.id } })).stock).toBe(9);
+  });
+
+  it('scopes keys to the authenticated user', async () => {
+    const other = await createOrderRouteFixture(app);
+    try {
+      const key = crypto.randomUUID();
+      const ids = [];
+      for (const owner of [fixture, other]) {
+        const address = await owner.createAddress();
+        const product = await owner.createProduct();
+        await owner.addToCart(product.id, 1);
+        const response = await owner.agent
+          .post('/api/orders')
+          .set('Idempotency-Key', key)
+          .send({ addressId: address.id, paymentMethod: 'paypal' });
+        expect(response.status).toBe(201);
+        expect(response.body.userId).toBe(owner.userId);
+        ids.push(response.body.id);
+      }
+      expect(ids[0]).not.toBe(ids[1]);
+    } finally {
+      await other.cleanup();
+    }
+  }, 15_000);
+
+  it('allows retrying a failed checkout with the same key', async () => {
+    const address = await fixture.createAddress();
+    const product = await fixture.createProduct({ stock: 1 });
+    await fixture.addToCart(product.id, 2);
+    const key = crypto.randomUUID();
+    const payload = { addressId: address.id, paymentMethod: 'paypal' };
+    const failed = await fixture.agent
+      .post('/api/orders')
+      .set('Idempotency-Key', key)
+      .send(payload);
+    expect(failed.status).toBe(409);
+    await expectOrderCount(fixture.userId, 0);
+    await prisma.product.update({ where: { id: product.id }, data: { stock: 5 } });
+    const retried = await fixture.agent
+      .post('/api/orders')
+      .set('Idempotency-Key', key)
+      .send(payload);
+    expect(retried.status).toBe(201);
+    await expectOrderCount(fixture.userId, 1);
+    expect((await prisma.product.findUniqueOrThrow({ where: { id: product.id } })).stock).toBe(3);
+  });
+
+  it('requires a valid bounded idempotency key', async () => {
+    const payload = { addressId: 1, paymentMethod: 'paypal' };
+    expect((await fixture.agent.post('/api/orders').send(payload)).status).toBe(400);
+    for (const key of ['', 'invalid key', 'x'.repeat(129)]) {
+      const response = await fixture.agent
+        .post('/api/orders')
+        .set('Idempotency-Key', key)
+        .send(payload);
+      expect(response.status).toBe(400);
+    }
+    await expectOrderCount(fixture.userId, 0);
+  });
+
   it('checks out the same cart only once when requests arrive together', async () => {
     const address = await fixture.createAddress();
     // Enough stock for both requests: stock checks alone cannot prevent duplicates.
     const product = await fixture.createProduct({ stock: 10 });
     await fixture.addToCart(product.id, 2);
 
-    // Hold each cart read until both real database transactions have read it.
-    // This forces the race instead of relying on request timing.
-    let readCount = 0;
-    let releaseReads!: () => void;
-    const bothHaveRead = new Promise<void>((resolve) => {
-      releaseReads = resolve;
-    });
-    const runTransaction = prisma.$transaction.bind(prisma);
-    const transactionSpy = vi
-      .spyOn(prisma, '$transaction')
-      .mockImplementation(async (operation, options) => {
-        if (typeof operation !== 'function') throw new Error('Expected interactive transaction');
-        return runTransaction(async (transaction) => {
-          const cartItem = new Proxy(transaction.cartItem, {
-            get(delegate, property, receiver) {
-              if (property === 'findMany') {
-                return async (...args: Parameters<typeof delegate.findMany>) => {
-                  const items = await delegate.findMany(...args);
-                  if (++readCount === 2) releaseReads();
-                  await bothHaveRead;
-                  return items;
-                };
-              }
-              return Reflect.get(delegate, property, receiver);
-            },
-          });
-          return operation(
-            new Proxy(transaction, {
-              get(target, property, receiver) {
-                return property === 'cartItem' ? cartItem : Reflect.get(target, property, receiver);
-              },
-            }),
-          );
-        }, options);
-      });
+    const releaseReads = synchronizeCartReads();
 
     let responses;
     try {
@@ -113,12 +228,12 @@ describe('POST /api/orders', () => {
         Array.from({ length: 2 }, () =>
           fixture.agent
             .post('/api/orders')
+            .set('Idempotency-Key', crypto.randomUUID())
             .send({ addressId: address.id, paymentMethod: 'credit_card' }),
         ),
       );
     } finally {
       releaseReads();
-      transactionSpy.mockRestore();
     }
 
     expect(responses.filter(({ status }) => status === 201)).toHaveLength(1);
@@ -153,6 +268,7 @@ describe('POST /api/orders', () => {
 
     const response = await fixture.agent
       .post('/api/orders')
+      .set('Idempotency-Key', crypto.randomUUID())
       .send({ addressId: address.id, paymentMethod: 'credit_card' });
 
     expect(response.status).toBe(201);
@@ -185,6 +301,7 @@ describe('POST /api/orders', () => {
 
       const response = await fixture.agent
         .post('/api/orders')
+        .set('Idempotency-Key', crypto.randomUUID())
         .send({ addressId: address.id, paymentMethod: 'credit_card' });
 
       expect(response.status).toBe(201);
@@ -199,10 +316,12 @@ describe('POST /api/orders', () => {
     const address = await fixture.createAddress();
     const emptyResponse = await fixture.agent
       .post('/api/orders')
+      .set('Idempotency-Key', crypto.randomUUID())
       .send({ addressId: address.id, paymentMethod: 'paypal' });
     const foreign = await createForeignUserAddress();
     const foreignResponse = await fixture.agent
       .post('/api/orders')
+      .set('Idempotency-Key', crypto.randomUUID())
       .send({ addressId: foreign.address.id, paymentMethod: 'paypal' });
     await foreign.cleanup();
 
@@ -210,6 +329,7 @@ describe('POST /api/orders', () => {
     await fixture.addToCart(product.id, 2);
     const stockResponse = await fixture.agent
       .post('/api/orders')
+      .set('Idempotency-Key', crypto.randomUUID())
       .send({ addressId: address.id, paymentMethod: 'paypal' });
 
     expect(emptyResponse.status).toBe(400);
@@ -262,6 +382,7 @@ describe('PATCH /api/orders/:id/cancel', () => {
 
     const created = await fixture.agent
       .post('/api/orders')
+      .set('Idempotency-Key', crypto.randomUUID())
       .send({ addressId: address.id, paymentMethod: 'paypal' });
     expect(created.status).toBe(201);
     await prisma.product.update({ where: { id: secondProduct.id }, data: { isActive: false } });
@@ -286,6 +407,7 @@ describe('PATCH /api/orders/:id/cancel', () => {
     await fixture.addToCart(product.id, 2);
     const created = await fixture.agent
       .post('/api/orders')
+      .set('Idempotency-Key', crypto.randomUUID())
       .send({ addressId: address.id, paymentMethod: 'paypal' });
     expect(created.status).toBe(201);
 
