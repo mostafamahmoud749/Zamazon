@@ -59,7 +59,7 @@ router.post(
 router.get('/api/auth/github', passport.authenticate('github'));
 
 router.get('/api/auth/github/callback', passport.authenticate('github'), (_, response) => {
-  response.sendStatus(200);
+  response.redirect('http://localhost:3000');
 });
 
 export default router;

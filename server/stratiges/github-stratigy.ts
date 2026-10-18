@@ -2,6 +2,7 @@ import passport from 'passport';
 import { Strategy, type Profile } from 'passport-github';
 import type { VerifyCallback } from 'passport-oauth2';
 import { prisma } from '@/prisma/lib/prisma.js';
+import { getVerifiedGitHubEmail } from '../services/githubEmail.js';
 
 const clientID = process.env.GITHUB_CLIENT_ID;
 const clientSecret = process.env.GITHUB_CLIENT_SECRET;
@@ -16,7 +17,7 @@ export default passport.use(
       clientID,
       clientSecret,
       callbackURL: 'http://localhost:9000/api/auth/github/callback',
-      scope: ['identify'],
+      scope: ['user:email'],
       // @ts-expect-error passport-github types restrict OAuth2's boolean state option to strings.
       state: true,
     },
@@ -26,45 +27,49 @@ export default passport.use(
       profile: Profile,
       done: VerifyCallback,
     ) {
-      const account = await prisma.account.findUnique({
-        where: {
-          provider_providerAccountId: {
-            provider: profile.provider,
-            providerAccountId: profile.id,
-          },
-        },
-        include: {
-          user: true,
-        },
-      });
-
-      if (account) {
-        return done(null, account.user);
-      }
-
-      const email = profile.emails?.[0]?.value;
-
-      if (!profile.id || !email) {
-        return done(null, false, {
-          message: 'A verified GitHub email is required',
-        });
-      }
-
-      const newUser = await prisma.user.create({
-        data: {
-          email,
-          name: profile.displayName || null,
-          accounts: {
-            create: {
-              provider: 'github',
+      try {
+        const account = await prisma.account.findUnique({
+          where: {
+            provider_providerAccountId: {
+              provider: profile.provider,
               providerAccountId: profile.id,
-              username: profile.username || null,
             },
           },
-        },
-      });
+          include: {
+            user: true,
+          },
+        });
 
-      return done(null, newUser);
+        if (account) {
+          return done(null, account.user);
+        }
+
+        const email = await getVerifiedGitHubEmail(accessToken);
+
+        if (!profile.id || !email) {
+          return done(null, false, {
+            message: 'A verified GitHub email is required',
+          });
+        }
+
+        const newUser = await prisma.user.create({
+          data: {
+            email,
+            name: profile.displayName || null,
+            accounts: {
+              create: {
+                provider: 'github',
+                providerAccountId: profile.id,
+                username: profile.username || null,
+              },
+            },
+          },
+        });
+
+        return done(null, newUser);
+      } catch (error) {
+        return done(error);
+      }
     },
   ),
 );

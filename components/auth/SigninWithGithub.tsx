@@ -7,9 +7,13 @@ type Props = {
 };
 
 export default function SigninWithGithub({ callbackUrl = '/' }: Props) {
+  function signInWithGithub() {
+    window.location.href = 'http://localhost:9000/api/auth/github';
+  }
+
   return (
     <button
-      onClick={() => signIn('github', { redirect: true, callbackUrl })}
+      onClick={() => signInWithGithub()}
       className="flex cursor-pointer items-center gap-2 rounded border p-2"
     >
       <FaGithub size={22} /> Sign in with GitHub

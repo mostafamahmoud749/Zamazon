@@ -23,9 +23,12 @@ export default function SignClient() {
       router.push(`/sign?s=${next ? 'signup' : 'signin'}`);
     }
   }
+
   useEffect(() => {
     setNewUser(S === 'signin' ? false : true);
   }, [S]);
+
+  
   return (
     <main className="m-auto w-full max-w-[400px] rounded-md border-1 border-gray-200 bg-white shadow-sm md:mt-6">
       <Form selected={newUser} toggle={toggle} text="Create account" textq="New to Zamazon?">
