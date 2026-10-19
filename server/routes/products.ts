@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { prisma } from '../../prisma/lib/prisma.js';
 import { getCategoryIdsIncludingChildren } from '../utils/category.js';
 import { validateQuery } from '../middleware/validateQuery.js';
-import { ProductsQuerySchema } from '../schemas/Product.schema.js';
+import { ProductsQuerySchema } from '../../schemas/Product.schema.js';
 
 const router = Router();
 
@@ -10,12 +10,13 @@ router.get('/api/products', validateQuery(ProductsQuerySchema), async (request, 
   try {
     const { page, rating, search, filters: selectedCategoryIds } = response.locals.query;
     const categoryIds = await getCategoryIdsIncludingChildren(selectedCategoryIds);
-    const ratedProducts = rating > 0
-      ? await prisma.review.groupBy({
-          by: ['productId'],
-          having: { rating: { _avg: { gte: rating } } },
-        })
-      : [];
+    const ratedProducts =
+      rating > 0
+        ? await prisma.review.groupBy({
+            by: ['productId'],
+            having: { rating: { _avg: { gte: rating } } },
+          })
+        : [];
 
     const products = await prisma.product.findMany({
       where: {

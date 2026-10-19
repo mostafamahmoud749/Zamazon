@@ -6,6 +6,7 @@ type ButtonProps = {
   children: ReactNode;
   padding: string;
   onClick: () => void;
+  type: 'button' | 'submit' | 'reset';
   disabled: boolean;
   extraStyling: string;
   margin: string;
@@ -16,6 +17,7 @@ export default function Button({
   color,
   hoverdColor,
   children,
+  type = 'button',
   padding = 'py-1',
   onClick,
   disabled = false,
@@ -25,7 +27,7 @@ export default function Button({
 }: Partial<ButtonProps>) {
   return (
     <button
-      type="button"
+      type={type}
       disabled={disabled}
       onClick={onClick}
       className={[

@@ -2,7 +2,7 @@ import { csrfAgent } from './helpers/csrf.js';
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { createApp } from '../app.js';
-import { MAX_CART_QUANTITY } from '../schemas/Cart.schema.js';
+import { MAX_CART_QUANTITY } from '../../schemas/Cart.schema.js';
 import { prisma } from '../../prisma/lib/prisma.js';
 import { createCartRouteFixture, expectCartItemCount } from './helpers/cart.js';
 
@@ -50,7 +50,11 @@ describe('GET /api/cart/items', () => {
 
 describe('POST /api/cart/items', () => {
   it('requires authentication', async () => {
-    const response = await (await csrfAgent(app)).post('/api/cart/items').send({ productId: 1, quantity: 1 });
+    const response = await (
+      await csrfAgent(app)
+    )
+      .post('/api/cart/items')
+      .send({ productId: 1, quantity: 1 });
 
     expect(response.status).toBe(401);
   });
@@ -139,7 +143,9 @@ describe('DELETE /api/cart/items/:id', () => {
       data: { userId: fixture.userId, productId: product.id, quantity: 1 },
     });
 
-    const unauthenticatedResponse = await (await csrfAgent(app)).delete(`/api/cart/items/${item.id}`);
+    const unauthenticatedResponse = await (
+      await csrfAgent(app)
+    ).delete(`/api/cart/items/${item.id}`);
     const deleteResponse = await fixture.agent.delete(`/api/cart/items/${item.id}`);
 
     expect(unauthenticatedResponse.status).toBe(401);

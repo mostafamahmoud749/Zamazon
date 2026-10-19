@@ -3,12 +3,12 @@ import { prisma } from '../../prisma/lib/prisma.js';
 import { requireAuth } from '../middleware/requireAuth.js';
 import { CreateReviewDto, PatchReviewDto } from '../dtos/Reviews.dto.js';
 import { validateParams } from '../middleware/validateParams.js';
-import { ProducIdParamsSchema } from '../schemas/Product.schema.js';
+import { ProducIdParamsSchema } from '../../schemas/Product.schema.js';
 import {
   CreateReviewSchema,
   ReviewRouteParamsSchema,
   UpdateReviewSchema,
-} from '../schemas/reviews.schema.js';
+} from '../../schemas/reviews.schema.js';
 import { validateBody } from '../middleware/validateBody.js';
 import { isPrismaError } from '../utils/isPrismaError.js';
 

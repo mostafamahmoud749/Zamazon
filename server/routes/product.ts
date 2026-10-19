@@ -7,7 +7,7 @@ import {
   CreateProductSchema,
   ProducIdParamsSchema,
   UpdateProductSchema,
-} from '../schemas/Product.schema.js';
+} from '../../schemas/Product.schema.js';
 import { validateBody } from '../middleware/validateBody.js';
 import { isPrismaError } from '../utils/isPrismaError.js';
 

@@ -6,7 +6,7 @@ import {
   CreateAddressSchema,
   PatchAddressSchema,
   AddressIdParamsSchema,
-} from '../schemas/Address.schema.js';
+} from '../../schemas/Address.schema.js';
 import { validateBody } from '../middleware/validateBody.js';
 import { validateParams } from '../middleware/validateParams.js';
 import { isPrismaError } from '../utils/isPrismaError.js';

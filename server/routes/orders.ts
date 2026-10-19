@@ -9,7 +9,7 @@ import {
   IdempotencyKeySchema,
   OrderIdParamsSchema,
   OrderQuerySchema,
-} from '../schemas/Orders.schema.js';
+} from '../../schemas/Orders.schema.js';
 import { validateParams } from '../middleware/validateParams.js';
 import { validateBody } from '../middleware/validateBody.js';
 import { isPrismaError } from '../utils/isPrismaError.js';

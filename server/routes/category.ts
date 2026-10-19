@@ -1,6 +1,6 @@
 import { Router, Request } from 'express';
 import { prisma } from '../../prisma/lib/prisma.js';
-import { CategoryIdParamsSchema } from '../schemas/category.schema.js';
+import { CategoryIdParamsSchema } from '../../schemas/category.schema.js';
 import { validateParams } from '../middleware/validateParams.js';
 
 const router = Router();

@@ -2,11 +2,11 @@ import Radio from '@/components/auth/Radio';
 import { AuthProps } from '@/types/auth';
 import { ReactNode } from 'react';
 
-type FormProps = {
+type AuthSectionProps = {
   children: ReactNode;
 } & AuthProps;
 
-export default function Form({ selected, toggle, children, text, textq }: FormProps) {
+export default function AuthSection({ selected, toggle, children, text, textq }: AuthSectionProps) {
   return (
     <>
       <Radio selected={selected} toggle={toggle} text={text} textq={textq} />

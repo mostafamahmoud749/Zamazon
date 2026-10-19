@@ -6,12 +6,12 @@ import {
   CreateCartItemSchema,
   CartIDParamsSchema,
   UpdateCartItemSchema,
-} from '../schemas/Cart.schema.js';
+} from '../../schemas/Cart.schema.js';
 import { validateBody } from '../middleware/validateBody.js';
 import { validateParams } from '../middleware/validateParams.js';
 import { checkAvailableProductQuantity } from '../utils/checkAvilableProductQuantity.js';
 import { Prisma } from '../../generated/prisma/client.js';
-import { MAX_CART_QUANTITY } from '../schemas/Cart.schema.js';
+import { MAX_CART_QUANTITY } from '../../schemas/Cart.schema.js';
 import { isPrismaError } from '../utils/isPrismaError.js';
 
 const router = Router();

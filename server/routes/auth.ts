@@ -4,7 +4,7 @@ import { rateLimit } from 'express-rate-limit';
 import { hashPassword } from '../utils/helpers.js';
 import { CreateUserDto } from '../dtos/User.dto.js';
 import { prisma } from '../../prisma/lib/prisma.js';
-import { RegisterSchema, LoginSchema } from '../schemas/Auth.schema.js';
+import { RegisterSchema, LoginSchema } from '../../schemas/Auth.schema.js';
 import { validateBody } from '../middleware/validateBody.js';
 import { isPrismaError } from '../utils/isPrismaError.js';
 
