@@ -44,7 +44,7 @@ export default function SignClient() {
       </AuthSection>
 
       <AuthSection selected={!newUser} toggle={toggle} text="Sign in" textq="Already a customer?">
-        <LoginForm callbackUrl={callbackUrl} />
+        <LoginForm onResult={setPopup} callbackUrl={callbackUrl} />
       </AuthSection>
     </main>
   );

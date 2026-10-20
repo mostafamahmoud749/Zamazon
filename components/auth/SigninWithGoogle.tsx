@@ -9,6 +9,7 @@ type Props = {
 export default function SigninWithGoogle({ callbackUrl = '/' }: Props) {
   return (
     <button
+      type="button"
       onClick={() => signIn('google', { redirect: true, callbackUrl })}
       className="flex cursor-pointer items-center gap-2 rounded border p-2"
     >

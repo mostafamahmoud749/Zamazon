@@ -8,6 +8,7 @@ type Props = {
 export default function SigninWithGithub() {
   return (
     <button
+      type="button"
       onClick={() => (window.location.href = 'http://localhost:9000/api/auth/github')}
       className="flex cursor-pointer items-center gap-2 rounded border p-2"
     >
