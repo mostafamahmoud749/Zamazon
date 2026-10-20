@@ -62,4 +62,17 @@ router.get('/api/auth/github/callback', passport.authenticate('github'), (_, res
   response.redirect('http://localhost:3000');
 });
 
+router.post('/api/auth/logout', (request, response, next) => {
+  request.logout((error) => {
+    if (error) return next(error);
+
+    request.session.destroy((error) => {
+      if (error) return next(error);
+
+      response.clearCookie('connect.sid', { path: '/' });
+      response.sendStatus(204);
+    });
+  });
+});
+
 export default router;
