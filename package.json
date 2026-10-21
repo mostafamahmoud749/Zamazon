@@ -10,6 +10,7 @@
     "test:watch": "vitest",
     "lint": "eslint",
     "backend": "nodemon --exec tsx server/server.ts",
+    "seed:products": "tsx prisma/seed-products.ts",
     "postinstall": "prisma skills sync || exit 0"
   },
   "dependencies": {
@@ -54,6 +55,7 @@
     "@types/passport-local": "^1.0.38",
     "@types/pg": "^8.23.1",
     "@types/react": "^19.2.10",
+    "@types/react-dom": "^19.3.0",
     "@types/supertest": "^7.2.1",
     "@typescript-eslint/eslint-plugin": "^8.71.1",
     "@typescript-eslint/parser": "^8.71.1",

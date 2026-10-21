@@ -15,16 +15,17 @@ export default async function HeaderMedia({
 }): Promise<JSX.Element> {
   const isMobile: boolean = /Mobi|Android/i.test(userAgent ?? '');
   const session: Session | null = await getServerSession(authOptions);
-  let categories: string[] = [];
+  let categories: NavItem[] = [];
   try {
-    categories = await fetchCategories('https://dummyjson.com/products/categories');
+    const result = await fetchCategories('http://localhost:9000/api/categories');
+    categories = result
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((category) => ({ id: category.id, group: 'departments', key: category.name }));
   } catch {
     categories = [];
   }
 
-  const navs: NavItem[] = (
-    categories.length ? categories.sort() : ['Home', 'Health & Household', 'Books', 'PC', 'clothes']
-  ).map((category) => ({ group: 'departments', key: category }));
+  const navs: NavItem[] = categories;
 
   return isMobile ? (
     <MobileHeader navs={navs} session={session} />

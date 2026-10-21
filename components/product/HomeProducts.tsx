@@ -21,11 +21,9 @@ export default function HomeProducts({ products }: HomeProductsProps): JSX.Eleme
       .filter((product: Product): boolean => {
         const title = product.title?.toLowerCase() ?? '';
         const description = product.description?.toLowerCase() ?? '';
-        const category = product.category?.toLowerCase() ?? '';
         return (
           title.includes(searchQuery) ||
-          description.includes(searchQuery) ||
-          category.includes(searchQuery)
+          description.includes(searchQuery)
         );
       })
       .slice(0, 12);

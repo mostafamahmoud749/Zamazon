@@ -1,24 +1,10 @@
-export async function fetchCategories(url: string): Promise<string[]> {
-  try {
-    const res = await fetch(url, { next: { revalidate: 600 } }); // cache for 10 minutes
-    if (!res.ok) return [];
+import { CategoriesResponseSchema } from '@/schemas/category.schema';
+import type { Category } from '@/types/category';
 
-    const data: unknown = await res.json();
+export async function fetchCategories(url: string): Promise<Category[]> {
+  const res = await fetch(url, { next: { revalidate: 600 } });
+  if (!res.ok) throw new Error(`Could not fetch categories (${res.status})`);
 
-    // DummyJSON categories: [{ slug, name, url }]
-    if (
-      Array.isArray(data) &&
-      data.length > 0 &&
-      typeof data[0] === 'object' &&
-      data[0] !== null &&
-      'slug' in data[0]
-    ) {
-      return data.map((c: { slug: string }) => c.slug);
-    }
-
-    // Plain string array (original fakestoreapi format)
-    return Array.isArray(data) && data.every((x) => typeof x === 'string') ? data : [];
-  } catch {
-    return [];
-  }
+  const data: unknown = await res.json();
+  return CategoriesResponseSchema.parse(data);
 }

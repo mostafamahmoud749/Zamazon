@@ -13,6 +13,7 @@ export type DealsFiltersState = {
 };
 
 export type NavItem = {
+  id?: number;
   group: 'departments';
   key: string;
 };

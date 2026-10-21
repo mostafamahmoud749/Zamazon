@@ -11,7 +11,7 @@ export default function useClientEffectOnce(url: string) {
 
     (async () => {
       try {
-        const res = await fetchProducts<Product[]>(url);
+        const res = await fetchProducts(url);
         if (!cancelled) setProduct(res);
       } catch {
         if (!cancelled) setProduct(null);

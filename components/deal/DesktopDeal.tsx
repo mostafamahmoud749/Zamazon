@@ -14,7 +14,7 @@ export default function DesktopDeal({ product }: DesktopDealProps) {
         <ProductImg img={product.image} />
       </div>
       <div className="max-w-[800px] flex-2">
-        <Details data={{ title: product.title, rating: product.rating }} m={true} />
+        <Details data={product} m={true} />
         <Buy product={product} />
       </div>
     </div>

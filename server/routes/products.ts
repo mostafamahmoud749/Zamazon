@@ -46,6 +46,7 @@ router.get('/api/products', validateQuery(ProductsQuerySchema), async (request, 
       },
       skip: (page - 1) * 20,
       take: 20,
+      orderBy: { id: 'asc' },
     });
 
     response.status(200).json(products);

@@ -9,7 +9,7 @@ import type { JSX } from 'react';
 
 export default async function Home(): Promise<JSX.Element> {
   const [productsResult, sessionResult] = await Promise.allSettled([
-    fetchProducts('https://dummyjson.com/products?limit=12'),
+    fetchProducts('http://localhost:9000/api/products'),
     getServerSession(authOptions),
   ]);
 

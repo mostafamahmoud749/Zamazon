@@ -58,7 +58,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return products.reduce(
       (acc: { totalProductsCount: number; totalProductsPrice: number }, product: CartProduct) => {
         acc.totalProductsCount += product.count;
-        acc.totalProductsPrice += product.count * product.price;
+        acc.totalProductsPrice += product.count * Number(product.price);
         return acc;
       },
       { totalProductsCount: 0, totalProductsPrice: 0 },

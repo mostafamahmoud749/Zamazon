@@ -1,166 +1,96 @@
 'use client';
-import { useEffect, useMemo, useState } from 'react';
+import { useState, useTransition } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import FiltersBlock from '@/components/deals/FiltersBlock';
 import ProductCard from '@/components/product/ProductCard';
 import Filter from '@/components/deals/Filter';
 import { X } from 'lucide-react';
+import type { Product, Category } from '@/types/index';
+import { ProductsQuerySchema } from '@/schemas/Product.schema';
+import useInfiniteProducts from '@/hooks/useInfiniteProducts';
 
-import type {
-  DealsFiltersState,
-  Product,
-  DealsActiveFilter,
-  DealsFilterGroup,
-} from '@/types/index';
-import { JSX } from 'react';
 type MainDealsProps = {
   products: Product[];
+  categories: Category[];
 };
-export default function MainDeals({ products }: MainDealsProps) {
+export default function MainDeals({ products, categories }: MainDealsProps) {
+  const [open, setOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
-  const pathname: string = usePathname();
+  const pathname = usePathname();
   const router = useRouter();
 
-  const [filtersState, setFiltersState] = useState<DealsFiltersState>({
-    rating: { '4_up': false },
-    departments: {},
+  const query = ProductsQuerySchema.parse({
+    filters: searchParams.get('filters') ?? undefined,
+    rating: searchParams.get('rating') ?? undefined,
+    page: searchParams.get('page') ?? undefined,
   });
-  const [open, setOpen] = useState<boolean>(false);
-  const [filtersReady, setFiltersReady] = useState<boolean>(false);
-
-  const searchQuery = searchParams.get('search')?.toLowerCase() ?? '';
-
-  const activeFilters = useMemo<DealsActiveFilter[]>(
-    () =>
-      Object.entries(filtersState).flatMap(([group, items]) =>
-        Object.entries(items)
-          .filter(([, value]) => value)
-          .map(([key]) => ({ group: group as DealsFilterGroup, key })),
-      ),
-    [filtersState],
+  const {
+    products: visibleProducts,
+    isLoading,
+    error,
+    sentinelRef,
+    loadMore,
+  } = useInfiniteProducts(products, query.page, searchParams.toString(), isPending);
+  const selectedIds = query.filters;
+  const departments = Object.fromEntries(
+    categories.map((category) => [String(category.id), selectedIds.includes(category.id)]),
+  );
+  const departmentNames = Object.fromEntries(
+    categories.map((category) => [String(category.id), category.name]),
   );
 
-  // 1) initialize from products + URL, and mark ready ONCE
-  useEffect((): void => {
-    // build departments map from products
-    const departments: Record<string, boolean> = {};
-    products.forEach((p: Product): void => {
-      departments[p.category] = false;
-    });
-
-    let initial: DealsFiltersState = {
-      rating: { '4_up': false },
-      departments,
-    };
-
-    const filtersParam: string | null = searchParams.get('filters');
-    if (filtersParam) {
-      try {
-        const parsed = JSON.parse(filtersParam);
-        const arr = Array.isArray(parsed) ? parsed : [parsed];
-        arr.forEach(({ group, key }: { group: DealsFilterGroup; key: string }) => {
-          if (group === 'rating') {
-            if (key === '4_up') initial.rating['4_up'] = true;
-            return;
-          }
-
-          if (Object.prototype.hasOwnProperty.call(initial.departments, key)) {
-            initial.departments[key] = true;
-          }
-        });
-      } catch {}
-    }
-
-    setFiltersState((prev: DealsFiltersState): DealsFiltersState => {
-      const prevStr: string = JSON.stringify(prev);
-      const nextStr: string = JSON.stringify(initial);
-      return prevStr === nextStr ? prev : initial;
-    });
-
-    setFiltersReady(true);
-  }, [products, searchParams]);
-
-  // 2) sync URL ONLY after filters are ready
-  useEffect((): void => {
-    if (!filtersReady) return;
-
-    const newFiltersString: string = JSON.stringify(activeFilters);
-    const params = new URLSearchParams(window.location.search);
-    const currentFiltersString: string = params.get('filters') ?? '';
-
-    if (currentFiltersString === newFiltersString) return;
-
-    if (activeFilters.length === 0) {
-      params.delete('filters');
-    } else {
-      params.set('filters', newFiltersString);
-    }
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-  }, [activeFilters, filtersReady, pathname, router]);
-
-  // 3) filtering logic: only run when ready
-  const filteredProducts = useMemo((): Product[] => {
-    if (!filtersReady) return products;
-
-    let result = products;
-
-    // Apply search query filter
-    if (searchQuery) {
-      result = result.filter((product: Product): boolean => {
-        const title = product.title?.toLowerCase() ?? '';
-        const description = product.description?.toLowerCase() ?? '';
-        const category = product.category?.toLowerCase() ?? '';
-        return (
-          title.includes(searchQuery) ||
-          description.includes(searchQuery) ||
-          category.includes(searchQuery)
-        );
-      });
-    }
-
-    if (activeFilters.length === 0) return result;
-
-    const has4Up: boolean = activeFilters.some((f) => f.group === 'rating' && f.key === '4_up');
-    const departmentFilters: DealsActiveFilter[] = activeFilters.filter(
-      (f) => f.group === 'departments',
-    );
-
-    return result.filter((product: Product): boolean | void => {
-      if (!product.rating?.rate) return;
-      if (has4Up && product.rating?.rate < 4) return false;
-      if (departmentFilters.length === 0) return true;
-      return departmentFilters.some((f) => f.key === product.category);
-    });
-  }, [products, activeFilters, filtersReady, searchQuery]);
-  const showProducts: JSX.Element[] = filteredProducts.map((el) => (
-    <ProductCard key={el.id} deals={true} el={el} />
-  ));
-
-  const showActiveFilters: JSX.Element[] = activeFilters.map(({ group, key }) => (
-    <Filter key={group + key} name={key} value toggle={() => toggle(group, key)} />
-  ));
-
-  function toggle(group: DealsFilterGroup, key: string): void {
-    setFiltersState((prev: DealsFiltersState): DealsFiltersState => {
-      if (group === 'rating') {
-        return {
-          ...prev,
-          rating: {
-            ...prev.rating,
-            '4_up': !prev.rating['4_up'],
-          },
-        };
-      }
-
-      return {
-        ...prev,
-        departments: {
-          ...prev.departments,
-          [key]: !prev.departments[key],
-        },
-      };
+  function updateUrl(params: URLSearchParams) {
+    startTransition(() => {
+      const queryString = params.toString();
+      router.push(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
     });
   }
+
+  function toggleCategory(id: number) {
+    const ids = selectedIds.includes(id)
+      ? selectedIds.filter((selectedId) => selectedId !== id)
+      : [...selectedIds, id];
+    const params = new URLSearchParams(searchParams.toString());
+    if (ids.length) params.set('filters', JSON.stringify(ids));
+    else params.delete('filters');
+    params.delete('page');
+    updateUrl(params);
+  }
+
+  function toggleRating() {
+    const params = new URLSearchParams(searchParams.toString());
+    if (query.rating === 4) params.delete('rating');
+    else params.set('rating', '4');
+    params.delete('page');
+    updateUrl(params);
+  }
+
+  const showActiveFilters = selectedIds.map((id) => (
+    <Filter
+      key={id}
+      name={departmentNames[String(id)] ?? `Category ${id}`}
+      value
+      toggle={() => toggleCategory(id)}
+    />
+  ));
+  if (query.rating > 0) {
+    showActiveFilters.push(
+      <Filter
+        key="rating"
+        name={query.rating === 4 ? '4_up' : `${query.rating} stars & up`}
+        value
+        toggle={() => {
+          const params = new URLSearchParams(searchParams.toString());
+          params.delete('rating');
+          params.delete('page');
+          updateUrl(params);
+        }}
+      />,
+    );
+  }
+
+  const showProducts = visibleProducts.map((el) => <ProductCard key={el.id} el={el} deals />);
 
   return (
     <div className="md:m-auto md:my-8 md:flex md:w-4/5 md:gap-3">
@@ -184,20 +114,50 @@ export default function MainDeals({ products }: MainDealsProps) {
             <X onClick={() => setOpen((v) => !v)} className="cursor-pointer" />
           </div>
           <FiltersBlock
-            filtersState={filtersState.departments}
-            toggle={(key) => toggle('departments', key)}
+            filtersState={departments}
+            labels={departmentNames}
+            toggle={(id) => toggleCategory(Number(id))}
             name="departments"
           />
           <FiltersBlock
-            filtersState={filtersState.rating}
-            toggle={(key) => toggle('rating', key)}
+            filtersState={{ '4_up': query.rating === 4 }}
+            toggle={toggleRating}
             name="Rating"
           />
         </div>
       </div>
 
-      <div className="mx-auto grid bg-white w-199/200 grid-cols-2 gap-5 px-2 py-2 sm:w-full sm:bg-white  lg:grid-cols-3 xl:grid-cols-4">
-        {!filtersReady ? <p>Loading filters…</p> : showProducts}
+      <div
+        aria-busy={isPending || isLoading}
+        className="mx-auto grid w-199/200 grid-cols-2 gap-5 bg-white px-2 py-2 sm:w-full sm:bg-white lg:grid-cols-3 xl:grid-cols-4"
+      >
+        {isPending && (
+          <p role="status" className="col-span-full text-gray-600">
+            Updating products…
+          </p>
+        )}
+        {showProducts.length ? (
+          showProducts
+        ) : (
+          <p className="col-span-full py-6 text-center text-gray-600">
+            No products match your filters.
+          </p>
+        )}
+        <div ref={sentinelRef} className="col-span-full min-h-12 py-4 text-center">
+          {isLoading && <p role="status">Loading more products…</p>}
+          {error && (
+            <div role="alert">
+              <p>{error}</p>
+              <button
+                type="button"
+                onClick={() => void loadMore()}
+                className="mt-2 cursor-pointer text-sky-800 underline"
+              >
+                Try again
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

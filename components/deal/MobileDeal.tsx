@@ -12,7 +12,7 @@ export default function MobileDeal({ product }: MobileDealProps) {
       <div className="mx-auto overflow-hidden rounded-xl bg-white shadow-lg">
         <ProductImg img={product.image} />
         <div className="px-4 pt-2 pb-4">
-          <Details data={{ title: product.title, rating: product.rating }} m={true} />
+          <Details data={product} m={true} />
           <Buy product={product} />
         </div>
       </div>

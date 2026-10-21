@@ -1,15 +1,43 @@
 import MainDeals from '@/components/deals/MainDeals';
+import { fetchCategories } from '@/lib/fetchCategories';
 import { fetchProducts } from '@/lib/fetchProducts';
-import type { Product } from '@/types/index';
-import type { JSX } from 'react';
+import { ProductsQuerySchema } from '@/schemas/Product.schema';
+import Link from 'next/link';
 
-export default async function DealsPage(): Promise<JSX.Element> {
-  const res = await fetchProducts('https://dummyjson.com/products?limit=100');
-  const products: Product[] = Array.isArray(res) ? (res as Product[]) : [];
+type DealsPageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
 
-  return (
-    <>
-      <MainDeals products={products} />
-    </>
-  );
+export default async function DealsPage({ searchParams }: DealsPageProps) {
+  const params = await searchParams;
+  const result = ProductsQuerySchema.safeParse({
+    search: params.search,
+    rating: params.rating,
+    filters: params.filters,
+    page: params.page,
+  });
+
+  if (!result.success) {
+    return (
+      <div className="mx-auto w-4/5 py-8">
+        <p>These product filters are invalid.</p>
+        <Link href="/deals" className="text-sky-800 underline">
+          Reset filters
+        </Link>
+      </div>
+    );
+  }
+
+  const query = new URLSearchParams({
+    search: result.data.search,
+    rating: String(result.data.rating),
+    filters: JSON.stringify(result.data.filters),
+    page: String(result.data.page),
+  });
+  const [products, categories] = await Promise.all([
+    fetchProducts(`http://localhost:9000/api/products?${query}`),
+    fetchCategories('http://localhost:9000/api/categories'),
+  ]);
+
+  return <MainDeals key={query.toString()} products={products} categories={categories} />;
 }

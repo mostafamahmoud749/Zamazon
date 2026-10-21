@@ -1,3 +1,5 @@
+'use client';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/types/index';
@@ -9,6 +11,7 @@ type ProductCardProps = {
 };
 
 export default function ProductCard({ el, deals }: ProductCardProps) {
+  const [failedImage, setFailedImage] = useState<string | null>(null);
   return (
     <div className="flex h-80 w-full min-w-0 flex-col justify-between overflow-hidden rounded-md bg-gray-100 p-2 shadow-md transition hover:shadow-lg">
       <Link
@@ -16,7 +19,8 @@ export default function ProductCard({ el, deals }: ProductCardProps) {
         className="flex h-40 flex-1 w-full items-center justify-center overflow-hidden"
       >
         <Image
-          src={el.image}
+          src={!el.image || failedImage === el.image ? '/products/demo-product.svg' : el.image}
+          onError={() => setFailedImage(el.image)}
           width={200}
           height={200}
           alt={el.title}

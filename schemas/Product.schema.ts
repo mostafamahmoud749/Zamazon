@@ -8,19 +8,16 @@ export const ProductsQuerySchema = Z.object({
   page: Z.coerce.number().int().min(1).default(1),
   rating: Z.coerce.number().min(0).max(5).default(0),
   search: Z.string().trim().max(100, 'Search must be at most 100 characters').default(''),
-  filters: Z.preprocess(
-    (value) => {
-      if (value === undefined || value === '') return [];
-      if (typeof value !== 'string') return value;
+  filters: Z.preprocess((value) => {
+    if (value === undefined || value === '') return [];
+    if (typeof value !== 'string') return value;
 
-      try {
-        return JSON.parse(value);
-      } catch {
-        return value;
-      }
-    },
-    Z.array(Z.coerce.number().int().positive()).default([]),
-  ),
+    try {
+      return JSON.parse(value);
+    } catch {
+      return value;
+    }
+  }, Z.array(Z.coerce.number().int().positive()).default([])),
 }).strict();
 
 export const CreateProductSchema = Z.object({
@@ -44,3 +41,17 @@ export const UpdateProductSchema = CreateProductSchema.partial().refine(
   (data) => Object.keys(data).length > 0,
   'At least one field must be provided for update',
 );
+
+
+export const ProductResponseSchema = CreateProductSchema.extend({
+  image: Z.union([CreateProductSchema.shape.image, Z.string().regex(/^\/(?!\/)\S+$/)]),
+  id: Z.number().int().positive(),
+  userId: Z.number().int().positive(),
+  categoryId: Z.number().int().positive().nullable(),
+  price: Z.string().regex(/^\d+(\.\d+)?$/),
+  discount: Z.string().regex(/^\d+(\.\d+)?$/).nullable(),
+  isActive: Z.boolean(),
+  createdAt: Z.iso.datetime(),
+});
+
+export const ProductsResponseSchema = Z.array(ProductResponseSchema);

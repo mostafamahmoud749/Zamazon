@@ -2,6 +2,10 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+For the catalog, run `npm run backend` and `npm run dev` in separate terminals.
+Run `npm run seed:products` to add 120 sample products for testing scroll loading.
+This additive script preserves existing records and skips products already added.
+
 ### Express backend security
 
 Run the API with `npm run backend`. Helmet adds security response headers.
@@ -51,6 +55,13 @@ Passport regenerates the session. Missing, incorrect, or stale tokens return
 403 with `code: 'EBADCSRFTOKEN'` before route handlers run. If the frontend loses
 its token, fetch it again using the same session cookie. GitHub OAuth GET routes
 use OAuth `state` verification rather than an API CSRF header.
+
+### Category lookup
+
+`GET /api/categories?ids=3,8,12` returns the matching category objects. Supply
+up to 100 comma-separated positive integer IDs. Duplicate IDs are deduplicated;
+missing categories are omitted, and no matches returns `[]`. Invalid input
+returns 400. Without `ids`, the endpoint returns all categories.
 
 ### Checkout retries
 

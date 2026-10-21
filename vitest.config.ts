@@ -5,6 +5,9 @@ import { defineConfig } from 'vitest/config';
 const rootDirectory = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
+  oxc: {
+    jsx: { runtime: 'automatic' },
+  },
   test: {
     setupFiles: ['./server/integration/setup.ts'],
   },

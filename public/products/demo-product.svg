@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="320" viewBox="0 0 400 320">
+  <rect width="400" height="320" rx="24" fill="#eef2f7"/>
+  <circle cx="200" cy="145" r="108" fill="#dbeafe"/>
+  <path d="M131 111h138l-13 127H144z" fill="#fff" stroke="#334155" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M169 121V95a31 31 0 0 1 62 0v26" fill="none" stroke="#334155" stroke-width="7" stroke-linecap="round"/>
+  <path d="m179 175 15 15 30-35" fill="none" stroke="#f59e0b" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="200" y="286" text-anchor="middle" font-family="sans-serif" font-size="19" fill="#475569">Zamazon collection</text>
+</svg>

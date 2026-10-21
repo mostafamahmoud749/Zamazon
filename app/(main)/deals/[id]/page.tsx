@@ -1,4 +1,4 @@
-import { fetchProducts } from '@/lib/fetchProducts';
+import { fetchProduct } from '@/lib/fetchProducts';
 import DealMedia from './DealMedia';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
@@ -15,10 +15,10 @@ export default async function DealsDetailsPage({
   params,
 }: DealsDetailsPageProps): Promise<JSX.Element> {
   const { id } = await params;
-  const res = await fetchProducts(`https://dummyjson.com/products/${id}`);
-  if (!res || Array.isArray(res)) notFound();
+  const res = await fetchProduct(`http://localhost:9000/api/products/${id}`);
+  if (!res) notFound();
 
-  const product = res as Product;
+  const product: Product = res;
 
   const headersList = await headers();
   const userAgent: string = headersList.get('user-agent') ?? '';

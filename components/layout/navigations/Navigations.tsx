@@ -17,7 +17,7 @@ export default function Navigations({ py, H, navs = [], toggle }: Partial<Naviga
     <Link
       key={el.key}
       onClick={toggle}
-      href={`/deals?filters=${encodeURIComponent(JSON.stringify(el))}`}
+      href={`/deals?filters=${encodeURIComponent(JSON.stringify(el.id ? [el.id] : []))}`}
       className={`${py ? 'py-2' : ''} block transition-all duration-200 ${H ? 'items-center flex justify-center border-1 border-transparent hover:border-white px-2 h-8 flex-shrink-0 first:pl-0' : 'pl-4 w-full hover:translate-x-1 hover:bg-gray-100'} text-sm`}
     >
       {el.key}

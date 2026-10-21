@@ -1,14 +1,16 @@
 import { Router, Request } from 'express';
 import { prisma } from '../../prisma/lib/prisma.js';
-import { CategoryIdParamsSchema } from '../../schemas/category.schema.js';
+import { CategoriesQuerySchema, CategoryIdParamsSchema } from '../../schemas/category.schema.js';
 import { validateParams } from '../middleware/validateParams.js';
+import { validateQuery } from '../middleware/validateQuery.js';
 
 const router = Router();
 
-router.get('/api/categories', async (request, response) => {
+router.get('/api/categories', validateQuery(CategoriesQuerySchema), async (request, response) => {
   try {
+    const { ids } = response.locals.query;
     const categories = await prisma.category.findMany({
-      take: 20,
+      where: ids ? { id: { in: ids } } : {},
     });
     response.json(categories);
   } catch (error) {
