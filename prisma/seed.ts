@@ -1,7 +1,9 @@
 import 'dotenv/config';
 import { prisma } from './lib/prisma';
+import { assertSeedImagesReady, getSeedImage } from './lib/seedImages';
 
 async function main() {
+  assertSeedImagesReady();
   await prisma.$transaction(
     async (tx) => {
       await tx.payment.deleteMany();
@@ -255,7 +257,7 @@ async function main() {
               title,
               description: `${title} made for reliable everyday use.`,
               price,
-              image: `/products/${slug}.jpg`,
+              image: getSeedImage(slug),
               discount,
               slug,
             },

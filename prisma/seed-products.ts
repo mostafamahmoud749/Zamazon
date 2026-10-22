@@ -1,8 +1,10 @@
 import 'dotenv/config';
 import { prisma } from './lib/prisma';
+import { assertSeedImagesReady, getCategorySeedImage } from './lib/seedImages';
 
 // Add demo inventory without clearing existing users, orders, or products.
 async function main() {
+  assertSeedImagesReady();
   const owner = await prisma.user.findFirst({ select: { id: true }, orderBy: { id: 'asc' } });
   const demoUser = await prisma.user.upsert({
     where: { email: 'scroll-demo@example.com' },
@@ -11,7 +13,7 @@ async function main() {
   });
   let categories = await prisma.category.findMany({
     where: { parentId: null },
-    select: { id: true, name: true },
+    select: { id: true, name: true, slug: true },
     orderBy: { id: 'asc' },
     take: 5,
   });
@@ -34,7 +36,7 @@ async function main() {
       title: `${names[index % names.length]} ${category.name} Item ${number}`,
       description: `Sample ${category.name.toLowerCase()} product ${number} for exploring the Zamazon catalog.`,
       slug: `scroll-demo-product-${number}`,
-      image: '/products/demo-product.svg',
+      image: getCategorySeedImage(category.slug, Math.floor(index / categories.length)),
       stock: 10 + (index % 90),
       price: (9.99 + index * 2.5).toFixed(2),
       discount: index % 3 === 0 ? '10.00' : '0.00',
@@ -42,6 +44,12 @@ async function main() {
   });
 
   const result = await prisma.product.createMany({ data, skipDuplicates: true });
+  for (const { slug, image } of data) {
+    await prisma.product.updateMany({
+      where: { slug, image: '/products/demo-product.svg' },
+      data: { image },
+    });
+  }
   const products = await prisma.product.findMany({
     where: { slug: { in: data.map(({ slug }) => slug) } },
     select: { id: true },

@@ -1,0 +1,113 @@
+{
+  "tool": "Built-in image_gen",
+  "styleReference": "source/style-reference.png",
+  "background": "#f3f4f6",
+  "canvas": {
+    "width": 1024,
+    "height": 1024
+  },
+  "maximumProductDimension": 800,
+  "style": "Photorealistic studio product cutouts, soft neutral lighting, entire product visible, consistent three-quarter perspective, no rooms, people or unrelated props. The final assets are centered on an exact #f3f4f6 background.",
+  "images": {
+    "noise-cancelling-headphones": {
+      "source": "source/noise-cancelling-headphones.png",
+      "output": "noise-cancelling-headphones.webp",
+      "prompt": "Use the provided headphone photograph as a STYLE REFERENCE ONLY for a cohesive product catalog. Generate ONE NEW square photorealistic ecommerce studio product image. Subject: one pair of matte black over-ear wireless noise-cancelling headphones, entire headband and both earcups fully visible. The product must be isolated on a genuinely TRANSPARENT background with clean alpha edges; the final website will composite it on #f3f4f6. No background scenery, no room, no hands, no people, no unrelated props, no brands, logos, writing or watermark. Soft neutral high-key studio lighting, crisp realistic materials, very subtle local contact shadow only. Three-quarter product view from slightly above, entire product silhouette visible, centered, maximum object dimension about 72 percent of the square frame with generous equal breathing room. Match the reference's polished photographic realism and light direction, but render ONLY the requested product. 1024x1024 square catalog composition."
+    },
+    "mechanical-keyboard": {
+      "source": "source/mechanical-keyboard.png",
+      "output": "mechanical-keyboard.webp",
+      "prompt": "Use the provided headphone photograph as a STYLE REFERENCE ONLY for a cohesive product catalog. Generate ONE NEW square photorealistic ecommerce studio product image. Subject: one compact mechanical computer keyboard with a dark charcoal case and clean ivory keycaps, entire keyboard fully visible, no mouse. The product must be isolated on a genuinely TRANSPARENT background with clean alpha edges; the final website will composite it on #f3f4f6. No background scenery, no room, no hands, no people, no unrelated props, no brands, logos, writing or watermark. Soft neutral high-key studio lighting, crisp realistic materials, very subtle local contact shadow only. Three-quarter product view from slightly above, entire product silhouette visible, centered, maximum object dimension about 72 percent of the square frame with generous equal breathing room. Match the reference's polished photographic realism and light direction, but render ONLY the requested product. 1024x1024 square catalog composition."
+    },
+    "4k-usb-c-monitor": {
+      "source": "source/4k-usb-c-monitor.png",
+      "output": "4k-usb-c-monitor.webp",
+      "prompt": "Use the provided headphone photograph as a STYLE REFERENCE ONLY for a cohesive product catalog. Generate ONE NEW square photorealistic ecommerce studio product image. Subject: one slim modern black computer monitor on a minimalist stand, screen showing only a simple abstract blue gradient, entire screen and stand visible. The product must be isolated on a genuinely TRANSPARENT background with clean alpha edges; the final website will composite it on #f3f4f6. No background scenery, no room, no hands, no people, no unrelated props, no brands, logos, writing or watermark. Soft neutral high-key studio lighting, crisp realistic materials, very subtle local contact shadow only. Three-quarter product view from slightly above, entire product silhouette visible, centered, maximum object dimension about 72 percent of the square frame with generous equal breathing room. Match the reference's polished photographic realism and light direction, but render ONLY the requested product. 1024x1024 square catalog composition."
+    },
+    "pour-over-coffee-maker": {
+      "source": "source/pour-over-coffee-maker.png",
+      "output": "pour-over-coffee-maker.webp",
+      "prompt": "Use the provided headphone photograph as a STYLE REFERENCE ONLY for a cohesive product catalog. Generate ONE NEW square photorealistic ecommerce studio product image. Subject: one empty clear glass pour-over coffee carafe with a conical top, wooden collar and small leather tie, full carafe visible, no cups or kettle. The product must be isolated on a genuinely TRANSPARENT background with clean alpha edges; the final website will composite it on #f3f4f6. No background scenery, no room, no hands, no people, no unrelated props, no brands, logos, writing or watermark. Soft neutral high-key studio lighting, crisp realistic materials, very subtle local contact shadow only. Three-quarter product view from slightly above, entire product silhouette visible, centered, maximum object dimension about 72 percent of the square frame with generous equal breathing room. Match the reference's polished photographic realism and light direction, but render ONLY the requested product. 1024x1024 square catalog composition."
+    },
+    "smart-table-lamp": {
+      "source": "source/smart-table-lamp.png",
+      "output": "smart-table-lamp.webp",
+      "prompt": "Use the provided headphone photograph as a STYLE REFERENCE ONLY for a cohesive product catalog. Generate ONE NEW square photorealistic ecommerce studio product image. Subject: one minimalist smart table lamp with a warm white tapered shade and matte off-white cylindrical base, complete lamp visible. The product must be isolated on a genuinely TRANSPARENT background with clean alpha edges; the final website will composite it on #f3f4f6. No background scenery, no room, no hands, no people, no unrelated props, no brands, logos, writing or watermark. Soft neutral high-key studio lighting, crisp realistic materials, very subtle local contact shadow only. Three-quarter product view from slightly above, entire product silhouette visible, centered, maximum object dimension about 72 percent of the square frame with generous equal breathing room. Match the reference's polished photographic realism and light direction, but render ONLY the requested product. 1024x1024 square catalog composition."
+    },
+    "mirrorless-camera": {
+      "source": "source/mirrorless-camera.png",
+      "output": "mirrorless-camera.webp",
+      "prompt": "one compact black mirrorless camera body with a single attached compact lens, three-quarter front view with lens and body fully visible, no strap, cap, manuals or accessories"
+    },
+    "wireless-earbuds": {
+      "source": "source/wireless-earbuds.png",
+      "output": "wireless-earbuds.webp",
+      "prompt": "one pair of white wireless earbuds neatly seated in an open white charging case, all visible, clean modern design"
+    },
+    "ergonomic-office-chair": {
+      "source": "source/ergonomic-office-chair.png",
+      "output": "ergonomic-office-chair.webp",
+      "prompt": "one modern ergonomic office chair with black mesh back, charcoal seat, adjustable armrests, lumbar support and a five-spoke wheeled base, entire chair visible"
+    },
+    "cast-iron-skillet": {
+      "source": "source/cast-iron-skillet.png",
+      "output": "cast-iron-skillet.webp",
+      "prompt": "one clean empty black cast-iron skillet, interior and single handle fully visible at a slightly elevated three-quarter view, no food, utensils or stove"
+    },
+    "yoga-mat": {
+      "source": "source/yoga-mat.png",
+      "output": "yoga-mat.webp",
+      "prompt": "one neatly rolled teal non-slip yoga mat, roll and textured surface visible, no basket, plants, straps or other props"
+    },
+    "adjustable-dumbbells": {
+      "source": "source/adjustable-dumbbells.png",
+      "output": "adjustable-dumbbells.webp",
+      "prompt": "The reference headphone photo is a STYLE REFERENCE ONLY. Generate ONE NEW square photorealistic ecommerce studio photograph of the following subject: one matching pair of compact adjustable black-and-steel dumbbells with removable weight plates, arranged neatly together, entire weights visible, no towel or workout props. Isolate ONLY this product on a genuinely TRANSPARENT background with clean alpha edges. The final catalog will composite it onto #f3f4f6. Soft neutral high-key studio lighting, crisp realistic material detail, subtle local contact shadow, three-quarter product perspective. Entire product fully in frame, centered, moderate consistent margins, longest object dimension about 72 percent of the square frame. No scenery, no room, no people, no hands, no unrelated props, no logos, brands, watermarks or added writing. Match the reference's clean polished studio realism, but do not include any headphones. 1024x1024 square composition."
+    },
+    "running-backpack": {
+      "source": "source/running-backpack.png",
+      "output": "running-backpack.webp",
+      "prompt": "The reference headphone photo is a STYLE REFERENCE ONLY. Generate ONE NEW square photorealistic ecommerce studio photograph of the following subject: one lightweight black trail-running hydration backpack with slim shoulder straps and subtle teal accents, standing upright in a three-quarter view, no person or hiking scenery. Isolate ONLY this product on a genuinely TRANSPARENT background with clean alpha edges. The final catalog will composite it onto #f3f4f6. Soft neutral high-key studio lighting, crisp realistic material detail, subtle local contact shadow, three-quarter product perspective. Entire product fully in frame, centered, moderate consistent margins, longest object dimension about 72 percent of the square frame. No scenery, no room, no people, no hands, no unrelated props, no logos, brands, watermarks or added writing. Match the reference's clean polished studio realism, but do not include any headphones. 1024x1024 square composition."
+    },
+    "the-last-lighthouse": {
+      "source": "source/the-last-lighthouse.png",
+      "output": "the-last-lighthouse.webp",
+      "prompt": "Use the reference headphones only as a STYLE REFERENCE for lighting and photographic quality; do not include headphones. Generate ONE NEW square photorealistic ecommerce studio product photograph. Subject: one realistic upright navy paperback novel with a minimal gold lighthouse illustration on its front cover, title printed large and exactly as \"THE LAST LIGHTHOUSE\"; three-quarter front view showing front cover and a narrow spine and white page edges, no author name and no other cover text. The single requested product is isolated on a genuinely TRANSPARENT background with clean alpha edges, ready to composite on #f3f4f6. Soft even neutral studio lighting, crisp realistic materials, subtle local contact shadow immediately below the object. Entire product in frame, centered, longest object dimension about 72 percent of the square frame with generous margins. No room, scenery, people, hands, unrelated props, brands, watermarks or text except the book-cover title and monogram explicitly requested, if any. Consistent polished commercial catalog style, square 1024x1024 composition."
+    },
+    "practical-typescript": {
+      "source": "source/practical-typescript.png",
+      "output": "practical-typescript.webp",
+      "prompt": "Use the reference headphones only as a STYLE REFERENCE for lighting and photographic quality; do not include headphones. Generate ONE NEW square photorealistic ecommerce studio product photograph. Subject: one realistic upright technical paperback book with a minimal blue-and-ivory geometric cover, title printed large and exactly as \"PRACTICAL TYPESCRIPT\", a large white \"TS\" monogram on a blue square on the front cover; three-quarter front view showing front cover, narrow spine and white page edges, no author name and no other cover text. The single requested product is isolated on a genuinely TRANSPARENT background with clean alpha edges, ready to composite on #f3f4f6. Soft even neutral studio lighting, crisp realistic materials, subtle local contact shadow immediately below the object. Entire product in frame, centered, longest object dimension about 72 percent of the square frame with generous margins. No room, scenery, people, hands, unrelated props, brands, watermarks or text except the book-cover title and monogram explicitly requested, if any. Consistent polished commercial catalog style, square 1024x1024 composition."
+    },
+    "leather-crossbody-bag": {
+      "source": "source/leather-crossbody-bag.png",
+      "output": "leather-crossbody-bag.webp",
+      "prompt": "The reference headphone photo is a STYLE REFERENCE ONLY. Generate ONE NEW square photorealistic ecommerce studio photograph of the following subject: one small cognac-brown leather crossbody bag with simple rectangular silhouette and its adjustable leather shoulder strap arranged neatly beside it, all parts visible. Isolate ONLY this product on a genuinely TRANSPARENT background with clean alpha edges. The final catalog will composite it onto #f3f4f6. Soft neutral high-key studio lighting, crisp realistic material detail, subtle local contact shadow, three-quarter product perspective. Entire product fully in frame, centered, moderate consistent margins, longest object dimension about 72 percent of the square frame. No scenery, no room, no people, no hands, no unrelated props, no logos, brands, watermarks or added writing. Match the reference's clean polished studio realism, but do not include any headphones. 1024x1024 square composition."
+    },
+    "classic-sunglasses": {
+      "source": "source/classic-sunglasses.png",
+      "output": "classic-sunglasses.webp",
+      "prompt": "The reference headphone photo is a STYLE REFERENCE ONLY. Generate ONE NEW square photorealistic ecommerce studio photograph of the following subject: one pair of classic black rounded polarized sunglasses with both lenses and open temple arms fully visible, three-quarter product view. Isolate ONLY this product on a genuinely TRANSPARENT background with clean alpha edges. The final catalog will composite it onto #f3f4f6. Soft neutral high-key studio lighting, crisp realistic material detail, subtle local contact shadow, three-quarter product perspective. Entire product fully in frame, centered, moderate consistent margins, longest object dimension about 72 percent of the square frame. No scenery, no room, no people, no hands, no unrelated props, no logos, brands, watermarks or added writing. Match the reference's clean polished studio realism, but do not include any headphones. 1024x1024 square composition."
+    },
+    "smartwatch-active": {
+      "source": "source/smartwatch-active.png",
+      "output": "smartwatch-active.webp",
+      "prompt": "The reference headphone photo is a STYLE REFERENCE ONLY. Generate ONE NEW square photorealistic ecommerce studio photograph of the following subject: one modern sporty smartwatch with a charcoal silicone band and dark round screen showing a minimal abstract colored activity ring, no numbers, words or brand names, complete band and face visible. Isolate ONLY this product on a genuinely TRANSPARENT background with clean alpha edges. The final catalog will composite it onto #f3f4f6. Soft neutral high-key studio lighting, crisp realistic material detail, subtle local contact shadow, three-quarter product perspective. Entire product fully in frame, centered, moderate consistent margins, longest object dimension about 72 percent of the square frame. No scenery, no room, no people, no hands, no unrelated props, no logos, brands, watermarks or added writing. Match the reference's clean polished studio realism, but do not include any headphones. 1024x1024 square composition."
+    },
+    "portable-projector": {
+      "source": "source/portable-projector.png",
+      "output": "portable-projector.webp",
+      "prompt": "Use the reference headphones only as a STYLE REFERENCE for lighting and photographic quality; do not include headphones. Generate ONE NEW square photorealistic ecommerce studio product photograph. Subject: one compact matte white portable HD projector with a dark lens and small integrated pedestal, three-quarter front view, full device visible, no projected light beam, remote or extra props. The single requested product is isolated on a genuinely TRANSPARENT background with clean alpha edges, ready to composite on #f3f4f6. Soft even neutral studio lighting, crisp realistic materials, subtle local contact shadow immediately below the object. Entire product in frame, centered, longest object dimension about 72 percent of the square frame with generous margins. No room, scenery, people, hands, unrelated props, brands, watermarks or text except the book-cover title and monogram explicitly requested, if any. Consistent polished commercial catalog style, square 1024x1024 composition."
+    },
+    "bluetooth-speaker": {
+      "source": "source/bluetooth-speaker.png",
+      "output": "bluetooth-speaker.webp",
+      "prompt": "Use the reference headphones only as a STYLE REFERENCE for lighting and photographic quality; do not include headphones. Generate ONE NEW square photorealistic ecommerce studio product photograph. Subject: one compact portable black waterproof Bluetooth speaker with a rounded rectangular shape, woven acoustic fabric grille and small rubber carry loop, full speaker visible. The single requested product is isolated on a genuinely TRANSPARENT background with clean alpha edges, ready to composite on #f3f4f6. Soft even neutral studio lighting, crisp realistic materials, subtle local contact shadow immediately below the object. Entire product in frame, centered, longest object dimension about 72 percent of the square frame with generous margins. No room, scenery, people, hands, unrelated props, brands, watermarks or text except the book-cover title and monogram explicitly requested, if any. Consistent polished commercial catalog style, square 1024x1024 composition."
+    },
+    "standing-desk": {
+      "source": "source/standing-desk.png",
+      "output": "standing-desk.webp",
+      "prompt": "Use the reference headphones only as a STYLE REFERENCE for lighting and photographic quality; do not include headphones. Generate ONE NEW square photorealistic ecommerce studio product photograph. Subject: one electric height-adjustable standing desk with a light oak rectangular desktop and two matte black telescoping legs with T-shaped feet, entire desk visible in a three-quarter view, absolutely empty desktop with no monitor, chair, decor or accessories. The single requested product is isolated on a genuinely TRANSPARENT background with clean alpha edges, ready to composite on #f3f4f6. Soft even neutral studio lighting, crisp realistic materials, subtle local contact shadow immediately below the object. Entire product in frame, centered, longest object dimension about 72 percent of the square frame with generous margins. No room, scenery, people, hands, unrelated props, brands, watermarks or text except the book-cover title and monogram explicitly requested, if any. Consistent polished commercial catalog style, square 1024x1024 composition."
+    }
+  }
+}

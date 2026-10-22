@@ -11,6 +11,9 @@
     "lint": "eslint",
     "backend": "nodemon --exec tsx server/server.ts",
     "seed:products": "tsx prisma/seed-products.ts",
+    "seed:images": "tsx prisma/upload-seed-images.ts",
+    "seed:images:prepare": "tsx prisma/prepare-studio-images.ts",
+    "seed:images:apply": "tsx prisma/apply-seed-images.ts",
     "postinstall": "prisma skills sync || exit 0"
   },
   "dependencies": {
@@ -39,6 +42,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.5.0",
+    "sharp": "0.34.5",
     "zod": "^4.6.6"
   },
   "devDependencies": {

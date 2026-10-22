@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1400" viewBox="0 0 1000 1400">
+  <rect width="1000" height="1400" fill="#102c42"/>
+  <rect x="34" y="34" width="932" height="1332" fill="none" stroke="#c9af79" stroke-width="3"/>
+  <text x="500" y="135" text-anchor="middle" font-family="Georgia,serif" font-size="24" letter-spacing="10" fill="#d9c698">A NOVEL</text>
+  <g text-anchor="middle" font-family="Georgia,serif" fill="#fff0cd">
+    <text x="500" y="288" font-size="76" letter-spacing="8">THE LAST</text>
+    <text x="500" y="390" font-size="88" letter-spacing="3">LIGHTHOUSE</text>
+  </g>
+  <circle cx="500" cy="820" r="260" fill="#204b60"/>
+  <path d="M500 680 100 820 100 600Z" fill="#f9d994" opacity=".22"/>
+  <path d="M500 680 900 580 900 760Z" fill="#f9d994" opacity=".22"/>
+  <path d="M260 1090 390 980 520 1000 645 940 775 1090Z" fill="#091e2c"/>
+  <path d="M438 1008 463 710 537 710 562 1008Z" fill="#f2e4c3"/>
+  <path d="M451 853 549 853 554 905 447 905Z" fill="#b85048"/>
+  <rect x="455" y="648" width="90" height="70" fill="#f9d994"/>
+  <path d="M442 648 500 601 558 648Z" fill="#b85048"/>
+  <path d="M460 648V718M500 648V718M540 648V718" stroke="#102c42" stroke-width="7"/>
+  <path d="M135 1112Q250 1080 365 1112T595 1112T825 1112M135 1152Q250 1120 365 1152T595 1152T825 1152" fill="none" stroke="#668791" stroke-width="4"/>
+  <text x="500" y="1270" text-anchor="middle" font-family="Georgia,serif" font-size="25" letter-spacing="4" fill="#d9c698">A STORY OF LIGHT AND RETURN</text>
+</svg>

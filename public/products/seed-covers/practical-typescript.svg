@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1400" viewBox="0 0 1000 1400">
+  <rect width="1000" height="1400" fill="#f1efe7"/>
+  <rect x="0" y="0" width="1000" height="28" fill="#2672b9"/>
+  <text x="80" y="135" font-family="Arial,sans-serif" font-size="25" letter-spacing="7" fill="#526170">THE DEVELOPER SERIES</text>
+  <g font-family="Arial,sans-serif" font-weight="bold" fill="#172c43">
+    <text x="75" y="300" font-size="76">PRACTICAL</text>
+    <text x="75" y="405" font-size="104">TYPESCRIPT</text>
+  </g>
+  <text x="80" y="477" font-family="Arial,sans-serif" font-size="31" fill="#526170">Build with clarity. Ship with confidence.</text>
+  <rect x="80" y="575" width="840" height="565" rx="12" fill="#2672b9"/>
+  <path d="M80 650H920M80 725H920M80 800H920M80 875H920M80 950H920M80 1025H920M200 575V1140M320 575V1140M440 575V1140M560 575V1140M680 575V1140M800 575V1140" stroke="#fff" opacity=".10" stroke-width="2"/>
+  <text x="860" y="1060" text-anchor="end" font-family="Arial,sans-serif" font-weight="bold" font-size="310" fill="#ffffff">TS</text>
+  <path d="m170 690-38 38 38 38M250 690l38 38-38 38M225 675l-29 107" fill="none" stroke="#c9e7ff" stroke-width="12"/>
+  <text x="80" y="1240" font-family="Arial,sans-serif" font-size="28" letter-spacing="4" fill="#172c43">TYPES / PATTERNS / PROJECTS</text>
+  <rect x="80" y="1290" width="130" height="8" fill="#2672b9"/>
+</svg>

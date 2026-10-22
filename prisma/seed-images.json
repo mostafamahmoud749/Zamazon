@@ -1,0 +1,302 @@
+{
+  "noise-cancelling-headphones": {
+    "url": "https://res.cloudinary.com/dywssqmm/image/upload/v1792666884/zamazon/seed/products/studio/noise-cancelling-headphones-2f3ee0447b5d.webp",
+    "publicId": "zamazon/seed/products/studio/noise-cancelling-headphones-2f3ee0447b5d",
+    "source": {
+      "url": "public/products/studio/noise-cancelling-headphones.webp",
+      "page": "public/products/studio/prompts.json",
+      "author": "AI-generated Zamazon demo artwork",
+      "license": "Generated demo artwork"
+    },
+    "width": 1024,
+    "height": 1024,
+    "bytes": 346540,
+    "format": "webp",
+    "background": "#f3f4f6"
+  },
+  "mechanical-keyboard": {
+    "url": "https://res.cloudinary.com/dywssqmm/image/upload/v1792666888/zamazon/seed/products/studio/mechanical-keyboard-2b49c1d28805.webp",
+    "publicId": "zamazon/seed/products/studio/mechanical-keyboard-2b49c1d28805",
+    "source": {
+      "url": "public/products/studio/mechanical-keyboard.webp",
+      "page": "public/products/studio/prompts.json",
+      "author": "AI-generated Zamazon demo artwork",
+      "license": "Generated demo artwork"
+    },
+    "width": 1024,
+    "height": 1024,
+    "bytes": 235528,
+    "format": "webp",
+    "background": "#f3f4f6"
+  },
+  "4k-usb-c-monitor": {
+    "url": "https://res.cloudinary.com/dywssqmm/image/upload/v1792666893/zamazon/seed/products/studio/4k-usb-c-monitor-58dacc86f514.webp",
+    "publicId": "zamazon/seed/products/studio/4k-usb-c-monitor-58dacc86f514",
+    "source": {
+      "url": "public/products/studio/4k-usb-c-monitor.webp",
+      "page": "public/products/studio/prompts.json",
+      "author": "AI-generated Zamazon demo artwork",
+      "license": "Generated demo artwork"
+    },
+    "width": 1024,
+    "height": 1024,
+    "bytes": 366814,
+    "format": "webp",
+    "background": "#f3f4f6"
+  },
+  "pour-over-coffee-maker": {
+    "url": "https://res.cloudinary.com/dywssqmm/image/upload/v1792666897/zamazon/seed/products/studio/pour-over-coffee-maker-9ce71eea077d.webp",
+    "publicId": "zamazon/seed/products/studio/pour-over-coffee-maker-9ce71eea077d",
+    "source": {
+      "url": "public/products/studio/pour-over-coffee-maker.webp",
+      "page": "public/products/studio/prompts.json",
+      "author": "AI-generated Zamazon demo artwork",
+      "license": "Generated demo artwork"
+    },
+    "width": 1024,
+    "height": 1024,
+    "bytes": 339486,
+    "format": "webp",
+    "background": "#f3f4f6"
+  },
+  "smart-table-lamp": {
+    "url": "https://res.cloudinary.com/dywssqmm/image/upload/v1792666901/zamazon/seed/products/studio/smart-table-lamp-c0c09c40cc93.webp",
+    "publicId": "zamazon/seed/products/studio/smart-table-lamp-c0c09c40cc93",
+    "source": {
+      "url": "public/products/studio/smart-table-lamp.webp",
+      "page": "public/products/studio/prompts.json",
+      "author": "AI-generated Zamazon demo artwork",
+      "license": "Generated demo artwork"
+    },
+    "width": 1024,
+    "height": 1024,
+    "bytes": 232126,
+    "format": "webp",
+    "background": "#f3f4f6"
+  },
+  "mirrorless-camera": {
+    "url": "https://res.cloudinary.com/dywssqmm/image/upload/v1792666907/zamazon/seed/products/studio/mirrorless-camera-480bd00083ed.webp",
+    "publicId": "zamazon/seed/products/studio/mirrorless-camera-480bd00083ed",
+    "source": {
+      "url": "public/products/studio/mirrorless-camera.webp",
+      "page": "public/products/studio/prompts.json",
+      "author": "AI-generated Zamazon demo artwork",
+      "license": "Generated demo artwork"
+    },
+    "width": 1024,
+    "height": 1024,
+    "bytes": 420484,
+    "format": "webp",
+    "background": "#f3f4f6"
+  },
+  "wireless-earbuds": {
+    "url": "https://res.cloudinary.com/dywssqmm/image/upload/v1792666915/zamazon/seed/products/studio/wireless-earbuds-0ec08363ad5e.webp",
+    "publicId": "zamazon/seed/products/studio/wireless-earbuds-0ec08363ad5e",
+    "source": {
+      "url": "public/products/studio/wireless-earbuds.webp",
+      "page": "public/products/studio/prompts.json",
+      "author": "AI-generated Zamazon demo artwork",
+      "license": "Generated demo artwork"
+    },
+    "width": 1024,
+    "height": 1024,
+    "bytes": 371104,
+    "format": "webp",
+    "background": "#f3f4f6"
+  },
+  "ergonomic-office-chair": {
+    "url": "https://res.cloudinary.com/dywssqmm/image/upload/v1792666919/zamazon/seed/products/studio/ergonomic-office-chair-c277c8484f9a.webp",
+    "publicId": "zamazon/seed/products/studio/ergonomic-office-chair-c277c8484f9a",
+    "source": {
+      "url": "public/products/studio/ergonomic-office-chair.webp",
+      "page": "public/products/studio/prompts.json",
+      "author": "AI-generated Zamazon demo artwork",
+      "license": "Generated demo artwork"
+    },
+    "width": 1024,
+    "height": 1024,
+    "bytes": 317694,
+    "format": "webp",
+    "background": "#f3f4f6"
+  },
+  "cast-iron-skillet": {
+    "url": "https://res.cloudinary.com/dywssqmm/image/upload/v1792666925/zamazon/seed/products/studio/cast-iron-skillet-9251eab9070f.webp",
+    "publicId": "zamazon/seed/products/studio/cast-iron-skillet-9251eab9070f",
+    "source": {
+      "url": "public/products/studio/cast-iron-skillet.webp",
+      "page": "public/products/studio/prompts.json",
+      "author": "AI-generated Zamazon demo artwork",
+      "license": "Generated demo artwork"
+    },
+    "width": 1024,
+    "height": 1024,
+    "bytes": 404044,
+    "format": "webp",
+    "background": "#f3f4f6"
+  },
+  "yoga-mat": {
+    "url": "https://res.cloudinary.com/dywssqmm/image/upload/v1792666930/zamazon/seed/products/studio/yoga-mat-31362a80ba7d.webp",
+    "publicId": "zamazon/seed/products/studio/yoga-mat-31362a80ba7d",
+    "source": {
+      "url": "public/products/studio/yoga-mat.webp",
+      "page": "public/products/studio/prompts.json",
+      "author": "AI-generated Zamazon demo artwork",
+      "license": "Generated demo artwork"
+    },
+    "width": 1024,
+    "height": 1024,
+    "bytes": 399802,
+    "format": "webp",
+    "background": "#f3f4f6"
+  },
+  "adjustable-dumbbells": {
+    "url": "https://res.cloudinary.com/dywssqmm/image/upload/v1792666935/zamazon/seed/products/studio/adjustable-dumbbells-e24d8019109d.webp",
+    "publicId": "zamazon/seed/products/studio/adjustable-dumbbells-e24d8019109d",
+    "source": {
+      "url": "public/products/studio/adjustable-dumbbells.webp",
+      "page": "public/products/studio/prompts.json",
+      "author": "AI-generated Zamazon demo artwork",
+      "license": "Generated demo artwork"
+    },
+    "width": 1024,
+    "height": 1024,
+    "bytes": 363108,
+    "format": "webp",
+    "background": "#f3f4f6"
+  },
+  "running-backpack": {
+    "url": "https://res.cloudinary.com/dywssqmm/image/upload/v1792666940/zamazon/seed/products/studio/running-backpack-584731e87fed.webp",
+    "publicId": "zamazon/seed/products/studio/running-backpack-584731e87fed",
+    "source": {
+      "url": "public/products/studio/running-backpack.webp",
+      "page": "public/products/studio/prompts.json",
+      "author": "AI-generated Zamazon demo artwork",
+      "license": "Generated demo artwork"
+    },
+    "width": 1024,
+    "height": 1024,
+    "bytes": 396024,
+    "format": "webp",
+    "background": "#f3f4f6"
+  },
+  "leather-crossbody-bag": {
+    "url": "https://res.cloudinary.com/dywssqmm/image/upload/v1792666945/zamazon/seed/products/studio/leather-crossbody-bag-9f9477e05038.webp",
+    "publicId": "zamazon/seed/products/studio/leather-crossbody-bag-9f9477e05038",
+    "source": {
+      "url": "public/products/studio/leather-crossbody-bag.webp",
+      "page": "public/products/studio/prompts.json",
+      "author": "AI-generated Zamazon demo artwork",
+      "license": "Generated demo artwork"
+    },
+    "width": 1024,
+    "height": 1024,
+    "bytes": 429760,
+    "format": "webp",
+    "background": "#f3f4f6"
+  },
+  "classic-sunglasses": {
+    "url": "https://res.cloudinary.com/dywssqmm/image/upload/v1792666949/zamazon/seed/products/studio/classic-sunglasses-c92d19add4ea.webp",
+    "publicId": "zamazon/seed/products/studio/classic-sunglasses-c92d19add4ea",
+    "source": {
+      "url": "public/products/studio/classic-sunglasses.webp",
+      "page": "public/products/studio/prompts.json",
+      "author": "AI-generated Zamazon demo artwork",
+      "license": "Generated demo artwork"
+    },
+    "width": 1024,
+    "height": 1024,
+    "bytes": 120108,
+    "format": "webp",
+    "background": "#f3f4f6"
+  },
+  "smartwatch-active": {
+    "url": "https://res.cloudinary.com/dywssqmm/image/upload/v1792666953/zamazon/seed/products/studio/smartwatch-active-7409ef23e300.webp",
+    "publicId": "zamazon/seed/products/studio/smartwatch-active-7409ef23e300",
+    "source": {
+      "url": "public/products/studio/smartwatch-active.webp",
+      "page": "public/products/studio/prompts.json",
+      "author": "AI-generated Zamazon demo artwork",
+      "license": "Generated demo artwork"
+    },
+    "width": 1024,
+    "height": 1024,
+    "bytes": 345880,
+    "format": "webp",
+    "background": "#f3f4f6"
+  },
+  "portable-projector": {
+    "url": "https://res.cloudinary.com/dywssqmm/image/upload/v1792666960/zamazon/seed/products/studio/portable-projector-4ac90b179c77.webp",
+    "publicId": "zamazon/seed/products/studio/portable-projector-4ac90b179c77",
+    "source": {
+      "url": "public/products/studio/portable-projector.webp",
+      "page": "public/products/studio/prompts.json",
+      "author": "AI-generated Zamazon demo artwork",
+      "license": "Generated demo artwork"
+    },
+    "width": 1024,
+    "height": 1024,
+    "bytes": 445598,
+    "format": "webp",
+    "background": "#f3f4f6"
+  },
+  "bluetooth-speaker": {
+    "url": "https://res.cloudinary.com/dywssqmm/image/upload/v1792666965/zamazon/seed/products/studio/bluetooth-speaker-2e712d0e8429.webp",
+    "publicId": "zamazon/seed/products/studio/bluetooth-speaker-2e712d0e8429",
+    "source": {
+      "url": "public/products/studio/bluetooth-speaker.webp",
+      "page": "public/products/studio/prompts.json",
+      "author": "AI-generated Zamazon demo artwork",
+      "license": "Generated demo artwork"
+    },
+    "width": 1024,
+    "height": 1024,
+    "bytes": 368338,
+    "format": "webp",
+    "background": "#f3f4f6"
+  },
+  "standing-desk": {
+    "url": "https://res.cloudinary.com/dywssqmm/image/upload/v1792666969/zamazon/seed/products/studio/standing-desk-4bce505ac277.webp",
+    "publicId": "zamazon/seed/products/studio/standing-desk-4bce505ac277",
+    "source": {
+      "url": "public/products/studio/standing-desk.webp",
+      "page": "public/products/studio/prompts.json",
+      "author": "AI-generated Zamazon demo artwork",
+      "license": "Generated demo artwork"
+    },
+    "width": 1024,
+    "height": 1024,
+    "bytes": 127420,
+    "format": "webp",
+    "background": "#f3f4f6"
+  },
+  "the-last-lighthouse": {
+    "url": "https://res.cloudinary.com/dywssqmm/image/upload/v1792666974/zamazon/seed/products/studio/the-last-lighthouse-bc2296374924.webp",
+    "publicId": "zamazon/seed/products/studio/the-last-lighthouse-bc2296374924",
+    "source": {
+      "url": "public/products/studio/the-last-lighthouse.webp",
+      "page": "public/products/studio/prompts.json",
+      "author": "AI-generated Zamazon demo artwork",
+      "license": "Generated demo artwork"
+    },
+    "width": 1024,
+    "height": 1024,
+    "bytes": 470552,
+    "format": "webp",
+    "background": "#f3f4f6"
+  },
+  "practical-typescript": {
+    "url": "https://res.cloudinary.com/dywssqmm/image/upload/v1792666979/zamazon/seed/products/studio/practical-typescript-706a3bed0752.webp",
+    "publicId": "zamazon/seed/products/studio/practical-typescript-706a3bed0752",
+    "source": {
+      "url": "public/products/studio/practical-typescript.webp",
+      "page": "public/products/studio/prompts.json",
+      "author": "AI-generated Zamazon demo artwork",
+      "license": "Generated demo artwork"
+    },
+    "width": 1024,
+    "height": 1024,
+    "bytes": 379388,
+    "format": "webp",
+    "background": "#f3f4f6"
+  }
+}

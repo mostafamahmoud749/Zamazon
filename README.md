@@ -5,6 +5,35 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 For the catalog, run `npm run backend` and `npm run dev` in separate terminals.
 Run `npm run seed:products` to add 120 sample products for testing scroll loading.
 This additive script preserves existing records and skips products already added.
+It also replaces the old placeholder image on existing scroll-demo products.
+
+### Seed product images
+
+Both seed scripts use the verified Cloudinary URLs in `prisma/seed-images.json`.
+The 20 named products have individual images; the 120 scroll-demo items cycle
+through matching images for their category. The manifest records the source,
+photographer, license, Cloudinary public ID, dimensions, and stored file size.
+The current images are AI-generated studio product shots in
+`public/products/studio/`, with the source cutouts and generation prompts saved
+alongside them. Every image has a 1024 x 1024 canvas, consistent product padding,
+and a solid `#f3f4f6` background matching the product cards.
+
+- `npm run seed:images` uploads missing assets, optimizes them within
+  1600 x 1600, and saves their actual returned URLs and formats in the manifest. It requires
+  the three Cloudinary environment variables. Stable public IDs and
+  `overwrite: false` prevent duplicate or replacement uploads when rerunning it.
+- `npm run seed:images:prepare` rebuilds the studio WebP images from their
+  transparent PNG sources and resets their manifest URLs for uploading. It
+  centers the full product without cropping it and preserves the exact background
+  color using lossless WebP. Studio images are stored without a second lossy
+  Cloudinary transformation so their background continues to match the cards.
+- `npm run seed:images:apply` updates only the image field of existing named
+  seed products and `scroll-demo-product-NNN` records. It does not create or
+  delete records, so it can repair the existing catalog without running the
+  main database seed.
+
+Regular database seeding uses the saved URLs and does not upload images again.
+The seed scripts validate the manifest before writing database records.
 
 ### Cloudinary images
 
