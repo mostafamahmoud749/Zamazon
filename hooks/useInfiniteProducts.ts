@@ -13,7 +13,7 @@ export default function useInfiniteProducts(
 ) {
   const [products, setProducts] = useState(initialProducts);
   const [hasMore, setHasMore] = useState(
-    initialPage < MAX_PRODUCT_PAGE && initialProducts.length === 20,
+    initialPage < MAX_PRODUCT_PAGE && initialProducts.length === initialPage * 20,
   );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -33,6 +33,7 @@ export default function useInfiniteProducts(
     try {
       const params = new URLSearchParams(queryString);
       params.set('page', String(nextPage.current));
+      params.set('cumulative', 'false');
       const batch = await fetchProducts(`/api/products?${params}`, controller.signal);
       if (controller.signal.aborted) return;
 
@@ -40,6 +41,11 @@ export default function useInfiniteProducts(
         const ids = new Set(previous.map((product) => product.id));
         return [...previous, ...batch.filter((product) => !ids.has(product.id))];
       });
+      if (batch.length > 0) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('page', String(nextPage.current));
+        window.history.replaceState(null, '', url);
+      }
       nextPage.current += 1;
       setHasMore(nextPage.current <= MAX_PRODUCT_PAGE && batch.length === 20);
     } catch {

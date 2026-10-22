@@ -2,7 +2,7 @@ import { ProductResponseSchema, ProductsResponseSchema } from '@/schemas/Product
 import type { Product } from '@/types/product';
 
 export async function fetchProducts(url: string, signal?: AbortSignal): Promise<Product[]> {
-  const res = await fetch(url, { cache: 'no-store', signal });
+  const res = await fetch(url, { next: { revalidate: 600 }, signal });
   if (!res.ok) throw new Error(`Could not fetch products (${res.status})`);
 
   const data: unknown = await res.json();

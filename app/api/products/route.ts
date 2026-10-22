@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { fetchProducts } from '@/lib/fetchProducts';
 import { ProductsQuerySchema } from '@/schemas/Product.schema';
 
-export const dynamic = 'force-dynamic';
-
 export async function GET(request: NextRequest) {
   const result = ProductsQuerySchema.safeParse(Object.fromEntries(request.nextUrl.searchParams));
   if (!result.success) {
@@ -15,6 +13,7 @@ export async function GET(request: NextRequest) {
     rating: String(result.data.rating),
     filters: JSON.stringify(result.data.filters),
     page: String(result.data.page),
+    cumulative: String(result.data.cumulative),
   });
 
   try {
