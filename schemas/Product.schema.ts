@@ -18,6 +18,11 @@ export const ProductsQuerySchema = Z.object({
       return value;
     }
   }, Z.array(Z.coerce.number().int().positive()).default([])),
+  cumulative: Z.preprocess((value) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return value;
+  }, Z.boolean().default(false)),
 }).strict();
 
 export const CreateProductSchema = Z.object({

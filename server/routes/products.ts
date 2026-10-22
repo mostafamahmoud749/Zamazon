@@ -7,8 +7,11 @@ import { ProductsQuerySchema } from '../../schemas/Product.schema.js';
 const router = Router();
 
 router.get('/api/products', validateQuery(ProductsQuerySchema), async (request, response) => {
+  const { page, rating, search, filters: selectedCategoryIds, cumulative } = response.locals.query;
+  const skip = cumulative ? 0 : 20 * (page - 1);
+  const take = cumulative ? page * 20 : 20;
+
   try {
-    const { page, rating, search, filters: selectedCategoryIds } = response.locals.query;
     const categoryIds = await getCategoryIdsIncludingChildren(selectedCategoryIds);
     const ratedProducts =
       rating > 0
@@ -44,8 +47,8 @@ router.get('/api/products', validateQuery(ProductsQuerySchema), async (request, 
           { isActive: true },
         ],
       },
-      skip: (page - 1) * 20,
-      take: 20,
+      skip,
+      take,
       orderBy: { id: 'asc' },
     });
 
