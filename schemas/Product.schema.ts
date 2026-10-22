@@ -1,11 +1,13 @@
 import Z from 'zod';
 
+export const MAX_PRODUCT_PAGE = 50;
+
 export const ProducIdParamsSchema = Z.object({
   id: Z.coerce.number().int().positive('Product ID must be a positive integer'),
 });
 
 export const ProductsQuerySchema = Z.object({
-  page: Z.coerce.number().int().min(1).default(1),
+  page: Z.coerce.number().int().min(1).max(MAX_PRODUCT_PAGE).default(1),
   rating: Z.coerce.number().min(0).max(5).default(0),
   search: Z.string().trim().max(100, 'Search must be at most 100 characters').default(''),
   filters: Z.preprocess((value) => {

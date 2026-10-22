@@ -159,6 +159,26 @@ describe('GET /api/products cumulative pagination', () => {
     expect(response.body.map(({ id }: { id: number }) => id)).toEqual(productIds.slice(0, 20));
   });
 
+  it.each(['true', 'false'])('accepts page 50 with cumulative=%s', async (cumulative) => {
+    const response = await request(app)
+      .get('/api/products')
+      .query({ search, page: 50, cumulative });
+
+    expect(response.status).toBe(200);
+    expect(response.body.map(({ id }: { id: number }) => id)).toEqual(
+      cumulative === 'true' ? productIds : [],
+    );
+  });
+
+  it.each(['true', 'false'])('rejects page 51 with cumulative=%s', async (cumulative) => {
+    const response = await request(app)
+      .get('/api/products')
+      .query({ search, page: 51, cumulative });
+
+    expect(response.status).toBe(400);
+    expect(response.body.details.fieldErrors.page).toBeDefined();
+  });
+
   it.each([undefined, 'false'])('returns only page 2 with cumulative=%s', async (cumulative) => {
     const response = await request(app)
       .get('/api/products')

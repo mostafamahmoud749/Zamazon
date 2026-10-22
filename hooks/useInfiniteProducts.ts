@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { fetchProducts } from '@/lib/fetchProducts';
+import { MAX_PRODUCT_PAGE } from '@/schemas/Product.schema';
 import type { Product } from '@/types';
 
 export default function useInfiniteProducts(
@@ -11,7 +12,9 @@ export default function useInfiniteProducts(
   paused: boolean,
 ) {
   const [products, setProducts] = useState(initialProducts);
-  const [hasMore, setHasMore] = useState(initialProducts.length === 20);
+  const [hasMore, setHasMore] = useState(
+    initialPage < MAX_PRODUCT_PAGE && initialProducts.length === 20,
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -38,7 +41,7 @@ export default function useInfiniteProducts(
         return [...previous, ...batch.filter((product) => !ids.has(product.id))];
       });
       nextPage.current += 1;
-      setHasMore(batch.length === 20);
+      setHasMore(nextPage.current <= MAX_PRODUCT_PAGE && batch.length === 20);
     } catch {
       if (!controller.signal.aborted) setError('Could not load more products. Please try again.');
     } finally {
