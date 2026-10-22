@@ -6,6 +6,56 @@ For the catalog, run `npm run backend` and `npm run dev` in separate terminals.
 Run `npm run seed:products` to add 120 sample products for testing scroll loading.
 This additive script preserves existing records and skips products already added.
 
+### Cloudinary images
+
+Set `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, and `CLOUDINARY_API_SECRET` in
+the backend environment. Restart the API and Next.js after changing them.
+The API secret stays on the backend; no upload preset is needed.
+
+Use `uploadImage(file)` from `lib/uploadImage.ts` in browser code:
+
+```ts
+import { uploadImage } from '@/lib/uploadImage';
+
+const image = await uploadImage(file); // file is a browser File
+// image.url is the HTTPS URL to save in a product's existing image field.
+// Also returns id, publicId, width, height, format, and bytes.
+```
+
+The function checks for a nonempty JPEG, PNG, or WebP up to 5 MB, gets a CSRF
+token, and calls `POST /api/images/upload-signature` using the existing login
+session. Express signs a new user-specific public ID and fixed upload settings.
+The browser then sends the file and signed parameters directly to Cloudinary
+as multipart `FormData`. File bytes never pass through Express.
+
+Cloudinary applies a signed incoming transformation before storing new uploads:
+fit within 1600 x 1600 while preserving aspect ratio and never enlarging smaller
+images, convert to WebP, and apply automatic quality compression. The returned
+URL, dimensions, format, and byte count describe the optimized stored image.
+The transformation is signed so the browser cannot remove or change it.
+Existing uploaded images are unaffected.
+
+Cloudinary enforces the signed format restriction, `overwrite: false`, and an
+`eval` rule that rejects files over 5,242,880 bytes (5 MiB) before storing them.
+The browser also checks the size for immediate feedback. The size rule is part
+of the signature, so removing or changing it invalidates the upload signature.
+The signature and API key may be sent to the browser; the API secret must stay
+in the backend environment. Cloudinary accepts signatures for one hour.
+
+Signature requests are limited to 30 per user per hour, in addition to the
+general API limit. These limiters are in memory. The signing endpoint returns
+401 for missing login, 403 for invalid CSRF, 429 for rate limits, and 503 for
+missing Cloudinary configuration. The browser function throws on upload failure.
+
+Use `image.url` directly to display/download the public image from Cloudinary's
+CDN. The existing Next.js Image configuration allows your Cloudinary cloud.
+There are no image listing or metadata endpoints. Uploading does not create or
+modify a product or save a database record.
+
+Reference: [Cloudinary signed browser uploads](https://cloudinary.com/documentation/client_side_uploading).
+The signed size rule uses [Cloudinary upload evaluation](https://cloudinary.com/documentation/upload_parameters#eval_modify_upload_options_before_upload).
+Optimization uses [Cloudinary incoming transformations](https://cloudinary.com/documentation/eager_and_incoming_transformations#incoming_transformations).
+
 ### Express backend security
 
 Run the API with `npm run backend`. Helmet adds security response headers.

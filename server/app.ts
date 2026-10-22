@@ -17,6 +17,7 @@ import cartRouter from './routes/cart.js';
 import addressesRouter from './routes/addresses.js';
 import reviewsRouter from './routes/reviews.js';
 import categoriesRouter from './routes/category.js';
+import imagesRouter from './routes/images.js';
 import connectPgSimple from 'connect-pg-simple';
 import { errorHandler } from './middleware/errorHandler.js';
 import { csrfSynchronisedProtection, generateToken } from './middleware/csrf.js';
@@ -85,6 +86,7 @@ export const createApp = () => {
   app.use(addressesRouter);
   app.use(reviewsRouter);
   app.use(categoriesRouter);
+  app.use(imagesRouter);
   app.use(errorHandler);
 
   return app;

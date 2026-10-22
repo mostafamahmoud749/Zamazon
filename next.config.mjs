@@ -5,6 +5,17 @@ const nextConfig = {
   },
   images: {
     domains: ['avatars.githubusercontent.com', 'lh3.googleusercontent.com', 'cdn.dummyjson.com'],
+    remotePatterns: process.env.CLOUDINARY_CLOUD_NAME
+      ? [
+          {
+            protocol: 'https',
+            hostname: 'res.cloudinary.com',
+            port: '',
+            pathname: `/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/**`,
+            search: '',
+          },
+        ]
+      : [],
   },
 };
 
