@@ -35,8 +35,8 @@ export default async function DealsPage({ searchParams }: DealsPageProps) {
     page: String(result.data.page),
   });
   const [products, categories] = await Promise.all([
-    fetchProducts(`http://localhost:9000/api/products?${query}`),
-    fetchCategories('http://localhost:9000/api/categories'),
+    fetchProducts(`${process.env.API_URL}/api/products?${query}`),
+    fetchCategories(`${process.env.API_URL}/api/categories`),
   ]);
 
   return <MainDeals key={query.toString()} products={products} categories={categories} />;

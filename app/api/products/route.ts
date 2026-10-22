@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const products = await fetchProducts(
-      `http://localhost:9000/api/products?${query}`,
+      `${process.env.API_URL}/api/products?${query}`,
       request.signal,
     );
     return NextResponse.json(products);

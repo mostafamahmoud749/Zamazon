@@ -38,7 +38,7 @@ export default function RegisterForm({ onResult }: RegisterFormProps) {
     try {
       const csrfToken = await getCsrfToken();
 
-      const response = await fetch('http://localhost:9000/api/auth/register', {
+      const response = await fetch(`${process.env.API_URL}/api/auth/register`, {
         method: 'POST',
         credentials: 'include',
         headers: {

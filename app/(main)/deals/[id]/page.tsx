@@ -15,7 +15,7 @@ export default async function DealsDetailsPage({
   params,
 }: DealsDetailsPageProps): Promise<JSX.Element> {
   const { id } = await params;
-  const res = await fetchProduct(`http://localhost:9000/api/products/${id}`);
+  const res = await fetchProduct(`${process.env.API_URL}/api/products/${id}`);
   if (!res) notFound();
 
   const product: Product = res;

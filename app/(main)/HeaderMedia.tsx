@@ -17,7 +17,7 @@ export default async function HeaderMedia({
   const session: Session | null = await getServerSession(authOptions);
   let categories: NavItem[] = [];
   try {
-    const result = await fetchCategories('http://localhost:9000/api/categories');
+    const result = await fetchCategories(`${process.env.API_URL}/api/categories`);
     categories = result
       .sort((a, b) => a.name.localeCompare(b.name))
       .map((category) => ({ id: category.id, group: 'departments', key: category.name }));
