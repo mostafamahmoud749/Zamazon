@@ -1,16 +1,18 @@
+'use client';
 import { CircleUserRound } from 'lucide-react';
 import Link from 'next/link';
 import type { Session } from 'next-auth';
+import { useContext } from 'react';
+import { UserContext } from '@/components/auth/UserProvider';
 
 type DUserNavProps = {
   big?: boolean;
-  session: Session | null;
 };
 
-export default function DUserNav({ big, session }: DUserNavProps) {
-  const text: string = session?.user
-    ? `Hello, ${session.user.name?.split(' ')[0]}`
-    : 'Hello, Sign in';
+export default function DUserNav({ big }: DUserNavProps) {
+  const { user, status } = useContext(UserContext);
+  const text: string =
+    status === 'authenticated' ? `Hello, ${user?.name?.split(' ')[0] ?? '?'}` : 'Hello, Sign in';
   return (
     <>
       {big ? (

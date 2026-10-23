@@ -2,10 +2,13 @@
 
 import { getCsrfToken } from '@/lib/getCsrfToken';
 import { useRouter } from 'next/navigation';
+import { useContext } from 'react';
+import { UserContext } from './UserProvider';
 
 export default function Signout() {
+  const { logout } = useContext(UserContext);
   const router = useRouter();
-  async function logout() {
+  async function logoutUser() {
     const csrfToken = await getCsrfToken();
 
     const response = await fetch(`${process.env.API_URL}/api/auth/logout`, {
@@ -18,6 +21,7 @@ export default function Signout() {
     });
 
     if (response.ok) {
+      logout();
       router.replace('/');
       router.refresh();
     }
@@ -26,7 +30,7 @@ export default function Signout() {
   return (
     <button
       className="w-full cursor-pointer text-start text-rose-700 hover:bg-gray-100"
-      onClick={() => logout()}
+      onClick={() => logoutUser()}
     >
       Signout
     </button>
