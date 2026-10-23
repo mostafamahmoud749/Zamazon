@@ -29,7 +29,7 @@ export default function Signout() {
 
   return (
     <button
-      className="w-full cursor-pointer text-start text-rose-700 hover:bg-gray-100"
+      className="block w-full cursor-pointer py-2 pl-4 text-start text-sm text-rose-700 transition-all duration-200 hover:translate-x-1 hover:bg-gray-100"
       onClick={() => logoutUser()}
     >
       Signout

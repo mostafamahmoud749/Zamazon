@@ -39,7 +39,7 @@ export default function Navigations({ py, H, navs = [], toggle }: Partial<Naviga
       >
         <Link
           href="/deals"
-          className={`${py ? 'py-2' : ''} block  text-sm transition-all duration-200 ${H ? 'items-center flex justify-center border-1 border-transparent hover:border-white h-8 px-2 flex-shrink-0' : 'pl-4 w-full hover:translate-x-1'}`}
+          className={`${py ? 'py-2' : ''} block  text-sm transition-all duration-200 ${H ? 'items-center flex justify-center border-1 border-transparent hover:border-white h-8 px-2 flex-shrink-0' : 'pl-4 w-full hover:translate-x-1 hover:bg-gray-100'}`}
         >
           Todays Deals
         </Link>
