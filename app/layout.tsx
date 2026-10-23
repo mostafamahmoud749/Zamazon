@@ -2,6 +2,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { UserProvider } from '@/components/auth/UserProvider';
 
 const amazonFont = Inter({
   variable: '--font-amazon-sans',
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={amazonFont.variable}>
-      <body className="bg-gray-100 text-black">{children}</body>
+      <body className="bg-gray-100 text-black">{<UserProvider>{children}</UserProvider>}</body>
     </html>
   );
 }
