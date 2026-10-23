@@ -12,7 +12,7 @@ const defaultUserContextValue: UserContextValue = {
   logout: async () => {},
 };
 
-const UserContext = createContext<UserContextValue>(defaultUserContextValue);
+export const UserContext = createContext<UserContextValue>(defaultUserContextValue);
 
 export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);

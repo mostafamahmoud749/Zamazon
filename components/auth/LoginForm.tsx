@@ -4,10 +4,11 @@ import Input from '@/components/auth/Input';
 import Button from '@/components/common/Button';
 import SigninWithGithub from '@/components/auth/SigninWithGithub';
 import SigninWithGoogle from '@/components/auth/SigninWithGoogle';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { LoginSchema } from '@/schemas/Auth.schema';
 import { getCsrfToken } from '@/lib/getCsrfToken';
 import { useRouter } from 'next/navigation';
+import { UserContext } from './UserProvider';
 
 type LoginFormProps = {
   callbackUrl: string;
@@ -15,6 +16,7 @@ type LoginFormProps = {
 };
 
 export default function LoginForm({ onResult, callbackUrl }: LoginFormProps) {
+  const { refreshUser } = useContext(UserContext);
   const router = useRouter();
   const [data, setData] = useState({
     email: '',
@@ -60,6 +62,8 @@ export default function LoginForm({ onResult, callbackUrl }: LoginFormProps) {
               : 'Could not log in. Please try again.'),
         );
       }
+
+      await refreshUser();
       router.replace('/');
       router.refresh();
     } catch (error) {
