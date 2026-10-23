@@ -26,6 +26,7 @@ export const createApp = () => {
   const app = express();
 
   const PgStore = connectPgSimple(session);
+  app.set('trust proxy', 1);
 
   app.use(helmet());
   app.use(
@@ -54,7 +55,7 @@ export const createApp = () => {
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 7,
         httpOnly: true,
-        secure: false,
+        secure: process.env.NODE_ENV === 'production',
       },
       store: new PgStore({
         conString: process.env.DATABASE_URL,
