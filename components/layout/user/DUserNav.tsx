@@ -1,7 +1,6 @@
 'use client';
 import { CircleUserRound } from 'lucide-react';
 import Link from 'next/link';
-import type { Session } from 'next-auth';
 import { useContext } from 'react';
 import { UserContext } from '@/components/auth/UserProvider';
 

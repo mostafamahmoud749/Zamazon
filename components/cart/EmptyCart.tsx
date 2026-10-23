@@ -2,10 +2,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from '@/components/common/Button';
-import { useSession } from 'next-auth/react';
+import { useContext } from 'react';
+import { UserContext } from '@/components/auth/UserProvider';
 
 export default function EmptyCart() {
-  const { data: session, status } = useSession();
+  const { status } = useContext(UserContext);
   return (
     <div className="mb-5 flex min-h-[300px] flex-col items-center bg-white md:flex-row md:gap-4">
       <Image width={400} height={400} src="/pngwing.com.png" alt="cart" />

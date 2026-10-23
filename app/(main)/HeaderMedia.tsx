@@ -4,9 +4,6 @@ import { fetchCategories } from '@/lib/fetchCategories';
 import type { JSX } from 'react';
 
 import type { NavItem } from '@/types/index';
-import type { Session } from 'next-auth';
-import { authOptions } from '@/lib/authOptions';
-import { getServerSession } from 'next-auth';
 
 export default async function HeaderMedia({
   userAgent,
@@ -14,7 +11,6 @@ export default async function HeaderMedia({
   userAgent?: string;
 }): Promise<JSX.Element> {
   const isMobile: boolean = /Mobi|Android/i.test(userAgent ?? '');
-  const session: Session | null = await getServerSession(authOptions);
   let categories: NavItem[] = [];
   try {
     const result = await fetchCategories(`${process.env.API_URL}/api/categories`);
@@ -28,8 +24,8 @@ export default async function HeaderMedia({
   const navs: NavItem[] = categories;
 
   return isMobile ? (
-    <MobileHeader navs={navs} session={session} />
+    <MobileHeader navs={navs} />
   ) : (
-    <DesktopHeader navs={navs} session={session} />
+    <DesktopHeader navs={navs} />
   );
 }

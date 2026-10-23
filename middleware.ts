@@ -1,12 +1,32 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getToken } from 'next-auth/jwt';
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  const isSignedIn = Boolean(token);
+  let isSignedIn = false;
+  const sessionCookie = req.cookies.get('connect.sid');
+
+  if (sessionCookie) {
+    try {
+      const response = await fetch(`${process.env.API_URL}/api/users/me`, {
+        headers: { Cookie: `connect.sid=${sessionCookie.value}` },
+        cache: 'no-store',
+      });
+
+      if (!response.ok && response.status !== 401) {
+        return new NextResponse('Unable to verify your session. Please try again.', {
+          status: 503,
+        });
+      }
+
+      isSignedIn = response.ok;
+    } catch {
+      return new NextResponse('Unable to verify your session. Please try again.', {
+        status: 503,
+      });
+    }
+  }
 
   if (pathname.startsWith('/orders') && !isSignedIn) {
     const url = req.nextUrl.clone();

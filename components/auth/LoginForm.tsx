@@ -3,7 +3,6 @@
 import Input from '@/components/auth/Input';
 import Button from '@/components/common/Button';
 import SigninWithGithub from '@/components/auth/SigninWithGithub';
-import SigninWithGoogle from '@/components/auth/SigninWithGoogle';
 import { useState, useContext } from 'react';
 import { LoginSchema } from '@/schemas/Auth.schema';
 import { getCsrfToken } from '@/lib/getCsrfToken';
@@ -64,7 +63,13 @@ export default function LoginForm({ onResult, callbackUrl }: LoginFormProps) {
       }
 
       await refreshUser();
-      router.replace('/');
+      const destination =
+        callbackUrl.startsWith('/') &&
+        !callbackUrl.startsWith('//') &&
+        !callbackUrl.includes('\\')
+          ? callbackUrl
+          : '/';
+      router.replace(destination);
       router.refresh();
     } catch (error) {
       onResult({
@@ -97,7 +102,6 @@ export default function LoginForm({ onResult, callbackUrl }: LoginFormProps) {
       />
       <div className="mb-4 flex flex-col gap-3">
         <SigninWithGithub />
-        <SigninWithGoogle callbackUrl={callbackUrl} />
       </div>
       <Button
         color="bg-amber-300"

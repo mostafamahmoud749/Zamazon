@@ -1,6 +1,5 @@
 import { X } from 'lucide-react';
 import { JSX } from 'react';
-import type { Session } from 'next-auth';
 
 type SidebarProps = {
   header: JSX.Element;

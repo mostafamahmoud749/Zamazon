@@ -12,16 +12,14 @@ import MergeText from '@/components/common/MergeText';
 import Logo from '@/components/common/Logo';
 import { JSX } from 'react';
 import type { NavItem } from '@/types/index';
-import type { Session } from 'next-auth';
 import { CartContext } from '@/components/cart/CartProvider';
 import Holder from '@/components/layout/headers/Holder';
 
 type DesktopHeaderProps = {
   navs: NavItem[];
-  session: Session | null;
 };
 
-export default function DesktopHeader({ navs, session }: DesktopHeaderProps): JSX.Element {
+export default function DesktopHeader({ navs }: DesktopHeaderProps): JSX.Element {
   const [open, setOpen] = useState<boolean>(false);
   const { totalProductsCount } = useContext(CartContext);
 
@@ -44,7 +42,7 @@ export default function DesktopHeader({ navs, session }: DesktopHeaderProps): JS
 
         <Search />
         <Holder>
-          <DUserNav session={session} />
+          <DUserNav />
         </Holder>
 
         <Holder>
@@ -77,8 +75,8 @@ export default function DesktopHeader({ navs, session }: DesktopHeaderProps): JS
       </div>
       <Sidebar
         border={true}
-        main={<MSidebar py={true} navs={navs} toggle={() => toggle()} session={session} />}
-        header={<HSidebarDesktop session={session} />}
+        main={<MSidebar py={true} navs={navs} toggle={() => toggle()} />}
+        header={<HSidebarDesktop />}
         toggle={() => toggle()}
         open={open}
       />

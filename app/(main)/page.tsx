@@ -1,5 +1,3 @@
-import { authOptions } from '@/lib/authOptions';
-import { getServerSession } from 'next-auth';
 import SeeSign from '@/components/auth/SeeSign';
 import { fetchProducts } from '@/lib/fetchProducts';
 import HomeProducts from '@/components/product/HomeProducts';
@@ -9,7 +7,6 @@ import type { JSX } from 'react';
 export default async function Home(): Promise<JSX.Element> {
   const [productsResult] = await Promise.allSettled([
     fetchProducts(`${process.env.API_URL}/api/products`),
-    getServerSession(authOptions),
   ]);
 
   const productsRaw: unknown = productsResult.status === 'fulfilled' ? productsResult.value : null;
