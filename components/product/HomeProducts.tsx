@@ -15,18 +15,11 @@ export default function HomeProducts({ products }: HomeProductsProps): JSX.Eleme
   const searchQuery = searchParams.get('search')?.toLowerCase() ?? '';
 
   const filtered = useMemo((): Product[] => {
-    if (!searchQuery) return products.slice(0, 12);
-
-    return products
-      .filter((product: Product): boolean => {
-        const title = product.title?.toLowerCase() ?? '';
-        const description = product.description?.toLowerCase() ?? '';
-        return (
-          title.includes(searchQuery) ||
-          description.includes(searchQuery)
-        );
-      })
-      .slice(0, 12);
+    return products.filter((product: Product): boolean => {
+      const title = product.title?.toLowerCase() ?? '';
+      const description = product.description?.toLowerCase() ?? '';
+      return title.includes(searchQuery) || description.includes(searchQuery);
+    });
   }, [products, searchQuery]);
 
   const showProducts: JSX.Element[] = filtered.map((el) => <ProductCard key={el.id} el={el} />);
