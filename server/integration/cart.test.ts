@@ -70,13 +70,23 @@ describe('POST /api/cart/items', () => {
       .send({ productId: product.id, quantity: 4 });
 
     expect(createResponse.status).toBe(201);
-    expect(createResponse.body).toEqual(
-      expect.objectContaining({ productId: product.id, quantity: 3 }),
-    );
+    expect(createResponse.body).toEqual({
+      id: expect.any(Number),
+      quantity: 3,
+      product: {
+        id: product.id,
+        title: product.title,
+        description: product.description,
+        price: product.price.toJSON(),
+        image: product.image,
+        discount: product.discount?.toJSON() ?? null,
+        stock: product.stock,
+      },
+    });
     expect(mergeResponse.status).toBe(200);
-    expect(mergeResponse.body).toEqual(
-      expect.objectContaining({ productId: product.id, quantity: 7 }),
-    );
+    expect(mergeResponse.body).toEqual({ ...createResponse.body, quantity: 7 });
+    const cartResponse = await fixture.agent.get('/api/cart/items');
+    expect(cartResponse.body).toEqual([mergeResponse.body]);
     await expectCartItemCount(fixture.userId, 1);
   });
 
@@ -130,6 +140,16 @@ describe('PATCH /api/cart/items/:id', () => {
 
     expect(updateResponse.status).toBe(200);
     expect(updateResponse.body).toEqual(expect.objectContaining({ id: item.id, quantity: 3 }));
+    expect(updateResponse.body.product).toEqual(
+      expect.objectContaining({
+        id: product.id,
+        title: product.title,
+        price: product.price.toJSON(),
+        stock: product.stock,
+      }),
+    );
+    const cartResponse = await fixture.agent.get('/api/cart/items');
+    expect(cartResponse.body).toEqual([updateResponse.body]);
     expect(stockResponse.status).toBe(400);
     expect(stockResponse.body).toEqual({ error: 'Not enough stock available' });
     expect(missingResponse.status).toBe(404);

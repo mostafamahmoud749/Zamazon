@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import { CartContext } from '@/components/cart/CartProvider';
 import type { CartProduct } from '@/types/index';
 import Counter from '@/components/common/Counter';
+import Link from 'next/link';
 
 type CartItemProps = {
   product: CartProduct;
@@ -13,13 +14,15 @@ export default function CartItem({ product }: CartItemProps) {
   const { addToCart, removeFromCart } = useContext(CartContext);
   return (
     <div className="my-2 flex gap-4 rounded-b-sm px-2 pt-1">
-      <Image
-        className="object-fit max-h-[135px] min-w-[145px]"
-        width={145}
-        height={135}
-        src={product.image}
-        alt="product image"
-      ></Image>
+      <Link href={`/deals/${product.id}`}>
+        <Image
+          className="object-fit max-h-[135px] min-w-[145px]"
+          width={145}
+          height={135}
+          src={product.image}
+          alt="product image"
+        ></Image>
+      </Link>
       <div>
         <div className="md:flex md:gap-5">
           <div className="line-clamp-2 overflow-hidden font-light md:text-lg md:font-medium">

@@ -2,6 +2,7 @@
 import { createContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { CartContextValue, CartProduct, Product } from '@/types';
+import { getCsrfToken } from '@/lib/getCsrfToken';
 
 const defaultCartContextValue: CartContextValue = {
   products: [],
@@ -17,17 +18,29 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [products, setProducts] = useState<CartProduct[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  function addToCart(product: Product) {
-    setProducts((prev) => {
-      if (prev.some((p): boolean => p.id === product.id)) {
-        return prev.map((p) => {
-          if (p.id === product.id) return { ...p, count: p.count + 1 };
-          return p;
-        });
+  async function addToCart(productId: number, quantity: number) {
+    const csrfToken = await getCsrfToken();
+    try {
+      let result = await fetch(`${process.env.API_URL}/api/cart/items`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken,
+        },
+        body: JSON.stringify({ productId, quantity }),
+      });
+
+      const data = await result.json();
+
+      if (!result.ok) {
+        throw new Error(data.error);
       }
 
-      return [...prev, { ...product, count: 1 }];
-    });
+      setProducts((prev) => [...prev, data]);
+    } catch (error) {
+      console.error('Error during adding product to the cart:', error);
+    }
   }
 
   function removeFromCart(product: Product) {

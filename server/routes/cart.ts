@@ -16,25 +16,27 @@ import { isPrismaError } from '../utils/isPrismaError.js';
 
 const router = Router();
 
+const cartItemSelect = {
+  id: true,
+  quantity: true,
+  product: {
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      price: true,
+      image: true,
+      discount: true,
+      stock: true,
+    },
+  },
+} satisfies Prisma.CartItemSelect;
+
 router.get('/api/cart/items', requireAuth, async (request, response) => {
   try {
     const cart = await prisma.cartItem.findMany({
       where: { userId: request.user!.id },
-      select: {
-        id: true,
-        quantity: true,
-        product: {
-          select: {
-            id: true,
-            title: true,
-            description: true,
-            price: true,
-            image: true,
-            discount: true,
-            stock: true,
-          },
-        },
-      },
+      select: cartItemSelect,
     });
 
     response.status(200).json(cart);
@@ -87,6 +89,7 @@ router.post(
             },
             create: { userId, productId, quantity },
             update: { quantity: mergedQuantity },
+            select: cartItemSelect,
           });
 
           return { cartItem, created: !existingItem };
@@ -145,6 +148,7 @@ router.patch(
       const updatedCartItem = await prisma.cartItem.update({
         where: { id, userId: request.user!.id },
         data: { quantity },
+        select: cartItemSelect,
       });
       response.status(200).json(updatedCartItem);
     } catch (error) {
