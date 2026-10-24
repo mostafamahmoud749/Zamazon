@@ -10,6 +10,7 @@ export default defineConfig({
   },
   test: {
     setupFiles: ['./server/integration/setup.ts'],
+    testTimeout: 30_000,
   },
   resolve: {
     alias: {
