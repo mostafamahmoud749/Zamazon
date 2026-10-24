@@ -8,6 +8,7 @@ export type CartContextValue = {
   products: CartProduct[];
   totalProductsCount: number;
   totalProductsPrice: number;
-  addToCart: (product: Product) => void;
-  removeFromCart: (product: Product) => void;
+  addToCart: (productId: number, quantity: number) => Promise<void>;
+  updateCartItemQuantity: (cartID: number, quantity: number) => Promise<void>;
+  removeFromCart: (cartID: number) => Promise<void>;
 };

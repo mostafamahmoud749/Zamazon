@@ -138,11 +138,11 @@ router.patch(
       });
 
       if (!cartItem) {
-        return response.sendStatus(404);
+        return response.status(404).json({error:"Cart item dose not exist!"});
       }
 
       if (!(await checkAvailableProductQuantity(cartItem.productId, quantity))) {
-        return response.status(400).send({ error: 'Not enough stock available' });
+        return response.status(400).json({ error: 'Not enough stock available' });
       }
 
       const updatedCartItem = await prisma.cartItem.update({
