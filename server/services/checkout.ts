@@ -20,7 +20,6 @@ export async function checkout(userId: number, input: CreateOrderDto, idempotenc
     try {
       return await prisma.$transaction(
         async (transaction) => {
-          // Replay before checking the address or current cart: checkout already succeeded.
           const existingOrder = await transaction.order.findUnique({
             where,
             include: { orderItems: true },
