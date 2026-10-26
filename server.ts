@@ -1,6 +1,6 @@
 import 'dotenv/config';
-import { prisma } from '../prisma/lib/prisma.js';
-import { createApp } from './app.js';
+import { prisma } from './prisma/lib/prisma.js';
+import { createApp } from './server/app.js';
 
 const app = createApp();
 
