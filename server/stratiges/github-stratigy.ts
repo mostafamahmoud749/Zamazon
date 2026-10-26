@@ -2,7 +2,7 @@ import 'dotenv/config';
 import passport from 'passport';
 import { Strategy, type Profile } from 'passport-github';
 import type { VerifyCallback } from 'passport-oauth2';
-import { prisma } from '@/prisma/lib/prisma.js';
+import { prisma } from '../../prisma/lib/prisma.js';
 import { getVerifiedGitHubEmail } from '../services/githubEmail.js';
 
 const clientID = process.env.GITHUB_CLIENT_ID;

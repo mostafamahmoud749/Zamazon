@@ -1,7 +1,7 @@
 import passport from 'passport';
 import { Strategy } from 'passport-local';
 import { compareHashed } from '../utils/helpers.js';
-import { prisma } from '@/prisma/lib/prisma.js';
+import { prisma } from '../../prisma/lib/prisma.js';
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
