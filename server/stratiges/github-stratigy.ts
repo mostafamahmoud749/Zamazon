@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import passport from 'passport';
 import { Strategy, type Profile } from 'passport-github';
 import type { VerifyCallback } from 'passport-oauth2';
@@ -16,7 +17,7 @@ export default passport.use(
     {
       clientID,
       clientSecret,
-      callbackURL: 'http://localhost:9000/api/auth/github/callback',
+      callbackURL: process.env.GITHUB_CALLBACK_URL,
       scope: ['user:email'],
       // @ts-expect-error passport-github types restrict OAuth2's boolean state option to strings.
       state: true,
