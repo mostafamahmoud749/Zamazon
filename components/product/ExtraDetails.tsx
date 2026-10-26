@@ -12,21 +12,28 @@ type ExtraDetailsProps = {
 type AddState = 'idle' | 'loading';
 
 export default function ExtraDetails({ el }: ExtraDetailsProps) {
-  const { addToCart, products, removeFromCart } = useContext(CartContext);
-  const [isAdded, setIsAdded] = useState<boolean>(() => products.some((p) => p.id === el.id));
+  // need to handle the quantity
+  const { addToCart, products } = useContext(CartContext);
+  const [isAdded, setIsAdded] = useState<boolean>(() =>
+    products.some((p) => p.product.id === el.id),
+  );
   const [product, setProduct] = useState<CartProduct | undefined>(undefined);
   const [addState, setAddState] = useState<AddState>('idle');
 
   async function handleAddToCart(): Promise<void> {
     if (addState !== 'idle') return;
+
     setAddState('loading');
-    addToCart(el);
-    window.setTimeout(() => setAddState('idle'), 300);
+    try {
+      await addToCart(el, 1);
+    } finally {
+      setAddState('idle');
+    }
   }
 
   useEffect(() => {
-    setIsAdded(products.some((p) => p.id === el.id));
-    const foundProduct: CartProduct | undefined = products.find((p) => p.id === el.id);
+    setIsAdded(products.some((p) => p.product.id === el.id));
+    const foundProduct: CartProduct | undefined = products.find((p) => p.product.id === el.id);
     if (foundProduct) {
       setProduct(foundProduct);
     }
@@ -38,7 +45,7 @@ export default function ExtraDetails({ el }: ExtraDetailsProps) {
       <p className="line-clamp-2 text-sm font-medium text-gray-700">{el.title}</p>
       <div className="-ml-1 max-w-[100px]">
         {isAdded && product ? (
-          <Counter product={product} addToCart={addToCart} removeFromCart={removeFromCart} />
+          <Counter product={product} />
         ) : (
           <Button
             color="bg-yellow-400"

@@ -1,10 +1,14 @@
 'use client';
-import type { Product } from '@/types/index';
+import type { CartProduct } from '@/types/index';
 import { CartContext } from '@/components/cart/CartProvider';
 import { UserContext } from '@/components/auth/UserProvider';
 import { useContext } from 'react';
 
-export default function Counter({ product }: Product) {
+type CounterProps = {
+  product: CartProduct;
+};
+
+export default function Counter({ product }: CounterProps) {
   const { addToCart, removeFromCart, updateCartItemQuantity } = useContext(CartContext);
   const { status } = useContext(UserContext);
 
@@ -27,7 +31,7 @@ export default function Counter({ product }: Product) {
         -{' '}
       </button>
       <div>{product.quantity}</div>
-      <button className="cursor-pointer text-xl" onClick={() => addToCart(product, 1)}>
+      <button className="cursor-pointer text-xl" onClick={() => addToCart(product.product, 1)}>
         +
       </button>
     </div>
