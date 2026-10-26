@@ -15,9 +15,13 @@ export default function Buy({ product }: BuyProps) {
 
   async function handleAddToCart(): Promise<void> {
     if (addState !== 'idle') return;
+
     setAddState('loading');
-    addToCart(product);
-    window.setTimeout(() => setAddState('idle'), 300);
+    try {
+      await addToCart(product, 1);
+    } finally {
+      setAddState('idle');
+    }
   }
 
   async function handleBuyNow(): Promise<void> {

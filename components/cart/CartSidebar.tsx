@@ -10,29 +10,27 @@ import type { CartProduct } from '@/types/index';
 import { JSX } from 'react';
 
 export default function CartSidebar() {
-  const { products, totalProductsPrice, addToCart, removeFromCart } = useContext(CartContext);
+  const { products, totalProductsPrice } = useContext(CartContext);
   const showItems: JSX.Element[] = useMemo(() => {
-    return products.map(
-      (el: CartProduct): JSX.Element => (
-        <CartSidebarItem key={el.id}>
-          <div className="flex w-full flex-col items-center hover:bg-gray-100">
-            <Link href={`/deals/${el.id}`} className="flex w-full justify-center">
-              <Image
-                src={el.image}
-                alt="Products img"
-                width={110}
-                height={110}
-                className="object-contain pt-4"
-              />
-            </Link>
-            <div className="mt-2 mb-1 text-sm font-bold">{el.price}$</div>
-          </div>
-          <Counter product={el} addToCart={addToCart} removeFromCart={removeFromCart} />
-          <div className="mb-1"></div>
-        </CartSidebarItem>
-      ),
-    );
-  }, [products, addToCart, removeFromCart]);
+    return products.map((product: CartProduct): JSX.Element => (
+      <CartSidebarItem key={product.id}>
+        <div className="flex w-full flex-col items-center hover:bg-gray-100">
+          <Link href={`/deals/${product.product.id}`} className="flex w-full justify-center">
+            <Image
+              src={product.product.image}
+              alt="Products img"
+              width={110}
+              height={110}
+              className="object-contain pt-4"
+            />
+          </Link>
+          <div className="mt-2 mb-1 text-sm font-bold">{product.product.price}$</div>
+        </div>
+        <Counter product={product} />
+        <div className="mb-1"></div>
+      </CartSidebarItem>
+    ));
+  }, [products]);
 
   return (
     <div

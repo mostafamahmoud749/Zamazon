@@ -12,7 +12,6 @@ type ExtraDetailsProps = {
 type AddState = 'idle' | 'loading';
 
 export default function ExtraDetails({ el }: ExtraDetailsProps) {
-  // need to handle the quantity
   const { addToCart, products } = useContext(CartContext);
   const [isAdded, setIsAdded] = useState<boolean>(() =>
     products.some((p) => p.product.id === el.id),
