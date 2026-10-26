@@ -14,23 +14,25 @@ export default function CartItem({ product }: CartItemProps) {
   const { addToCart, removeFromCart } = useContext(CartContext);
   return (
     <div className="my-2 flex gap-4 rounded-b-sm px-2 pt-1">
-      <Link href={`/deals/${product.id}`}>
+      <Link href={`/deals/${product.product.id}`}>
         <Image
           className="object-fit max-h-[135px] min-w-[145px]"
           width={145}
           height={135}
-          src={product.image}
+          src={product.product.image}
           alt="product image"
         ></Image>
       </Link>
-      <div>
-        <div className="md:flex md:gap-5">
-          <div className="line-clamp-2 overflow-hidden font-light md:text-lg md:font-medium">
-            {product.description}
+      <div className="min-w-0 flex-1">
+        <div className="md:flex md:gap-10">
+          <div className="line-clamp-2 overflow-hidden font-light md:min-w-0 md:flex-1 md:text-lg md:font-medium">
+            {product.product.description}
           </div>
-          <div className="text-xl font-semibold">{product.price}$</div>
+          <div className="text-xl font-semibold md:ml-auto md:shrink-0 md:text-right">
+            {product.product.price}$
+          </div>
         </div>
-        <Counter product={product} addToCart={addToCart} removeFromCart={removeFromCart} />
+        <Counter product={product} />
       </div>
     </div>
   );

@@ -13,7 +13,7 @@ export default function CartSidebar() {
   const { products, totalProductsPrice } = useContext(CartContext);
   const showItems: JSX.Element[] = useMemo(() => {
     return products.map((product: CartProduct): JSX.Element => (
-      <CartSidebarItem key={product.id}>
+      <CartSidebarItem key={product.product.id}>
         <div className="flex w-full flex-col items-center hover:bg-gray-100">
           <Link href={`/deals/${product.product.id}`} className="flex w-full justify-center">
             <Image

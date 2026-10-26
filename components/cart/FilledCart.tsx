@@ -9,7 +9,7 @@ export default function FilledCart() {
   const { products, totalProductsCount, totalProductsPrice } = useContext(CartContext);
   const showProducts: JSX.Element[] | null =
     products && products.length > 0
-      ? products.map((product) => <CartItem key={product.id} product={product} />)
+      ? products.map((product) => <CartItem key={product.product.id} product={product} />)
       : null;
   return (
     <div className="mb-5 bg-white py-2 md:flex md:flex-col-reverse md:px-5 md:pt-3">
