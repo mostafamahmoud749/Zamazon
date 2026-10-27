@@ -56,6 +56,7 @@ export const createApp = () => {
         maxAge: 1000 * 60 * 60 * 24 * 7,
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       },
       store: new PgStore({
         conString: process.env.DATABASE_URL,
