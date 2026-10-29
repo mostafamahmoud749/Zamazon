@@ -59,6 +59,10 @@ export const ProductResponseSchema = CreateProductSchema.extend({
   discount: Z.string().regex(/^\d+(\.\d+)?$/).nullable(),
   isActive: Z.boolean(),
   createdAt: Z.iso.datetime(),
+  rating: Z.object({
+    rate: Z.number().min(0).max(5),
+    count: Z.number().int().nonnegative()
+  })
 });
 
 export const ProductsResponseSchema = Z.array(ProductResponseSchema);
