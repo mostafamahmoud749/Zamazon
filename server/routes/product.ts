@@ -25,11 +25,22 @@ router.get('/api/products/:id', validateParams(ProducIdParamsSchema), async (req
     });
 
     if (!product) {
-      response.sendStatus(404);
-      return;
+      return response.sendStatus(404);
     }
 
-    response.status(200).json(product);
+    const rate = await prisma.review.aggregate({
+      where: { productId: id },
+      _avg: { rating: true },
+      _count: { id: true },
+    });
+
+    response.json({
+      ...product,
+      rating: {
+        rate: rate._avg.rating ?? 0,
+        count: rate._count.id,
+      },
+    });
   } catch (error) {
     console.error(error);
     throw error;

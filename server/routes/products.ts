@@ -52,7 +52,28 @@ router.get('/api/products', validateQuery(ProductsQuerySchema), async (request, 
       orderBy: { id: 'asc' },
     });
 
-    response.status(200).json(products);
+    const ratingStats = products.length
+      ? await prisma.review.groupBy({
+          by: ['productId'],
+          where: { productId: { in: products.map(({ id }) => id) } },
+          _avg: { rating: true },
+          _count: { id: true },
+        })
+      : [];
+
+    const ratingsByProductId = new Map(
+      ratingStats.map((stats) => [
+        stats.productId,
+        { rate: stats._avg.rating ?? 0, count: stats._count.id },
+      ]),
+    );
+
+    response.status(200).json(
+      products.map((product) => ({
+        ...product,
+        rating: ratingsByProductId.get(product.id) ?? { rate: 0, count: 0 },
+      })),
+    );
   } catch (error) {
     throw error;
   }

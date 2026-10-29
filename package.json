@@ -9,7 +9,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint",
-    "backend": "nodemon --exec tsx server/server.ts",
+    "backend": "nodemon --exec tsx server.ts",
     "seed:products": "tsx prisma/seed-products.ts",
     "seed:images": "tsx prisma/upload-seed-images.ts",
     "seed:images:prepare": "tsx prisma/prepare-studio-images.ts",
