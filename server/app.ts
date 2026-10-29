@@ -24,6 +24,7 @@ import { csrfSynchronisedProtection, generateToken } from './middleware/csrf.js'
 
 export const createApp = () => {
   const app = express();
+  const apiRateLimit = Number(process.env.API_RATE_LIMIT_MAX ?? 1000);
 
   const PgStore = connectPgSimple(session);
   app.set('trust proxy', 1);
@@ -39,7 +40,7 @@ export const createApp = () => {
     '/api',
     rateLimit({
       windowMs: 15 * 60 * 1000,
-      limit: 300,
+      limit: apiRateLimit,
       standardHeaders: 'draft-8',
       legacyHeaders: false,
       message: { error: 'Too many requests. Please try again later.' },

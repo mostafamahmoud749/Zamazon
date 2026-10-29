@@ -3,6 +3,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 ## Getting Started
 
 For the catalog, run `npm run backend` and `npm run dev` in separate terminals.
+For API load testing, see [tests/load/README.md](tests/load/README.md).
 Run `npm run seed:products` to add 120 sample products for testing scroll loading.
 This additive script preserves existing records and skips products already added.
 It also replaces the old placeholder image on existing scroll-demo products.
