@@ -8,7 +8,7 @@ export default function PaymentSection() {
   return (
     <div className="pt-8">
       <div
-        className="flex items-center justify-between gap-3"
+        className="flex items-center justify-between gap-3 cursor-pointer"
         onClick={() => setOpen((prev) => !prev)}
       >
         <h2 className="text-xl font-semibold tracking-tight">Payment methods</h2>

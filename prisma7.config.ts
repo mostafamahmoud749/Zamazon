@@ -10,4 +10,10 @@ export default defineConfig({
   datasource: {
     url: process.env['DATABASE_URL'],
   },
+  experimental: {
+    externalTables: true,
+  },
+  tables: {
+    external: ['public.session'],
+  },
 });

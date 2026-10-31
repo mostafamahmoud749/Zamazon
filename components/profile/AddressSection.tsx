@@ -8,7 +8,7 @@ export default function AddressSection() {
   return (
     <div className="border-b border-gray-200 py-8">
       <div
-        className="flex items-center justify-between gap-3"
+        className="flex cursor-pointer items-center justify-between gap-3"
         onClick={() => setOpen((prev) => !prev)}
       >
         <h2 className="text-xl font-semibold tracking-tight">Your addresses</h2>
