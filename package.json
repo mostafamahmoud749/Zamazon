@@ -17,7 +17,7 @@
     "seed:images": "tsx prisma/upload-seed-images.ts",
     "seed:images:prepare": "tsx prisma/prepare-studio-images.ts",
     "seed:images:apply": "tsx prisma/apply-seed-images.ts",
-    "postinstall": "prisma skills sync || exit 0"
+    "postinstall": "prisma generate --config prisma7.config.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",
