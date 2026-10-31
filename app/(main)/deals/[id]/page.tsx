@@ -4,6 +4,7 @@ import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import type { Product } from '@/types/product';
 import type { JSX } from 'react';
+import Comments from '@/components/deal/Comments';
 
 type DealsDetailsPageProps = {
   params: Promise<{
@@ -26,6 +27,7 @@ export default async function DealsDetailsPage({
   return (
     <>
       <DealMedia userAgent={userAgent} product={product} />
+      <Comments />
     </>
   );
 }
