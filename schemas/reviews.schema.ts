@@ -1,3 +1,4 @@
+import { Review } from './../generated/prisma/browser';
 import Z from 'zod';
 
 export const CreateReviewSchema = Z.object({
@@ -27,3 +28,4 @@ export const ReviewRouteParamsSchema = Z.object({
   id: Z.coerce.number().int().positive('Product ID must be a positive integer'),
   reviewId: Z.coerce.number().int().positive('Review ID must be a positive integer'),
 });
+
