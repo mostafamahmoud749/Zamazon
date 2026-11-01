@@ -4,11 +4,12 @@ import { useState } from 'react';
 
 export default function PaymentSection() {
   const [open, setOpen] = useState<boolean>(false);
+  const [showForm, setShowForm] = useState(false);
 
   return (
     <div className="pt-8">
       <div
-        className="flex items-center justify-between gap-3 cursor-pointer"
+        className="flex cursor-pointer items-center justify-between gap-3"
         onClick={() => setOpen((prev) => !prev)}
       >
         <h2 className="text-xl font-semibold tracking-tight">Payment methods</h2>
@@ -45,16 +46,88 @@ export default function PaymentSection() {
               </button>
             </li>
           </ul>
+          {showForm ? (
+            <form
+              onSubmit={(event) => event.preventDefault()}
+              className="mt-6 space-y-4 rounded-lg border border-gray-200 bg-gray-50 p-4 sm:p-5"
+            >
+              <h3 className="text-dark font-semibold">Add a payment method</h3>
+              <label className="text-dark block text-sm font-medium">
+                Name on card
+                <input
+                  type="text"
+                  name="cardholderName"
+                  autoComplete="cc-name"
+                  placeholder="Full name as shown on card"
+                  className="mt-2 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
+                />
+              </label>
+              <label className="text-dark block text-sm font-medium">
+                Card number
+                <input
+                  type="text"
+                  name="cardNumber"
+                  inputMode="numeric"
+                  autoComplete="cc-number"
+                  placeholder="1234 5678 9012 3456"
+                  className="mt-2 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
+                />
+              </label>
+              <div className="grid grid-cols-2 gap-4">
+                <label className="text-dark block text-sm font-medium">
+                  Expiry date
+                  <input
+                    type="text"
+                    name="expiryDate"
+                    inputMode="numeric"
+                    autoComplete="cc-exp"
+                    placeholder="MM/YY"
+                    maxLength={5}
+                    className="mt-2 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
+                  />
+                </label>
+                <label className="text-dark block text-sm font-medium">
+                  Security code
+                  <input
+                    type="password"
+                    name="securityCode"
+                    inputMode="numeric"
+                    autoComplete="cc-csc"
+                    placeholder="CVC"
+                    maxLength={4}
+                    className="mt-2 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
+                  />
+                </label>
+              </div>
+              <div className="flex flex-wrap gap-3 pt-1">
+                <button
+                  type="button"
+                  className="bg-yellow text-dark focus-visible:outline-dark_blue cursor-pointer rounded-full px-5 py-2.5 text-sm font-medium transition-colors hover:bg-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-2"
+                >
+                  Save payment method
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowForm(false)}
+                  className="focus-visible:outline-dark_blue cursor-pointer rounded-full border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          ) : (
+            <div className="mt-6 flex">
+              <button
+                type="button"
+                onClick={() => setShowForm(true)}
+                className="focus-visible:outline-dark_blue inline-flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 px-4 py-2.5 text-sm font-medium hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
+                <Plus size={16} />
+                Add payment method
+              </button>
+            </div>
+          )}
         </div>
-      </div>
-      <div className="mt-6 flex">
-        <button
-          type="button"
-          className="focus-visible:outline-dark_blue inline-flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 px-4 py-2.5 text-sm font-medium hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2"
-        >
-          <Plus size={16} />
-          Add payment method
-        </button>
       </div>
     </div>
   );
