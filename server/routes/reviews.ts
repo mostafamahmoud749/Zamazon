@@ -37,6 +37,7 @@ router.get(
             },
           },
         },
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       });
 
       if (reviews.length === 0) {

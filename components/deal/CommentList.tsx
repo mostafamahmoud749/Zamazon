@@ -1,7 +1,8 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import CommentItem from '@/components/deal/CommentItem';
+import { UserContext } from '@/components/auth/UserProvider';
 import type { Comment } from '@/types/index';
 
 type CommentListProps = {
@@ -11,6 +12,7 @@ type CommentListProps = {
 };
 
 export default function CommentList({ productId, comments, setComments }: CommentListProps) {
+  const { user } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -53,6 +55,7 @@ export default function CommentList({ productId, comments, setComments }: Commen
         rating={comment.rating}
         date={formattedDate}
         comment={comment.comment ?? ''}
+        isOwner={user?.id === comment.user.id}
       />
     );
   });
