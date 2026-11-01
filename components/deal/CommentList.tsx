@@ -1,10 +1,16 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import CommentItem from '@/components/deal/CommentItem';
 import type { Comment } from '@/types/index';
 
-export default function CommentList({ productId }: { productId: number }) {
-  const [comments, setComments] = useState<Comment[]>([]);
+type CommentListProps = {
+  productId: number;
+  comments: Comment[];
+  setComments: Dispatch<SetStateAction<Comment[]>>;
+};
+
+export default function CommentList({ productId, comments, setComments }: CommentListProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -31,7 +37,7 @@ export default function CommentList({ productId }: { productId: number }) {
     }
 
     fetchComments();
-  }, [productId]);
+  }, [productId, setComments]);
 
   const showComments = comments.map((comment) => {
     const formattedDate = new Date(comment.createdAt).toLocaleDateString('en-US', {
@@ -46,7 +52,7 @@ export default function CommentList({ productId }: { productId: number }) {
         name={comment.user.name}
         rating={comment.rating}
         date={formattedDate}
-        comment={comment.comment}
+        comment={comment.comment ?? ''}
       />
     );
   });
@@ -57,7 +63,7 @@ export default function CommentList({ productId }: { productId: number }) {
         ? 'Loading reviews...'
         : comments.length > 0
           ? showComments
-          : 'No reviews yet. Be the first to leave one!'}{' '}
+          : 'No reviews yet. Be the first to leave one!'}
     </div>
   );
 }

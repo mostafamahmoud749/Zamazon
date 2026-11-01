@@ -1,11 +1,11 @@
 export type Comment = {
   id: number;
-  ProductId: number;
+  productId: number;
   rating: number;
-  comment: string;
+  comment: string | null;
   createdAt: string;
   user: {
-    userId: number;
+    id: number;
     name: string;
   };
 };

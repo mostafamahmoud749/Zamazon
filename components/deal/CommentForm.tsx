@@ -1,10 +1,19 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
+import type { Comment } from '@/types';
+import { UserContext } from '@/components/auth/UserProvider';
 import Popup from '@/components/common/Popup';
 import { CreateReviewSchema } from '@/schemas/reviews.schema';
 import { getCsrfToken } from '@/lib/getCsrfToken';
 
-export default function CommentForm({ productId }: { productId: number }) {
+type CommentFormProps = {
+  productId: number;
+  setComments: Dispatch<SetStateAction<Comment[]>>;
+};
+
+export default function CommentForm({ productId, setComments }: CommentFormProps) {
+  const { user } = useContext(UserContext);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -58,6 +67,13 @@ export default function CommentForm({ productId }: { productId: number }) {
             'Could not post your review. Please try again.',
         );
       }
+
+      const review: Omit<Comment, 'user'> & { userId: number } = await response.json();
+      const newComment: Comment = {
+        ...review,
+        user: { id: review.userId, name: user?.name ?? 'You' },
+      };
+      setComments((current) => [...current, newComment]);
 
       setRating(0);
       setComment('');
