@@ -12,6 +12,8 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  if (!fixture) return;
+
   await prisma.orderItem.deleteMany({ where: { productId: { in: fixture.productIds } } });
   await prisma.product.deleteMany({ where: { id: { in: fixture.productIds } } });
   await prisma.category.deleteMany({

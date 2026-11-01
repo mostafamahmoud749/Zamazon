@@ -76,6 +76,8 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  if (!fixture) return;
+
   await fixture.cleanup();
 });
 

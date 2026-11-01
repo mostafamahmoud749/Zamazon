@@ -9,8 +9,9 @@ const frontendOrigin = process.env.FRONTEND_ORIGIN || 'http://localhost:3000';
 describe('API security middleware', () => {
   it('shares the general limit across API routes and excludes CORS preflights', async () => {
     const limitedApp = createApp();
+    const limit = Number(process.env.API_RATE_LIMIT_MAX ?? 1000);
 
-    for (let attempt = 0; attempt < 300; attempt++) {
+    for (let attempt = 0; attempt < limit; attempt++) {
       const response = await request(limitedApp).get('/api/users/me');
       expect(response.status).toBe(401);
     }
