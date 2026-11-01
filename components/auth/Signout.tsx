@@ -11,7 +11,7 @@ export default function Signout() {
   async function logoutUser() {
     const csrfToken = await getCsrfToken();
 
-    const response = await fetch(`${process.env.API_URL}/api/auth/logout`, {
+    const response = await fetch('/api/auth/logout', {
       method: 'POST',
       credentials: 'include',
       headers: {

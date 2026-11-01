@@ -22,7 +22,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setStatus('loading');
 
     try {
-      const result = await fetch(`${process.env.API_URL}/api/users/me`, {
+      const result = await fetch('/api/users/me', {
         credentials: 'include',
       });
 

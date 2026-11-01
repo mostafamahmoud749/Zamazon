@@ -28,7 +28,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (status === 'authenticated') {
       try {
         const csrfToken = await getCsrfToken();
-        const result = await fetch(`${process.env.API_URL}/api/cart/items`, {
+        const result = await fetch('/api/cart/items', {
           method: 'POST',
           credentials: 'include',
           headers: {
@@ -73,7 +73,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (status === 'authenticated') {
       try {
         const csrfToken = await getCsrfToken();
-        const result = await fetch(`${process.env.API_URL}/api/cart/items/${cartID}`, {
+        const result = await fetch(`/api/cart/items/${cartID}`, {
           method: 'PATCH',
           credentials: 'include',
           headers: {
@@ -104,7 +104,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (status === 'authenticated') {
       try {
         const csrfToken = await getCsrfToken();
-        const result = await fetch(`${process.env.API_URL}/api/cart/items/${cartID}`, {
+        const result = await fetch(`/api/cart/items/${cartID}`, {
           method: 'DELETE',
           credentials: 'include',
           headers: {
@@ -128,7 +128,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const fetchCart = useCallback(async () => {
     try {
-      const result = await fetch(`${process.env.API_URL}/api/cart/items`, {
+      const result = await fetch('/api/cart/items', {
         credentials: 'include',
         cache: 'no-store',
       });

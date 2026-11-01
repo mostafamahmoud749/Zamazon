@@ -59,7 +59,7 @@ export default function CommentItem({
     try {
       const csrfToken = await getCsrfToken();
       const response = await fetch(
-        `${process.env.API_URL}/api/products/${productId}/reviews/${reviewId}`,
+        `/api/products/${productId}/reviews/${reviewId}`,
         {
           method: 'PATCH',
           credentials: 'include',
@@ -97,7 +97,7 @@ export default function CommentItem({
     try {
       const csrfToken = await getCsrfToken();
       const response = await fetch(
-        `${process.env.API_URL}/api/products/${productId}/reviews/${reviewId}`,
+        `/api/products/${productId}/reviews/${reviewId}`,
         {
           method: 'DELETE',
           credentials: 'include',

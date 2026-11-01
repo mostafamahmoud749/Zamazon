@@ -10,7 +10,7 @@ export default function SigninWithGithub() {
     <button
       type="button"
       onClick={() => {
-        window.location.href = `${process.env.API_URL}/api/auth/github`;
+        window.location.href = '/api/auth/github';
       }}
       className="flex cursor-pointer items-center gap-2 rounded border p-2"
     >

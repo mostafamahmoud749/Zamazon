@@ -42,7 +42,7 @@ export default function LoginForm({ onResult, callbackUrl }: LoginFormProps) {
     try {
       const csrfToken = await getCsrfToken();
 
-      const response = await fetch(`${process.env.API_URL}/api/auth/login`, {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         credentials: 'include',
         headers: {

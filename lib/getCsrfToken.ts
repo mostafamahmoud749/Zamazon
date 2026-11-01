@@ -1,5 +1,5 @@
 export async function getCsrfToken(): Promise<string> {
-  const response = await fetch(`${process.env.API_URL}/api/auth/csrf-token`, {
+  const response = await fetch('/api/auth/csrf-token', {
     credentials: 'include',
     cache: 'no-store',
   });

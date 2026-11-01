@@ -12,7 +12,7 @@ export async function uploadImage(file: File): Promise<UploadedImage> {
   if (file.size > MAX_IMAGE_BYTES) throw new Error('Images must be 5 MB or smaller');
 
   const csrfToken = await getCsrfToken();
-  const signatureResponse = await fetch(`${process.env.API_URL}/api/images/upload-signature`, {
+  const signatureResponse = await fetch('/api/images/upload-signature', {
     method: 'POST',
     credentials: 'include',
     headers: { 'X-CSRF-Token': csrfToken },

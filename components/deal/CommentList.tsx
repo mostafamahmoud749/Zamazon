@@ -18,7 +18,7 @@ export default function CommentList({ productId, comments, setComments }: Commen
   useEffect(() => {
     async function fetchComments() {
       try {
-        const response = await fetch(`${process.env.API_URL}/api/products/${productId}/reviews`);
+        const response = await fetch(`/api/products/${productId}/reviews`);
 
         if (response.status === 404) {
           setComments([]);

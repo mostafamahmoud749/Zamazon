@@ -28,11 +28,17 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  if (pathname.startsWith('/orders') && !isSignedIn) {
+  const protectedRoutes = ['/orders', '/profile'];
+  const isProtected = protectedRoutes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
+
+  if (isProtected && !isSignedIn) {
     const url = req.nextUrl.clone();
     url.pathname = '/sign';
+    url.search = '';
     url.searchParams.set('s', 'signin');
-    url.searchParams.set('callbackUrl', '/orders');
+    url.searchParams.set('callbackUrl', pathname + req.nextUrl.search);
     return NextResponse.redirect(url);
   }
 
@@ -47,5 +53,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/orders/:path*', '/sign/:path*'],
+  matcher: ['/orders/:path*', '/profile/:path*', '/sign/:path*'],
 };

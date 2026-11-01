@@ -1,7 +1,12 @@
+const apiUrl = (process.env.API_URL || 'http://localhost:9000').replace(/\/+$/, '');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {
-    API_URL: process.env.API_URL || 'http://localhost:9000',
+    API_URL: apiUrl,
+  },
+  async rewrites() {
+    return [{ source: '/api/:path*', destination: `${apiUrl}/api/:path*` }];
   },
   images: {
     domains: ['avatars.githubusercontent.com', 'lh3.googleusercontent.com', 'cdn.dummyjson.com'],

@@ -42,7 +42,7 @@ export default function CommentForm({ productId, setComments }: CommentFormProps
     try {
       const csrfToken = await getCsrfToken();
 
-      const response = await fetch(`${process.env.API_URL}/api/products/${productId}/reviews`, {
+      const response = await fetch(`/api/products/${productId}/reviews`, {
         method: 'POST',
         credentials: 'include',
         headers: {

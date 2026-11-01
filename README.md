@@ -92,6 +92,13 @@ Run the API with `npm run backend`. Helmet adds security response headers.
 CORS allows credentialed requests from `http://localhost:3000` by default.
 Set `FRONTEND_ORIGIN` in `.env` to your frontend's exact origin when deploying
 (for example, `https://zamazon.example`, without a trailing slash).
+Browser API requests use `/api/...`, which Next.js forwards to `API_URL`, so the
+session cookie belongs to the frontend host and is available to middleware.
+For the Vercel frontend, set `API_URL=https://zamazon-6xg4.vercel.app`.
+On the backend, set `FRONTEND_ORIGIN=https://zamazon-chi.vercel.app` and
+`GITHUB_CALLBACK_URL=https://zamazon-chi.vercel.app/api/auth/github/callback`.
+Use that same callback URL in the GitHub OAuth app settings. Redeploy after
+updating these settings and sign in again to create a cookie on the frontend host.
 Frontend requests using session cookies also need `credentials: 'include'`.
 
 All `/api` routes share a limit of 300 requests per IP per 15 minutes. CORS
