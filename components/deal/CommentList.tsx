@@ -51,11 +51,14 @@ export default function CommentList({ productId, comments, setComments }: Commen
     return (
       <CommentItem
         key={comment.id}
+        reviewId={comment.id}
+        productId={productId}
         name={comment.user.name}
         rating={comment.rating}
         date={formattedDate}
         comment={comment.comment ?? ''}
         isOwner={user?.id === comment.user.id}
+        setComments={setComments}
       />
     );
   });
