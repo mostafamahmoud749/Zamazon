@@ -27,7 +27,7 @@ export default async function DealsDetailsPage({
   return (
     <>
       <DealMedia userAgent={userAgent} product={product} />
-      <Comments />
+      <Comments productId={product.id}/>
     </>
   );
 }
