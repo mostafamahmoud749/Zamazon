@@ -11,7 +11,6 @@ type CartItemProps = {
 };
 
 export default function CartItem({ product }: CartItemProps) {
-  const { addToCart, removeFromCart } = useContext(CartContext);
   return (
     <div className="my-2 flex gap-4 rounded-b-sm px-2 pt-1">
       <Link href={`/deals/${product.product.id}`}>
