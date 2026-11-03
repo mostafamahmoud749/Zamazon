@@ -1,7 +1,8 @@
 'use client';
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
-import AddressForm from './AddressForm';
+import AddressForm from '@/components/profile/AddressForm';
+import Address from '@/components/profile/Address';
 
 export default function AddressSection() {
   const [open, setOpen] = useState<boolean>(false);
@@ -26,31 +27,15 @@ export default function AddressSection() {
         }`}
       >
         <div className="min-h-0 overflow-hidden">
-          <ul className="mt-6">
-            <li className="flex items-start justify-between gap-4">
-              <div>
-                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <h3 className="font-semibold">Home</h3>
-                  <span className="text-xs text-gray-500">Default address</span>
-                </div>
-                <p className="mt-2 text-sm leading-6 text-gray-600">
-                  Mostafa Ahmed
-                  <br />
-                  12 El Tahrir Street, Apartment 4
-                  <br />
-                  Dokki, Giza 12611, Egypt
-                  <br />
-                  +20 100 123 4567
-                </p>
-              </div>
-              <button
-                type="button"
-                className="focus-visible:outline-dark_blue shrink-0 cursor-pointer py-1 text-sm text-gray-600 underline decoration-gray-300 underline-offset-4 hover:text-red-700 focus-visible:outline-2 focus-visible:outline-offset-2"
-              >
-                Remove
-              </button>
-            </li>
-          </ul>
+          <Address
+            name={`Mostafa Ahmed`}
+            street={`12 El Tahrir Street, Apartment 4`}
+            state={`Dokki`}
+            city={`Giza`}
+            postalCode={`12611`}
+            country={`Egypt`}
+            isDefault={true}
+          />
           <AddressForm />
         </div>
       </div>
