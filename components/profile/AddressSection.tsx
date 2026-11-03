@@ -34,7 +34,13 @@ export default function AddressSection() {
     fetchAddresses();
   }, []);
 
-  const showAddresses = addresses.map((address) => (
+  const sortedAddresses = [...addresses].sort(
+    (a, b) =>
+      Number(b.id === user?.defaultAddressId) -
+      Number(a.id === user?.defaultAddressId),
+  );
+
+  const showAddresses = sortedAddresses.map((address) => (
     <Address
       key={address.id}
       name={user?.name}
