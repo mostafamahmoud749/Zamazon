@@ -1,5 +1,5 @@
 type AddressProps = {
-  name: string;
+  name?: string | null;
   street: string;
   city: string;
   state: string;

@@ -11,6 +11,7 @@ router.get('/api/users/me', requireAuth, async (request, response) => {
       select: {
         id: true,
         email: true,
+        defaultAddressId: true,
         name: true,
         role: true,
         createdAt: true,

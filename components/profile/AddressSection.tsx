@@ -1,11 +1,51 @@
 'use client';
 import { ChevronDown } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../auth/UserProvider';
 import AddressForm from '@/components/profile/AddressForm';
 import Address from '@/components/profile/Address';
+import type { AddressProps } from '@/types';
 
 export default function AddressSection() {
   const [open, setOpen] = useState<boolean>(false);
+  const [addresses, setAddresses] = useState<AddressProps[]>([]);
+  const { user } = useContext(UserContext);
+
+  useEffect(() => {
+    async function fetchAddresses() {
+      try {
+        const response = await fetch('/api/addresses');
+
+        if (response.status === 401) {
+          throw new Error('You must sign in to view addresses');
+        }
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch addresses');
+        }
+
+        const data = await response.json();
+        setAddresses(data);
+      } catch (error) {
+        console.error('Error while fetching addresses:', error);
+      }
+    }
+
+    fetchAddresses();
+  }, []);
+
+  const showAddresses = addresses.map((address) => (
+    <Address
+      key={address.id}
+      name={user?.name}
+      street={address.street}
+      state={address.state}
+      city={address.city}
+      postalCode={address.postalCode}
+      country={address.country}
+      isDefault={user?.defaultAddressId === address.id}
+    />
+  ));
 
   return (
     <div className="border-b border-gray-200 py-8">
@@ -27,15 +67,7 @@ export default function AddressSection() {
         }`}
       >
         <div className="min-h-0 overflow-hidden">
-          <Address
-            name={`Mostafa Ahmed`}
-            street={`12 El Tahrir Street, Apartment 4`}
-            state={`Dokki`}
-            city={`Giza`}
-            postalCode={`12611`}
-            country={`Egypt`}
-            isDefault={true}
-          />
+          {showAddresses}
           <AddressForm />
         </div>
       </div>
