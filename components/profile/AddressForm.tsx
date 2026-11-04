@@ -18,6 +18,13 @@ export default function AddressForm({ setAddresses }: AddressFormProps) {
     postalCode: '',
     country: '',
   });
+  const [fieldErrors, setFieldErrors] = useState<{
+    street?: string[];
+    city?: string[];
+    state?: string[];
+    postalCode?: string[];
+    country?: string[];
+  }>({});
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -25,9 +32,10 @@ export default function AddressForm({ setAddresses }: AddressFormProps) {
     const result = CreateAddressSchema.safeParse(address);
 
     if (!result.success) {
-      console.log(result.error.flatten().fieldErrors);
+      setFieldErrors(result.error.flatten().fieldErrors);
       return;
     }
+    setFieldErrors({});
 
     try {
       const csrfToken = await getCsrfToken();
@@ -71,6 +79,12 @@ export default function AddressForm({ setAddresses }: AddressFormProps) {
               placeholder="Street, building, and apartment number"
               className="mt-2 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
             />
+            {fieldErrors.street?.map((message) => (
+              <span key={message} className="mt-1 flex items-start gap-2 text-sm font-normal text-red-600">
+                <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-current" />
+                <span>{message}</span>
+              </span>
+            ))}
           </label>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="text-dark block text-sm font-medium">
@@ -84,6 +98,12 @@ export default function AddressForm({ setAddresses }: AddressFormProps) {
                 placeholder="City"
                 className="mt-2 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
               />
+              {fieldErrors.city?.map((message) => (
+                <span key={message} className="mt-1 flex items-start gap-2 text-sm font-normal text-red-600">
+                  <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-current" />
+                  <span>{message}</span>
+                </span>
+              ))}
             </label>
             <label className="text-dark block text-sm font-medium">
               State / Governorate
@@ -96,6 +116,12 @@ export default function AddressForm({ setAddresses }: AddressFormProps) {
                 placeholder="State or governorate"
                 className="mt-2 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
               />
+              {fieldErrors.state?.map((message) => (
+                <span key={message} className="mt-1 flex items-start gap-2 text-sm font-normal text-red-600">
+                  <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-current" />
+                  <span>{message}</span>
+                </span>
+              ))}
             </label>
             <label className="text-dark block text-sm font-medium">
               Postal code
@@ -108,6 +134,12 @@ export default function AddressForm({ setAddresses }: AddressFormProps) {
                 placeholder="Postal code"
                 className="mt-2 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
               />
+              {fieldErrors.postalCode?.map((message) => (
+                <span key={message} className="mt-1 flex items-start gap-2 text-sm font-normal text-red-600">
+                  <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-current" />
+                  <span>{message}</span>
+                </span>
+              ))}
             </label>
             <label className="text-dark block text-sm font-medium">
               Country
@@ -120,6 +152,12 @@ export default function AddressForm({ setAddresses }: AddressFormProps) {
                 placeholder="Country"
                 className="rounYourded-md mt-2 block w-full border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
               />
+              {fieldErrors.country?.map((message) => (
+                <span key={message} className="mt-1 flex items-start gap-2 text-sm font-normal text-red-600">
+                  <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-current" />
+                  <span>{message}</span>
+                </span>
+              ))}
             </label>
           </div>
           <div className="flex flex-wrap gap-3 pt-1">
