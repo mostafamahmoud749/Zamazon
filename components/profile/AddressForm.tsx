@@ -1,22 +1,24 @@
 'use client';
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
-import { CreateAddressSchema } from '@/schemas/Address.schema';
+import { CreateAddressSchema, PatchAddressSchema } from '@/schemas/Address.schema';
 import { getCsrfToken } from '@/lib/getCsrfToken';
 import type { AddressData } from '@/types';
 
 type AddressFormProps = {
   setAddresses: React.Dispatch<React.SetStateAction<AddressData[]>>;
+  initialAddress?: AddressData;
+  onClose?: () => void;
 };
 
-export default function AddressForm({ setAddresses }: AddressFormProps) {
-  const [showForm, setShowForm] = useState(false);
+export default function AddressForm({ setAddresses, initialAddress, onClose }: AddressFormProps) {
+  const [showForm, setShowForm] = useState(Boolean(initialAddress));
   const [address, setAddress] = useState({
-    street: '',
-    city: '',
-    state: '',
-    postalCode: '',
-    country: '',
+    street: initialAddress?.street ?? '',
+    city: initialAddress?.city ?? '',
+    state: initialAddress?.state ?? '',
+    postalCode: initialAddress?.postalCode ?? '',
+    country: initialAddress?.country ?? '',
   });
   const [fieldErrors, setFieldErrors] = useState<{
     street?: string[];
@@ -29,7 +31,8 @@ export default function AddressForm({ setAddresses }: AddressFormProps) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const result = CreateAddressSchema.safeParse(address);
+    const schema = initialAddress ? PatchAddressSchema : CreateAddressSchema;
+    const result = schema.safeParse(address);
 
     if (!result.success) {
       setFieldErrors(result.error.flatten().fieldErrors);
@@ -39,24 +42,42 @@ export default function AddressForm({ setAddresses }: AddressFormProps) {
 
     try {
       const csrfToken = await getCsrfToken();
-      const response = await fetch('/api/addresses', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken,
+      const response = await fetch(
+        initialAddress ? `/api/addresses/${initialAddress.id}` : '/api/addresses',
+        {
+          method: initialAddress ? 'PATCH' : 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken,
+          },
+          body: JSON.stringify(result.data),
         },
-        body: JSON.stringify(address),
-      });
+      );
 
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data?.error);
       }
 
-      setAddresses((prev) => [...prev, data]);
+      setAddresses((prev) =>
+        initialAddress
+          ? prev.map((item) => (item.id === initialAddress.id ? data : item))
+          : [...prev, data],
+      );
+      if (!initialAddress) {
+        setAddress({
+          street: '',
+          city: '',
+          state: '',
+          postalCode: '',
+          country: '',
+        });
+      }
+      setShowForm(false);
+      onClose?.();
     } catch (error) {
-      console.log('error from adding address:', error);
+      console.log('error from saving address:', error);
     }
   }
 
@@ -67,7 +88,9 @@ export default function AddressForm({ setAddresses }: AddressFormProps) {
           onSubmit={(event) => handleSubmit(event)}
           className="mt-6 space-y-4 rounded-lg border border-gray-200 bg-gray-50 p-4 sm:p-5"
         >
-          <h3 className="text-dark font-semibold">Add an address</h3>
+          <h3 className="text-dark font-semibold">
+            {initialAddress ? 'Edit address' : 'Add an address'}
+          </h3>
           <label className="text-dark block text-sm font-medium">
             Street address
             <input
@@ -80,8 +103,14 @@ export default function AddressForm({ setAddresses }: AddressFormProps) {
               className="mt-2 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
             />
             {fieldErrors.street?.map((message) => (
-              <span key={message} className="mt-1 flex items-start gap-2 text-sm font-normal text-red-600">
-                <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-current" />
+              <span
+                key={message}
+                className="mt-1 flex items-start gap-2 text-sm font-normal text-red-600"
+              >
+                <span
+                  aria-hidden="true"
+                  className="mt-2 h-1 w-1 shrink-0 rounded-full bg-current"
+                />
                 <span>{message}</span>
               </span>
             ))}
@@ -99,8 +128,14 @@ export default function AddressForm({ setAddresses }: AddressFormProps) {
                 className="mt-2 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
               />
               {fieldErrors.city?.map((message) => (
-                <span key={message} className="mt-1 flex items-start gap-2 text-sm font-normal text-red-600">
-                  <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-current" />
+                <span
+                  key={message}
+                  className="mt-1 flex items-start gap-2 text-sm font-normal text-red-600"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="mt-2 h-1 w-1 shrink-0 rounded-full bg-current"
+                  />
                   <span>{message}</span>
                 </span>
               ))}
@@ -117,8 +152,14 @@ export default function AddressForm({ setAddresses }: AddressFormProps) {
                 className="mt-2 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
               />
               {fieldErrors.state?.map((message) => (
-                <span key={message} className="mt-1 flex items-start gap-2 text-sm font-normal text-red-600">
-                  <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-current" />
+                <span
+                  key={message}
+                  className="mt-1 flex items-start gap-2 text-sm font-normal text-red-600"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="mt-2 h-1 w-1 shrink-0 rounded-full bg-current"
+                  />
                   <span>{message}</span>
                 </span>
               ))}
@@ -135,8 +176,14 @@ export default function AddressForm({ setAddresses }: AddressFormProps) {
                 className="mt-2 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
               />
               {fieldErrors.postalCode?.map((message) => (
-                <span key={message} className="mt-1 flex items-start gap-2 text-sm font-normal text-red-600">
-                  <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-current" />
+                <span
+                  key={message}
+                  className="mt-1 flex items-start gap-2 text-sm font-normal text-red-600"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="mt-2 h-1 w-1 shrink-0 rounded-full bg-current"
+                  />
                   <span>{message}</span>
                 </span>
               ))}
@@ -153,8 +200,14 @@ export default function AddressForm({ setAddresses }: AddressFormProps) {
                 className="rounYourded-md mt-2 block w-full border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
               />
               {fieldErrors.country?.map((message) => (
-                <span key={message} className="mt-1 flex items-start gap-2 text-sm font-normal text-red-600">
-                  <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-current" />
+                <span
+                  key={message}
+                  className="mt-1 flex items-start gap-2 text-sm font-normal text-red-600"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="mt-2 h-1 w-1 shrink-0 rounded-full bg-current"
+                  />
                   <span>{message}</span>
                 </span>
               ))}
@@ -169,7 +222,10 @@ export default function AddressForm({ setAddresses }: AddressFormProps) {
             </button>
             <button
               type="button"
-              onClick={() => setShowForm(false)}
+              onClick={() => {
+                setShowForm(false);
+                onClose?.();
+              }}
               className="focus-visible:outline-dark_blue cursor-pointer rounded-full border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               Cancel

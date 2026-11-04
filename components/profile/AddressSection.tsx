@@ -35,9 +35,7 @@ export default function AddressSection() {
   }, []);
 
   const sortedAddresses = [...addresses].sort(
-    (a, b) =>
-      Number(b.id === user?.defaultAddressId) -
-      Number(a.id === user?.defaultAddressId),
+    (a, b) => Number(b.id === user?.defaultAddressId) - Number(a.id === user?.defaultAddressId),
   );
 
   const showAddresses = sortedAddresses.map((address) => (
@@ -51,7 +49,6 @@ export default function AddressSection() {
       postalCode={address.postalCode}
       country={address.country}
       isDefault={user?.defaultAddressId === address.id}
-      addresses={addresses}
       setAddresses={setAddresses}
     />
   ));

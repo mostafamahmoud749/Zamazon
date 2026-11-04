@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import AddressForm from './AddressForm';
 import { getCsrfToken } from '@/lib/getCsrfToken';
 import type { AddressData } from '@/types';
 
@@ -11,7 +13,6 @@ type AddressProps = {
   country: string;
   isDefault: boolean;
   setAddresses: React.Dispatch<React.SetStateAction<AddressData[]>>;
-  addresses: AddressData[];
 };
 
 export default function Address({
@@ -24,8 +25,9 @@ export default function Address({
   country,
   isDefault,
   setAddresses,
-  addresses,
 }: AddressProps) {
+  const [open, setOpen] = useState(false);
+
   async function removeAddress() {
     try {
       const csrfToken = await getCsrfToken();
@@ -66,14 +68,32 @@ export default function Address({
             {city}, {state} {postalCode}, {country}{' '}
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => removeAddress()}
-          className="focus-visible:outline-dark_blue shrink-0 cursor-pointer py-1 text-sm text-gray-600 underline decoration-gray-300 underline-offset-4 hover:text-red-700 focus-visible:outline-2 focus-visible:outline-offset-2"
-        >
-          Remove
-        </button>
+        <div className="flex shrink-0 gap-4">
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="focus-visible:outline-dark_blue cursor-pointer py-1 text-sm text-gray-600 underline decoration-gray-300 underline-offset-4 hover:text-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            onClick={() => removeAddress()}
+            className="focus-visible:outline-dark_blue shrink-0 cursor-pointer py-1 text-sm text-gray-600 underline decoration-gray-300 underline-offset-4 hover:text-red-700 focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
+            Remove
+          </button>
+        </div>
       </li>
+      {open && (
+        <li>
+          <AddressForm
+            initialAddress={{ id, street, city, state, postalCode, country }}
+            setAddresses={setAddresses}
+            onClose={() => setOpen(false)}
+          />
+        </li>
+      )}
     </ul>
   );
 }
