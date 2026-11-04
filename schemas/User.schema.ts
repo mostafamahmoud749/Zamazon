@@ -7,4 +7,8 @@ export const UserSchema = z.object({
   email: z.email(),
 });
 
+export const SetDefaultAddressSchema = z.object({
+  defaultAddressId: z.number().int().positive(),
+});
+
 export type User = z.infer<typeof UserSchema>;
