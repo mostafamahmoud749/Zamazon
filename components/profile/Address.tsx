@@ -85,8 +85,8 @@ export default function Address({
 
   return (
     <ul className="mt-6">
-      <li className="flex items-start justify-between gap-4">
-        <div>
+      <li className="flex items-start justify-between gap-6">
+        <div className="min-w-0 break-words">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <h3 className="font-semibold">Home</h3>
             {isDefault && <span className="text-xs text-gray-500">Default address</span>}
@@ -99,28 +99,28 @@ export default function Address({
             {city}, {state} {postalCode}, {country}{' '}
           </p>
         </div>
-        <div className="flex shrink-0 flex-col items-end gap-2 sm:flex-row sm:gap-4">
+        <div className="flex shrink-0 flex-col items-end gap-2">
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="focus-visible:outline-dark_blue cursor-pointer text-sm leading-6 text-gray-600 underline-offset-4 hover:text-sky-700 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
+            Edit
+          </button>
           {!isDefault && (
             <button
               type="button"
               onClick={setDefaultAddress}
               disabled={settingDefault}
-              className="focus-visible:outline-dark_blue cursor-pointer py-1 text-sm text-gray-600 underline decoration-gray-300 underline-offset-4 hover:text-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+              className="focus-visible:outline-dark_blue cursor-pointer text-sm leading-6 text-sky-700 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {settingDefault ? 'Saving...' : 'Set as default'}
             </button>
           )}
           <button
             type="button"
-            onClick={() => setOpen(true)}
-            className="focus-visible:outline-dark_blue cursor-pointer py-1 text-sm text-gray-600 underline decoration-gray-300 underline-offset-4 hover:text-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2"
-          >
-            Edit
-          </button>
-          <button
-            type="button"
             onClick={() => removeAddress()}
-            className="focus-visible:outline-dark_blue shrink-0 cursor-pointer py-1 text-sm text-gray-600 underline decoration-gray-300 underline-offset-4 hover:text-red-700 focus-visible:outline-2 focus-visible:outline-offset-2"
+            className="focus-visible:outline-dark_blue cursor-pointer text-sm leading-6 text-gray-500 underline-offset-4 hover:text-red-700 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             Remove
           </button>
