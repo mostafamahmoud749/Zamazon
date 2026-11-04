@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import AddressForm from './AddressForm';
+import { UserContext } from '@/components/auth/UserProvider';
 import { getCsrfToken } from '@/lib/getCsrfToken';
 import type { AddressData } from '@/types';
 
@@ -27,6 +28,36 @@ export default function Address({
   setAddresses,
 }: AddressProps) {
   const [open, setOpen] = useState(false);
+  const [settingDefault, setSettingDefault] = useState(false);
+  const { refreshUser } = useContext(UserContext);
+
+  async function setDefaultAddress() {
+    if (settingDefault) return;
+    setSettingDefault(true);
+
+    try {
+      const csrfToken = await getCsrfToken();
+      const response = await fetch('/api/users/me/default-address', {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken,
+        },
+        body: JSON.stringify({ defaultAddressId: id }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Could not set the default address');
+      }
+
+      await refreshUser();
+    } catch (error) {
+      console.log('error while setting default address:', error);
+    } finally {
+      setSettingDefault(false);
+    }
+  }
 
   async function removeAddress() {
     try {
@@ -68,7 +99,17 @@ export default function Address({
             {city}, {state} {postalCode}, {country}{' '}
           </p>
         </div>
-        <div className="flex shrink-0 gap-4">
+        <div className="flex shrink-0 flex-col items-end gap-2 sm:flex-row sm:gap-4">
+          {!isDefault && (
+            <button
+              type="button"
+              onClick={setDefaultAddress}
+              disabled={settingDefault}
+              className="focus-visible:outline-dark_blue cursor-pointer py-1 text-sm text-gray-600 underline decoration-gray-300 underline-offset-4 hover:text-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {settingDefault ? 'Saving...' : 'Set as default'}
+            </button>
+          )}
           <button
             type="button"
             onClick={() => setOpen(true)}
