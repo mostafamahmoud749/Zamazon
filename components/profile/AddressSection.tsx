@@ -4,11 +4,11 @@ import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../auth/UserProvider';
 import AddressForm from '@/components/profile/AddressForm';
 import Address from '@/components/profile/Address';
-import type { AddressProps } from '@/types';
+import type { AddressData } from '@/types';
 
 export default function AddressSection() {
   const [open, setOpen] = useState<boolean>(false);
-  const [addresses, setAddresses] = useState<AddressProps[]>([]);
+  const [addresses, setAddresses] = useState<AddressData[]>([]);
   const { user } = useContext(UserContext);
 
   useEffect(() => {
@@ -43,6 +43,7 @@ export default function AddressSection() {
   const showAddresses = sortedAddresses.map((address) => (
     <Address
       key={address.id}
+      id={address.id}
       name={user?.name}
       street={address.street}
       state={address.state}
@@ -50,6 +51,8 @@ export default function AddressSection() {
       postalCode={address.postalCode}
       country={address.country}
       isDefault={user?.defaultAddressId === address.id}
+      addresses={addresses}
+      setAddresses={setAddresses}
     />
   ));
 

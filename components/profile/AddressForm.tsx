@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { CreateAddressSchema } from '@/schemas/Address.schema';
 import { getCsrfToken } from '@/lib/getCsrfToken';
-import type { AddressProps } from '@/types';
+import type { AddressData } from '@/types';
 
 type AddressFormProps = {
-  setAddresses: React.Dispatch<React.SetStateAction<AddressProps[]>>;
+  setAddresses: React.Dispatch<React.SetStateAction<AddressData[]>>;
 };
 
 export default function AddressForm({ setAddresses }: AddressFormProps) {

@@ -1,4 +1,4 @@
-export type AddressProps = {
+export type AddressData = {
   id: number;
   street: string;
   city: string;

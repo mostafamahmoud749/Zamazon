@@ -5,4 +5,4 @@ export type { CartProduct, CartContextValue } from './cart';
 export type { DealsActiveFilter, DealsFilterGroup, DealsFiltersState, NavItem } from './deals';
 export type { Category } from './category';
 export type { UserContextValue } from './user';
-export type { AddressProps } from './address';
+export type { AddressData } from './address';
