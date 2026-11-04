@@ -74,7 +74,7 @@ export default function AddressSection() {
       >
         <div className="min-h-0 overflow-hidden">
           {showAddresses}
-          <AddressForm />
+          <AddressForm setAddresses={setAddresses} />
         </div>
       </div>
     </div>

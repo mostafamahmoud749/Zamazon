@@ -1,8 +1,15 @@
 'use client';
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
+import { CreateAddressSchema } from '@/schemas/Address.schema';
+import { getCsrfToken } from '@/lib/getCsrfToken';
+import type { AddressProps } from '@/types';
 
-export default function AddressForm() {
+type AddressFormProps = {
+  setAddresses: React.Dispatch<React.SetStateAction<AddressProps[]>>;
+};
+
+export default function AddressForm({ setAddresses }: AddressFormProps) {
   const [showForm, setShowForm] = useState(false);
   const [address, setAddress] = useState({
     street: '',
@@ -12,11 +19,44 @@ export default function AddressForm() {
     country: '',
   });
 
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const result = CreateAddressSchema.safeParse(address);
+
+    if (!result.success) {
+      console.log(result.error.flatten().fieldErrors);
+      return;
+    }
+
+    try {
+      const csrfToken = await getCsrfToken();
+      const response = await fetch('/api/addresses', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken,
+        },
+        body: JSON.stringify(address),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data?.error);
+      }
+
+      setAddresses((prev) => [...prev, data]);
+    } catch (error) {
+      console.log('error from adding address:', error);
+    }
+  }
+
   return (
     <>
       {showForm ? (
         <form
-          onSubmit={(event) => event.preventDefault()}
+          onSubmit={(event) => handleSubmit(event)}
           className="mt-6 space-y-4 rounded-lg border border-gray-200 bg-gray-50 p-4 sm:p-5"
         >
           <h3 className="text-dark font-semibold">Add an address</h3>
@@ -78,7 +118,7 @@ export default function AddressForm() {
                 onChange={(e) => setAddress((prev) => ({ ...prev, country: e.target.value }))}
                 autoComplete="country-name"
                 placeholder="Country"
-                className="mt-2 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
+                className="rounYourded-md mt-2 block w-full border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
               />
             </label>
           </div>
