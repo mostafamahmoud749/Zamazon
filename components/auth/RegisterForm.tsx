@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Input from '@/components/auth/Input';
+import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
 import { RegisterSchema } from '@/schemas/Auth.schema';
 import { getCsrfToken } from '@/lib/getCsrfToken';
@@ -65,6 +65,7 @@ export default function RegisterForm({ onResult }: RegisterFormProps) {
   return (
     <form className="mx-4" onSubmit={handleRegister}>
       <Input
+        variant="auth"
         type="text"
         error={fieldErrors.name}
         label="First and last name"
@@ -73,6 +74,7 @@ export default function RegisterForm({ onResult }: RegisterFormProps) {
         onChange={(e) => setData((prev) => ({ ...prev, [e.target.name]: e.target.value }))}
       />
       <Input
+        variant="auth"
         type="email"
         error={fieldErrors.email}
         label="Mobile number or email"
@@ -81,6 +83,7 @@ export default function RegisterForm({ onResult }: RegisterFormProps) {
         onChange={(e) => setData((prev) => ({ ...prev, [e.target.name]: e.target.value }))}
       />
       <Input
+        variant="auth"
         type="password"
         error={fieldErrors.password}
         label="Create a password"

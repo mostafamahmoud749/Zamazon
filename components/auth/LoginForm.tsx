@@ -1,6 +1,6 @@
 'use client';
 
-import Input from '@/components/auth/Input';
+import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
 import SigninWithGithub from '@/components/auth/SigninWithGithub';
 import { useState, useContext } from 'react';
@@ -83,6 +83,7 @@ export default function LoginForm({ onResult, callbackUrl }: LoginFormProps) {
   return (
     <form className="mx-4" onSubmit={handleLogin}>
       <Input
+        variant="auth"
         type="email"
         label="Email or phone number"
         name="email"
@@ -92,6 +93,7 @@ export default function LoginForm({ onResult, callbackUrl }: LoginFormProps) {
         onChange={(e) => setData((prev) => ({ ...prev, email: e.target.value }))}
       />
       <Input
+        variant="auth"
         type="password"
         label="Password"
         name="password"

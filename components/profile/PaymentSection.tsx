@@ -1,6 +1,7 @@
 'use client';
 import { ChevronDown, Plus } from 'lucide-react';
 import { useState } from 'react';
+import Input from '@/components/common/Input';
 
 export default function PaymentSection() {
   const [open, setOpen] = useState<boolean>(false);
@@ -52,52 +53,40 @@ export default function PaymentSection() {
               className="mt-6 space-y-4 rounded-lg border border-gray-200 bg-gray-50 p-4 sm:p-5"
             >
               <h3 className="text-dark font-semibold">Add a payment method</h3>
-              <label className="text-dark block text-sm font-medium">
-                Name on card
-                <input
-                  type="text"
-                  name="cardholderName"
-                  autoComplete="cc-name"
-                  placeholder="Full name as shown on card"
-                  className="mt-2 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
-                />
-              </label>
-              <label className="text-dark block text-sm font-medium">
-                Card number
-                <input
-                  type="text"
-                  name="cardNumber"
-                  inputMode="numeric"
-                  autoComplete="cc-number"
-                  placeholder="1234 5678 9012 3456"
-                  className="mt-2 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
-                />
-              </label>
+              <Input
+                label="Name on card"
+                type="text"
+                name="cardholderName"
+                autoComplete="cc-name"
+                placeholder="Full name as shown on card"
+              />
+              <Input
+                label="Card number"
+                type="text"
+                name="cardNumber"
+                inputMode="numeric"
+                autoComplete="cc-number"
+                placeholder="1234 5678 9012 3456"
+              />
               <div className="grid grid-cols-2 gap-4">
-                <label className="text-dark block text-sm font-medium">
-                  Expiry date
-                  <input
-                    type="text"
-                    name="expiryDate"
-                    inputMode="numeric"
-                    autoComplete="cc-exp"
-                    placeholder="MM/YY"
-                    maxLength={5}
-                    className="mt-2 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
-                  />
-                </label>
-                <label className="text-dark block text-sm font-medium">
-                  Security code
-                  <input
-                    type="password"
-                    name="securityCode"
-                    inputMode="numeric"
-                    autoComplete="cc-csc"
-                    placeholder="CVC"
-                    maxLength={4}
-                    className="mt-2 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
-                  />
-                </label>
+                <Input
+                  label="Expiry date"
+                  type="text"
+                  name="expiryDate"
+                  inputMode="numeric"
+                  autoComplete="cc-exp"
+                  placeholder="MM/YY"
+                  maxLength={5}
+                />
+                <Input
+                  label="Security code"
+                  type="password"
+                  name="securityCode"
+                  inputMode="numeric"
+                  autoComplete="cc-csc"
+                  placeholder="CVC"
+                  maxLength={4}
+                />
               </div>
               <div className="flex flex-wrap gap-3 pt-1">
                 <button
