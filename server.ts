@@ -6,7 +6,13 @@ app.use(createApp());
 
 const port = Number(process.env.PORT);
 
-app.listen(port, () => {
+app.listen(port, (error?: Error) => {
+  if (error) {
+    console.error(`Failed to start backend on port ${port}:`, error);
+    process.exitCode = 1;
+    return;
+  }
+
   console.log(`Backend listening on http://localhost:${port}`);
 });
 
