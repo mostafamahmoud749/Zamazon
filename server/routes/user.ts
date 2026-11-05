@@ -2,7 +2,7 @@ import { Request, Router } from 'express';
 import { prisma } from '../../prisma/lib/prisma.js';
 import { requireAuth } from '../middleware/requireAuth.js';
 import { validateBody } from '../middleware/validateBody.js';
-import { SetDefaultAddressSchema } from '../../schemas/User.schema';
+import { SetDefaultAddressSchema, UpdateImage } from '../../schemas/User.schema';
 
 const router = Router();
 
@@ -15,6 +15,7 @@ router.get('/api/users/me', requireAuth, async (request, response) => {
         email: true,
         defaultAddressId: true,
         name: true,
+        image: true,
         role: true,
         createdAt: true,
       },
@@ -59,6 +60,26 @@ router.patch(
       });
 
       response.sendStatus(204);
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+router.patch(
+  'api/users/me/image',
+  requireAuth,
+  validateBody(UpdateImage),
+  async (request: Request<{}, {}, { image: string }>, response) => {
+    const imageSrc = request.body;
+
+    try {
+      await prisma.user.update({
+        where: { id: request.user!.id },
+        data: {
+          image: imageSrc,
+        },
+      });
     } catch (error) {
       throw error;
     }
