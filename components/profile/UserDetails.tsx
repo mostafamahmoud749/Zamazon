@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
-import { Camera, LoaderCircle } from 'lucide-react';
-import { useEffect, useState, useContext } from 'react';
+import { Camera, LoaderCircle, X } from 'lucide-react';
+import { useEffect, useState, useContext, useRef } from 'react';
 import { UserContext } from '@/components/auth/UserProvider';
 import Popup from '@/components/common/Popup';
 import { uploadImage } from '@/lib/uploadImage';
@@ -9,8 +9,25 @@ import { getCsrfToken } from '@/lib/getCsrfToken';
 
 export default function UserDetails() {
   const { user, refreshUser } = useContext(UserContext);
+  const photoDialogRef = useRef<HTMLDialogElement>(null);
+  const [isPhotoOpen, setIsPhotoOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [popup, setPopup] = useState<{ success: boolean; message: string } | null>(null);
+  const photoSrc = user?.image ?? '/profile-avatar.svg';
+
+  useEffect(() => {
+    const dialog = photoDialogRef.current;
+    if (!isPhotoOpen || !dialog) return;
+
+    const previousOverflow = document.body.style.overflow;
+    dialog.showModal();
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      dialog.close();
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isPhotoOpen]);
 
   useEffect(() => {
     if (!popup) return;
@@ -70,15 +87,52 @@ export default function UserDetails() {
       {popup && (
         <Popup success={popup.success} message={popup.message} onClose={() => setPopup(null)} />
       )}
+      <dialog
+        ref={photoDialogRef}
+        onClose={() => setIsPhotoOpen(false)}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) setIsPhotoOpen(false);
+        }}
+        className="m-auto max-h-none max-w-none overflow-visible rounded-2xl border-0 bg-transparent p-0 shadow-2xl backdrop:bg-black/80 backdrop:backdrop-blur-sm"
+      >
+        <h2 id="profile-photo-preview-title" className="sr-only">
+          Profile photo
+        </h2>
+        <div className="relative aspect-square w-[min(85vw,40rem,80dvh)] overflow-hidden rounded-2xl bg-slate-950">
+          <Image
+            src={photoSrc}
+            alt="Enlarged profile photo"
+            fill
+            sizes="(max-width: 752px) 85vw, 640px"
+            className="object-contain"
+          />
+          <button
+            type="button"
+            aria-label="Close profile photo"
+            onClick={() => setIsPhotoOpen(false)}
+            className="absolute top-3 right-3 z-10 flex size-10 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white transition-colors hover:bg-black/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          >
+            <X size={22} aria-hidden="true" />
+          </button>
+        </div>
+      </dialog>
       <div className="relative">
-        <Image
-          src={user?.image ?? '/profile-avatar.svg'}
-          alt="profile picture"
-          width={112}
-          height={112}
-          className="size-28 rounded-full border-4 border-white object-cover shadow-md"
-          priority
-        />
+        <button
+          type="button"
+          aria-label="View profile photo"
+          aria-haspopup="dialog"
+          onClick={() => setIsPhotoOpen(true)}
+          className="focus-visible:outline-dark_blue block cursor-zoom-in rounded-full focus-visible:outline-2 focus-visible:outline-offset-2"
+        >
+          <Image
+            src={photoSrc}
+            alt="profile picture"
+            width={112}
+            height={112}
+            className="size-28 rounded-full border-4 border-white object-cover shadow-md"
+            priority
+          />
+        </button>
         <input
           id="profile-photo"
           type="file"
@@ -110,8 +164,8 @@ export default function UserDetails() {
           Uploading photo...
         </p>
       )}
-      <h1 className="mt-4 text-2xl font-semibold">Mostafa Ahmed</h1>
-      <p className="mt-1 text-sm text-slate-500">mostafa@example.com</p>
+      <h1 className="mt-4 text-2xl font-semibold">{user?.name ?? 'user'}</h1>
+      <p className="mt-1 text-sm text-slate-500">{user?.email ?? ''}</p>
     </div>
   );
 }
