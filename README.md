@@ -1,219 +1,211 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Zamazon
 
-## Getting Started
+[Live site](https://zamazon-chi.vercel.app/) · [Backend API](https://zamazon-backend-bry3una61-mostafamahmoud749s-projects.vercel.app/)
 
-For the catalog, run `npm run backend` and `npm run dev` in separate terminals.
-For API load testing, see [tests/load/README.md](tests/load/README.md).
-Run `npm run seed:products` to add 120 sample products for testing scroll loading.
-This additive script preserves existing records and skips products already added.
-It also replaces the old placeholder image on existing scroll-demo products.
+## About the project
 
-### Seed product images
+Zamazon is an Amazon clone I built to practice web development. You can browse products, search and filter them, add items to your cart, and leave reviews. The backend also supports creating product listings and placing orders.
 
-Both seed scripts use the verified Cloudinary URLs in `prisma/seed-images.json`.
-The 20 named products have individual images; the 120 scroll-demo items cycle
-through matching images for their category. The manifest records the source,
-photographer, license, Cloudinary public ID, dimensions, and stored file size.
-The current images are AI-generated studio product shots in
-`public/products/studio/`, with the source cutouts and generation prompts saved
-alongside them. Every image has a 1024 x 1024 canvas, consistent product padding,
-and a solid `#f3f4f6` background matching the product cards.
+I started this as a frontend project, then learned backend development so I could build my own API and add login.
 
-- `npm run seed:images` uploads missing assets, optimizes them within
-  1600 x 1600, and saves their actual returned URLs and formats in the manifest. It requires
-  the three Cloudinary environment variables. Stable public IDs and
-  `overwrite: false` prevent duplicate or replacement uploads when rerunning it.
-- `npm run seed:images:prepare` rebuilds the studio WebP images from their
-  transparent PNG sources and resets their manifest URLs for uploading. It
-  centers the full product without cropping it and preserves the exact background
-  color using lossless WebP. Studio images are stored without a second lossy
-  Cloudinary transformation so their background continues to match the cards.
-- `npm run seed:images:apply` updates only the image field of existing named
-  seed products and `scroll-demo-product-NNN` records. It does not create or
-  delete records, so it can repair the existing catalog without running the
-  main database seed.
+## Main features
 
-Regular database seeding uses the saved URLs and does not upload images again.
-The seed scripts validate the manifest before writing database records.
+- Responsive layouts for desktop and mobile.
+- Product search, category and rating filters, and infinite scrolling.
+- Registration, email and password login, and GitHub login.
+- A saved shopping cart with quantity controls.
+- Product ratings and reviews.
+- Saved addresses, a default address, and profile photo uploads.
+- Product creation, editing, and deactivation through the API.
+- Order creation and cancellation through the API, with stock checks and protection against duplicate orders.
 
-### Cloudinary images
+Order history has a frontend page. Checkout currently runs through the API, and payment processing is not connected to a payment provider.
 
-Set `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, and `CLOUDINARY_API_SECRET` in
-the backend environment. Restart the API and Next.js after changing them.
-The API secret stays on the backend; no upload preset is needed.
+## Screenshots
 
-Use `uploadImage(file)` from `lib/uploadImage.ts` in browser code:
+### Home
 
-```ts
-import { uploadImage } from '@/lib/uploadImage';
+![Zamazon homepage on desktop](docs/images/home-desktop.png)
 
-const image = await uploadImage(file); // file is a browser File
-// image.url is the HTTPS URL to save in a product's existing image field.
-// Also returns id, publicId, width, height, format, and bytes.
-```
+<details>
+<summary>Product browsing on desktop and mobile</summary>
 
-The function checks for a nonempty JPEG, PNG, or WebP up to 5 MB, gets a CSRF
-token, and calls `POST /api/images/upload-signature` using the existing login
-session. Express signs a new user-specific public ID and fixed upload settings.
-The browser then sends the file and signed parameters directly to Cloudinary
-as multipart `FormData`. File bytes never pass through Express.
+### Desktop
 
-Cloudinary applies a signed incoming transformation before storing new uploads:
-fit within 1600 x 1600 while preserving aspect ratio and never enlarging smaller
-images, convert to WebP, and apply automatic quality compression. The returned
-URL, dimensions, format, and byte count describe the optimized stored image.
-The transformation is signed so the browser cannot remove or change it.
-Existing uploaded images are unaffected.
+![Product browsing with category and rating filters](docs/images/products-desktop.png)
 
-Cloudinary enforces the signed format restriction, `overwrite: false`, and an
-`eval` rule that rejects files over 5,242,880 bytes (5 MiB) before storing them.
-The browser also checks the size for immediate feedback. The size rule is part
-of the signature, so removing or changing it invalidates the upload signature.
-The signature and API key may be sent to the browser; the API secret must stay
-in the backend environment. Cloudinary accepts signatures for one hour.
+### Mobile
 
-Signature requests are limited to 30 per user per hour, in addition to the
-general API limit. These limiters are in memory. The signing endpoint returns
-401 for missing login, 403 for invalid CSRF, 429 for rate limits, and 503 for
-missing Cloudinary configuration. The browser function throws on upload failure.
+<img src="docs/images/products-mobile.png" alt="Zamazon product browsing on mobile" width="320" />
 
-Use `image.url` directly to display/download the public image from Cloudinary's
-CDN. The existing Next.js Image configuration allows your Cloudinary cloud.
-There are no image listing or metadata endpoints. Uploading does not create or
-modify a product or save a database record.
+</details>
 
-For profile images, save the returned `image.url` with
-`PATCH /api/users/me/image` and a JSON body of `{ "image": "https://..." }`.
-Include the session cookie, `Content-Type: application/json`, and the
-`X-CSRF-Token` header. The endpoint updates the signed-in user only and returns
-204 with no response body. Image URLs must use HTTPS and be at most 2048
-characters; invalid input returns 400. `GET /api/users/me` returns the saved
-`image`, or `null` for users without a profile image.
+## Technologies used
 
-Apply the user-image migration with
-`npx prisma migrate deploy --config prisma7.config.ts` and regenerate the client
-with `npx prisma generate --config prisma7.config.ts` before using this endpoint.
-The profile photo picker currently previews files locally; it still needs to
-call `uploadImage`, save the URL through this endpoint, and refresh user context.
+### Frontend
 
-Reference: [Cloudinary signed browser uploads](https://cloudinary.com/documentation/client_side_uploading).
-The signed size rule uses [Cloudinary upload evaluation](https://cloudinary.com/documentation/upload_parameters#eval_modify_upload_options_before_upload).
-Optimization uses [Cloudinary incoming transformations](https://cloudinary.com/documentation/eager_and_incoming_transformations#incoming_transformations).
+- **Next.js and React** — pages, routing, and UI components.
+- **TypeScript** — types for components and API data.
+- **Tailwind CSS** — styling and responsive layouts.
+- **React Context** — shared user and cart state.
+- **Lucide React and React Icons** — icons.
 
-### Express backend security
+### Backend
 
-Run the API with `npm run backend`. Helmet adds security response headers.
-CORS allows credentialed requests from `http://localhost:3000` by default.
-Set `FRONTEND_ORIGIN` in `.env` to your frontend's exact origin when deploying
-(for example, `https://zamazon.example`, without a trailing slash).
-Browser API requests use `/api/...`, which Next.js forwards to `API_URL`, so the
-session cookie belongs to the frontend host and is available to middleware.
-For the Vercel frontend, set `API_URL=https://zamazon-6xg4.vercel.app`.
-On the backend, set `FRONTEND_ORIGIN=https://zamazon-chi.vercel.app` and
-`GITHUB_CALLBACK_URL=https://zamazon-chi.vercel.app/api/auth/github/callback`.
-Use that same callback URL in the GitHub OAuth app settings. Redeploy after
-updating these settings and sign in again to create a cookie on the frontend host.
-Frontend requests using session cookies also need `credentials: 'include'`.
+- **Node.js, Express, and TypeScript** — the API server.
+- **PostgreSQL and Prisma** — database, queries, and migrations.
+- **Passport.js** — local login and GitHub OAuth.
+- **express-session and connect-pg-simple** — sessions stored in PostgreSQL.
+- **bcrypt** — password hashing.
+- **Zod** — request validation.
+- **Cloudinary** — image uploads and storage.
+- **csrf-sync, Helmet, CORS, and express-rate-limit** — request protection and limits.
 
-All `/api` routes share a limit of 300 requests per IP per 15 minutes. CORS
-preflight requests are handled before the limiter and do not consume the quota.
-This is a starting limit to adjust based on normal application traffic.
-Login requests also have a stricter limit of 10 unsuccessful attempts per IP per 15 minutes;
-successful responses do not count toward the limit. Excess requests receive 429.
-The limiter stores counts in memory, so restarting the API resets them. Multiple
-API instances need a shared store. When deploying behind a proxy, configure
-Express `trust proxy` for that hosting setup so client IPs are identified correctly.
+### Testing and tools
 
-All API methods except GET, HEAD, and OPTIONS require a session-bound CSRF token
-in the `X-CSRF-Token` header, including login and registration. Obtain it with
-`GET /api/auth/csrf-token` using `credentials: 'include'`. The response is
-`{ "csrfToken": "..." }` and must not be cached. Keep the token in frontend memory.
+- **Vitest and Supertest** — API integration tests.
+- **k6** — API load tests.
+- **ESLint and Prettier** — linting and formatting.
 
-```ts
-const api = 'http://localhost:9000';
-const response = await fetch(`${api}/api/auth/csrf-token`, {
-  credentials: 'include',
-  cache: 'no-store',
-});
-const { csrfToken } = await response.json();
-// Retain this value for retries of this purchase.
-const checkoutKey = crypto.randomUUID();
+## What I learned
 
-await fetch(`${api}/api/orders`, {
-  method: 'POST',
-  credentials: 'include',
-  headers: {
-    'Content-Type': 'application/json',
-    'X-CSRF-Token': csrfToken,
-    'Idempotency-Key': checkoutKey,
-  },
-  body: JSON.stringify({ addressId: 1, paymentMethod: 'credit_card' }),
-});
-```
+- Building an Express API and connecting it to a Next.js frontend.
+- Designing database relationships between users, products, carts, orders, and reviews.
+- Adding login with hashed passwords, sessions, and GitHub OAuth.
+- Validating requests and checking that users can only change their own data.
+- Using database transactions to keep orders, stock, and cart updates together.
+- Handling repeated checkout requests without creating duplicate orders.
+- Writing API tests for successful requests, errors, and access checks.
 
-Fetch a fresh token after successful login (including GitHub login), because
-Passport regenerates the session. Missing, incorrect, or stale tokens return
-403 with `code: 'EBADCSRFTOKEN'` before route handlers run. If the frontend loses
-its token, fetch it again using the same session cookie. GitHub OAuth GET routes
-use OAuth `state` verification rather than an API CSRF header.
+## Challenges and how I solved them
 
-### Category lookup
+I started this project as a frontend developer. I had trouble finding an API that supported what I wanted to build, especially login. That limited what I could add to the project, so I learned backend development and built my own API with Express, PostgreSQL, and Prisma.
 
-`GET /api/categories?ids=3,8,12` returns the matching category objects. Supply
-up to 100 comma-separated positive integer IDs. Duplicate IDs are deduplicated;
-missing categories are omitted, and no matches returns `[]`. Invalid input
-returns 400. Without `ids`, the endpoint returns all categories.
+## API endpoints
 
-### Checkout retries
+For local development, the backend runs at `http://localhost:9000`. The frontend forwards `/api` requests to it. The deployed backend is linked above; append an endpoint such as `/api/products` to its URL.
 
-Before using this schema change, apply migrations with
-`npx prisma migrate deploy --config prisma7.config.ts` and regenerate the client
-with `npx prisma generate --config prisma7.config.ts`.
+Routes marked **Yes** require login. Product, review, address, and order changes are limited to the current user's records.
 
-Create `const checkoutKey = crypto.randomUUID()` once per intended purchase,
-before the order request above. `POST /api/orders` requires this key in the
-`Idempotency-Key` header (1-128 letters, digits, hyphens, or underscores).
-Keep the same key and request details for retries after timeouts or connection
-failures. Generate a new key only for a new purchase, not for each HTTP attempt.
+For `POST`, `PATCH`, and `DELETE` requests, first get a token from `GET /api/auth/csrf-token`, then send it in the `X-CSRF-Token` header with the session cookie. Get a fresh token after login.
 
-A new checkout returns 201. A successful retry returns 200 with the existing
-order and does not consume the current cart or stock again. Reusing a key with
-a different address ID or payment method returns 409. Keys are scoped to the
-authenticated user and recorded atomically with successful orders. Failed
-transactions do not consume a key. A replay returns the existing order's current
-status, including if it was canceled. Keys are retained for the life of the order.
-Serialization conflicts are retried up to three total attempts; after that,
-409 asks the client to retry with the same key.
+<details>
+<summary>View all endpoints</summary>
 
-First, run the development server:
+### Authentication
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+| Method | Endpoint                    | Description                      | Login required |
+| ------ | --------------------------- | -------------------------------- | -------------- |
+| GET    | `/api/auth/csrf-token`      | Get a CSRF token                 | No             |
+| POST   | `/api/auth/register`        | Create an account                | No             |
+| POST   | `/api/auth/login`           | Log in with email and password   | No             |
+| POST   | `/api/auth/logout`          | Log out and clear the session    | No             |
+| GET    | `/api/auth/github`          | Start GitHub login               | No             |
+| GET    | `/api/auth/github/callback` | Handle the GitHub login callback | No             |
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Products and categories
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+| Method | Endpoint                        | Description                                 | Login required |
+| ------ | ------------------------------- | ------------------------------------------- | -------------- |
+| GET    | `/api/products`                 | List, search, and filter products           | No             |
+| GET    | `/api/products/:id`             | Get a product and its rating                | No             |
+| POST   | `/api/products`                 | Create a product listing                    | Yes            |
+| PATCH  | `/api/products/:id`             | Update your product                         | Yes            |
+| DELETE | `/api/products/:id`             | Deactivate your product                     | Yes            |
+| GET    | `/api/categories`               | List categories, optionally filtered by IDs | No             |
+| GET    | `/api/categories/ancestors`     | List top-level categories                   | No             |
+| GET    | `/api/categories/:id/childrens` | List a category's direct children           | No             |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Product queries support `search`, `rating`, `filters` (a JSON array of category IDs), `page`, and `cumulative`. The `childrens` spelling matches the current route.
 
-## Learn More
+### Reviews
 
-To learn more about Next.js, take a look at the following resources:
+| Method | Endpoint                              | Description              | Login required |
+| ------ | ------------------------------------- | ------------------------ | -------------- |
+| GET    | `/api/products/:id/reviews`           | List a product's reviews | No             |
+| POST   | `/api/products/:id/reviews`           | Add a review             | Yes            |
+| PATCH  | `/api/products/:id/reviews/:reviewId` | Update your review       | Yes            |
+| DELETE | `/api/products/:id/reviews/:reviewId` | Delete your review       | Yes            |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Cart and orders
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Method | Endpoint                 | Description                                 | Login required |
+| ------ | ------------------------ | ------------------------------------------- | -------------- |
+| GET    | `/api/cart/items`        | Get your cart                               | Yes            |
+| POST   | `/api/cart/items`        | Add a product to your cart                  | Yes            |
+| PATCH  | `/api/cart/items/:id`    | Change a cart item's quantity               | Yes            |
+| DELETE | `/api/cart/items/:id`    | Remove a cart item                          | Yes            |
+| GET    | `/api/orders`            | List your orders, with pagination           | Yes            |
+| GET    | `/api/orders/:id`        | Get your order details                      | Yes            |
+| POST   | `/api/orders`            | Create an order from your cart              | Yes            |
+| PATCH  | `/api/orders/:id/cancel` | Cancel your pending order and restore stock | Yes            |
 
-## Deploy on Vercel
+Creating an order requires an `Idempotency-Key` header. Reusing the same key with the same checkout details returns the existing order.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Profile, addresses, and images
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Method | Endpoint                        | Description                                    | Login required |
+| ------ | ------------------------------- | ---------------------------------------------- | -------------- |
+| GET    | `/api/users/me`                 | Get your profile                               | Yes            |
+| PATCH  | `/api/users/me/default-address` | Set your default address                       | Yes            |
+| PATCH  | `/api/users/me/image`           | Update your profile image URL                  | Yes            |
+| GET    | `/api/addresses`                | List your saved addresses                      | Yes            |
+| POST   | `/api/addresses`                | Add an address                                 | Yes            |
+| PATCH  | `/api/addresses/:id`            | Update your address                            | Yes            |
+| DELETE | `/api/addresses/:id`            | Delete your address if no order uses it        | Yes            |
+| POST   | `/api/images/upload-signature`  | Get a signature for a direct Cloudinary upload | Yes            |
+
+</details>
+
+## Run locally
+
+You need Node.js 24.x, npm, a PostgreSQL database, and GitHub OAuth app credentials. The backend currently requires GitHub credentials to start, even when using email and password login.
+
+1. Create a `.env` file in the project root:
+
+   ```env
+   DATABASE_URL=postgresql://postgres:password@localhost:5432/zamazon
+   SESSION_SECRET=replace-with-a-long-random-string
+   PORT=9000
+   FRONTEND_ORIGIN=http://localhost:3000
+   API_URL=http://localhost:9000
+
+   GITHUB_CLIENT_ID=your-github-client-id
+   GITHUB_CLIENT_SECRET=your-github-client-secret
+   GITHUB_CALLBACK_URL=http://localhost:3000/api/auth/github/callback
+
+   CLOUDINARY_CLOUD_NAME=dywssqmm
+   CLOUDINARY_API_KEY=
+   CLOUDINARY_API_SECRET=
+   ```
+
+   Set your GitHub OAuth app's homepage to `http://localhost:3000` and its callback URL to the value above. The Cloudinary cloud name matches the included demo images. For uploads, use your own Cloudinary cloud name, API key, and secret; update the image URLs in `prisma/seed-images.json` if you move the demo images to your cloud.
+
+2. Install dependencies and apply the database migrations:
+
+   ```bash
+   npm install
+   npx prisma migrate deploy --config prisma7.config.ts
+   ```
+
+3. Optionally add sample products:
+
+   ```bash
+   npm run seed:products
+   ```
+
+4. Start the backend:
+
+   ```bash
+   npm run backend
+   ```
+
+5. In another terminal, start the frontend:
+
+   ```bash
+   npm run dev
+   ```
+
+Open `http://localhost:3000` and register an account.
+
+To run integration tests, set `DATABASE_URL_TEST` to a separate PostgreSQL test database, apply the migrations to that database, and run `npm test`. For load testing, see [tests/load/README.md](tests/load/README.md).
