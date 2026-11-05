@@ -16,7 +16,8 @@ export default function ProductCard({ el, deals }: ProductCardProps) {
     <div className="flex h-80 w-full min-w-0 flex-col justify-between overflow-hidden rounded-md bg-gray-100 p-2 shadow-md transition hover:shadow-lg">
       <Link
         href={`/deals/${el.id}`}
-        className="flex h-40 flex-1 w-full items-center justify-center overflow-hidden"
+        prefetch={false}
+        className="flex h-40 w-full flex-1 items-center justify-center overflow-hidden"
       >
         <Image
           src={!el.image || failedImage === el.image ? '/products/demo-product.svg' : el.image}
