@@ -67,19 +67,20 @@ router.patch(
 );
 
 router.patch(
-  'api/users/me/image',
+  '/api/users/me/image',
   requireAuth,
   validateBody(UpdateImage),
   async (request: Request<{}, {}, { image: string }>, response) => {
-    const imageSrc = request.body;
+    const { image } = request.body;
 
     try {
       await prisma.user.update({
         where: { id: request.user!.id },
         data: {
-          image: imageSrc,
+          image,
         },
       });
+      response.sendStatus(204);
     } catch (error) {
       throw error;
     }

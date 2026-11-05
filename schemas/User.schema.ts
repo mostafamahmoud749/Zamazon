@@ -5,7 +5,7 @@ export const UserSchema = z.object({
   defaultAddressId: z.number().nullable(),
   name: z.string().nullable(),
   email: z.email(),
-  image: z.string().min(1, 'add a image src').max(200, 'image src so long'),
+  image: z.string().nullable(),
 });
 
 export const SetDefaultAddressSchema = z.object({
@@ -13,7 +13,9 @@ export const SetDefaultAddressSchema = z.object({
 });
 
 export const UpdateImage = z.object({
-  image: z.string().min(1, 'add a image src').max(200, 'image src so long'),
+  image: z
+    .url({ protocol: /^https$/, error: 'Image must be a valid HTTPS URL' })
+    .max(2048, 'Image URL must be at most 2048 characters'),
 });
 
 export type User = z.infer<typeof UserSchema>;

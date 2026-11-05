@@ -82,6 +82,20 @@ CDN. The existing Next.js Image configuration allows your Cloudinary cloud.
 There are no image listing or metadata endpoints. Uploading does not create or
 modify a product or save a database record.
 
+For profile images, save the returned `image.url` with
+`PATCH /api/users/me/image` and a JSON body of `{ "image": "https://..." }`.
+Include the session cookie, `Content-Type: application/json`, and the
+`X-CSRF-Token` header. The endpoint updates the signed-in user only and returns
+204 with no response body. Image URLs must use HTTPS and be at most 2048
+characters; invalid input returns 400. `GET /api/users/me` returns the saved
+`image`, or `null` for users without a profile image.
+
+Apply the user-image migration with
+`npx prisma migrate deploy --config prisma7.config.ts` and regenerate the client
+with `npx prisma generate --config prisma7.config.ts` before using this endpoint.
+The profile photo picker currently previews files locally; it still needs to
+call `uploadImage`, save the URL through this endpoint, and refresh user context.
+
 Reference: [Cloudinary signed browser uploads](https://cloudinary.com/documentation/client_side_uploading).
 The signed size rule uses [Cloudinary upload evaluation](https://cloudinary.com/documentation/upload_parameters#eval_modify_upload_options_before_upload).
 Optimization uses [Cloudinary incoming transformations](https://cloudinary.com/documentation/eager_and_incoming_transformations#incoming_transformations).
