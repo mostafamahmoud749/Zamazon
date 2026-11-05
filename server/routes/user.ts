@@ -2,7 +2,7 @@ import { Request, Router } from 'express';
 import { prisma } from '../../prisma/lib/prisma.js';
 import { requireAuth } from '../middleware/requireAuth.js';
 import { validateBody } from '../middleware/validateBody.js';
-import { SetDefaultAddressSchema, UpdateImage } from '../../schemas/User.schema';
+import { SetDefaultAddressSchema, UpdateImage } from '../../schemas/User.schema.js';
 
 const router = Router();
 
