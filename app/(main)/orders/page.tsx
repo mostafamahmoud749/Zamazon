@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import OrdersCard from '@/components/orders/OrdersCard';
 
 const orders = [
   {
@@ -48,31 +48,13 @@ export default function OrdersPage() {
 
       <ul className="divide-y divide-gray-200 border-y border-gray-200">
         {orders.map((order) => (
-          <li key={order.id}>
-            <Link
-              href={`/orders/${order.id}`}
-              className="group focus-visible:outline-dark_blue grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-3 px-3 py-5 transition-colors hover:bg-gray-50 focus-visible:outline-2 focus-visible:-outline-offset-2 md:grid-cols-[minmax(0,1fr)_8rem_7rem_9rem] md:gap-6 md:py-6"
-            >
-              <div>
-                <h2 className="font-semibold">Order #{order.id}</h2>
-                <p className="mt-1 text-sm text-gray-500">{order.date}</p>
-              </div>
-
-              <p className={`text-right text-sm font-medium md:text-left ${order.statusStyle}`}>
-                <span className="sr-only">Status: </span>
-                {order.status}
-              </p>
-
-              <p className="text-sm font-medium tabular-nums md:text-right md:text-base">
-                <span className="mr-1 font-normal text-gray-500 md:sr-only">Total:</span>
-                {order.total}
-              </p>
-
-              <span className="text-right text-sm text-sky-700 underline-offset-4 group-hover:underline">
-                View order details
-              </span>
-            </Link>
-          </li>
+          <OrdersCard
+            key={order.id}
+            id={order.id}
+            status={order.status}
+            date={order.date}
+            total={order.total}
+          />
         ))}
       </ul>
     </div>
