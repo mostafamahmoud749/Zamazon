@@ -4,7 +4,7 @@ type OrdersCardProps = {
   id: number;
   status: string;
   date: string;
-  total: string;
+  total: number;
 };
 
 export default function OrdersCard({ id, date, status, total }: OrdersCardProps) {
@@ -27,7 +27,7 @@ export default function OrdersCard({ id, date, status, total }: OrdersCardProps)
 
         <p className="text-sm font-medium tabular-nums md:text-right md:text-base">
           <span className="mr-1 font-normal text-gray-500 md:sr-only">Total:</span>
-          {total}
+          {`$${total.toFixed(2)}`}
         </p>
 
         <span className="text-right text-sm text-sky-700 underline-offset-4 group-hover:underline">

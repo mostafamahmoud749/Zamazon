@@ -6,3 +6,4 @@ export type { DealsActiveFilter, DealsFilterGroup, DealsFiltersState, NavItem } 
 export type { Category } from './category';
 export type { UserContextValue } from './user';
 export type { AddressData } from './address';
+export type { OrderSummary } from './orders';
