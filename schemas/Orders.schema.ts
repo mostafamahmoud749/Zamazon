@@ -15,5 +15,5 @@ export const OrderIdParamsSchema = Z.object({
 
 export const CreateOrderSchema = Z.object({
   addressId: Z.coerce.number().int().positive('Address ID must be a positive integer'),
-  paymentMethod: Z.enum(['credit_card', 'paypal', 'bank_transfer']),
+  paymentMethod: Z.enum(['card', 'cash']),
 });

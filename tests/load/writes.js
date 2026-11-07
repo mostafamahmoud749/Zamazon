@@ -163,7 +163,7 @@ export default function writes() {
         'Add checkout item',
       ).json().id;
       const key = `load-${suffix}`;
-      const payload = { addressId, paymentMethod: 'credit_card' };
+      const payload = { addressId, paymentMethod: 'card' };
       // Checkout additionally requires an Idempotency-Key header.
       const order = checkout(payload, token, key, 201);
       orderId = order.id;

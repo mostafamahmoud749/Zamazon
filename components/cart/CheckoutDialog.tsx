@@ -1,23 +1,34 @@
 'use client';
 import Button from '@/components/common/Button';
-
 import { Banknote, CreditCard, ShoppingBag, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import Input from '@/components/common/Input';
 
 type CheckoutDialogProps = {
   totalProductsCount: number;
   totalProductsPrice: number;
   onClose: () => void;
+  paymentMethod: 'card' | 'cash';
+  onPaymentMethodChange: (value: 'card' | 'cash') => void;
+  paymentMethodLocked: boolean;
+  isSubmitting: boolean;
+  onSubmit: () => Promise<void>;
+  notification: ReactNode;
 };
 
 export default function CheckoutDialog({
   totalProductsCount,
   totalProductsPrice,
   onClose,
+  paymentMethod,
+  onPaymentMethodChange,
+  paymentMethodLocked,
+  isSubmitting,
+  onSubmit,
+  notification,
 }: CheckoutDialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'cash'>('card');
   const [selectedCard, setSelectedCard] = useState<'example' | 'new'>('example');
 
   useEffect(() => {
@@ -40,11 +51,15 @@ export default function CheckoutDialog({
       onClose={(event) => {
         if (!event.currentTarget.open) onClose();
       }}
+      onCancel={(event) => {
+        if (isSubmitting) event.preventDefault();
+      }}
       onClick={(event) => {
-        if (event.target === event.currentTarget) onClose();
+        if (!isSubmitting && event.target === event.currentTarget) onClose();
       }}
       className="text-dark m-auto max-h-[90dvh] w-[calc(100%-2rem)] max-w-3xl overflow-y-auto rounded-2xl border-0 bg-white p-0 shadow-2xl backdrop:bg-black/50 backdrop:backdrop-blur-sm"
     >
+      {notification}
       <div className="flex items-start justify-between gap-4 border-b border-gray-200 px-5 py-5 sm:px-7">
         <div>
           <p className="mb-1 text-xs font-semibold tracking-widest text-gray-500 uppercase">
@@ -56,6 +71,7 @@ export default function CheckoutDialog({
         <Button
           type="button"
           onClick={onClose}
+          disabled={isSubmitting}
           className="focus-visible:outline-dark_blue flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2"
         >
           <X size={20} aria-hidden="true" />
@@ -64,7 +80,7 @@ export default function CheckoutDialog({
 
       <div className="grid gap-6 p-5 sm:p-7 md:grid-cols-[minmax(0,1fr)_220px]">
         <div>
-          <fieldset>
+          <fieldset disabled={isSubmitting || paymentMethodLocked}>
             <legend className="mb-3 text-sm font-semibold">Payment method</legend>
             <div className="grid grid-cols-2 gap-3">
               {(
@@ -98,7 +114,7 @@ export default function CheckoutDialog({
                       name="checkout-payment-method"
                       value={value}
                       checked={paymentMethod === value}
-                      onChange={() => setPaymentMethod(value)}
+                      onChange={() => onPaymentMethodChange(value)}
                       className="size-4 accent-amber-500"
                     />
                   </span>
@@ -110,6 +126,11 @@ export default function CheckoutDialog({
               ))}
             </div>
           </fieldset>
+          {paymentMethodLocked && !isSubmitting && (
+            <p className="mt-3 text-sm text-gray-600">
+              Retry with the same payment method to confirm your previous attempt.
+            </p>
+          )}
 
           {paymentMethod === 'card' ? (
             <fieldset className="mt-6">
@@ -208,13 +229,13 @@ export default function CheckoutDialog({
 
           <Button
             type="button"
+            onClick={onSubmit}
+            loading={isSubmitting}
+            loadingText="Placing your order..."
             className="bg-yellow focus-visible:outline-dark_blue mt-5 w-full cursor-pointer rounded-full px-4 py-2.5 text-sm font-medium transition-colors hover:bg-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             Place your order
           </Button>
-          <p className="mt-3 text-center text-xs leading-relaxed text-gray-500">
-            Design preview only. No payment will be taken or order placed.
-          </p>
         </aside>
       </div>
 
@@ -222,6 +243,7 @@ export default function CheckoutDialog({
         <Button
           type="button"
           onClick={onClose}
+          disabled={isSubmitting}
           className="focus-visible:outline-dark_blue cursor-pointer rounded text-sm text-gray-600 underline decoration-gray-300 underline-offset-4 hover:text-gray-900 focus-visible:outline-2 focus-visible:outline-offset-2"
         >
           Back to cart

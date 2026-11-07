@@ -117,7 +117,7 @@ describe('DELETE /api/addresses/:id', () => {
         userId: user.id,
         addressId: address,
         totalAmount: 10,
-        paymentMethod: 'credit_card',
+        paymentMethod: 'card',
       },
     });
 

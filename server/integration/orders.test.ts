@@ -39,7 +39,7 @@ describe('GET /api/orders', () => {
         userId: fixture.userId,
         addressId: address.id,
         totalAmount: index + 1,
-        paymentMethod: 'credit_card',
+        paymentMethod: 'card',
         createdAt: new Date(Date.now() + index),
       })),
     });
@@ -53,7 +53,7 @@ describe('GET /api/orders', () => {
       expect.objectContaining({
         totalAmount: '1',
         status: 'PENDING',
-        paymentMethod: 'credit_card',
+        paymentMethod: 'card',
       }),
     );
   });
@@ -71,7 +71,7 @@ describe('POST /api/orders', () => {
     const product = await fixture.createProduct({ stock: 10 });
     await fixture.addToCart(product.id, 2);
     const key = crypto.randomUUID();
-    const payload = { addressId: address.id, paymentMethod: 'credit_card' };
+    const payload = { addressId: address.id, paymentMethod: 'card' };
     const first = await fixture.agent.post('/api/orders').set('Idempotency-Key', key).send(payload);
     const replay = await fixture.agent
       .post('/api/orders')
@@ -114,7 +114,7 @@ describe('POST /api/orders', () => {
               .set('Idempotency-Key', key)
               .send({
                 addressId: address.id,
-                paymentMethod: changedDetails && index === 1 ? 'credit_card' : 'paypal',
+                paymentMethod: changedDetails && index === 1 ? 'card' : 'cash',
               }),
           ),
         );
@@ -137,13 +137,13 @@ describe('POST /api/orders', () => {
     const product = await fixture.createProduct({ stock: 10 });
     await fixture.addToCart(product.id, 1);
     const key = crypto.randomUUID();
-    const payload = { addressId: address.id, paymentMethod: 'paypal' };
+    const payload = { addressId: address.id, paymentMethod: 'cash' };
     expect(
       (await fixture.agent.post('/api/orders').set('Idempotency-Key', key).send(payload)).status,
     ).toBe(201);
     for (const changed of [
       { ...payload, addressId: otherAddress.id },
-      { ...payload, paymentMethod: 'credit_card' },
+      { ...payload, paymentMethod: 'card' },
     ]) {
       const response = await fixture.agent
         .post('/api/orders')
@@ -168,7 +168,7 @@ describe('POST /api/orders', () => {
         const response = await owner.agent
           .post('/api/orders')
           .set('Idempotency-Key', key)
-          .send({ addressId: address.id, paymentMethod: 'paypal' });
+          .send({ addressId: address.id, paymentMethod: 'cash' });
         expect(response.status).toBe(201);
         expect(response.body.userId).toBe(owner.userId);
         ids.push(response.body.id);
@@ -184,7 +184,7 @@ describe('POST /api/orders', () => {
     const product = await fixture.createProduct({ stock: 1 });
     await fixture.addToCart(product.id, 2);
     const key = crypto.randomUUID();
-    const payload = { addressId: address.id, paymentMethod: 'paypal' };
+    const payload = { addressId: address.id, paymentMethod: 'cash' };
     const failed = await fixture.agent
       .post('/api/orders')
       .set('Idempotency-Key', key)
@@ -202,7 +202,7 @@ describe('POST /api/orders', () => {
   });
 
   it('requires a valid bounded idempotency key', async () => {
-    const payload = { addressId: 1, paymentMethod: 'paypal' };
+    const payload = { addressId: 1, paymentMethod: 'cash' };
     expect((await fixture.agent.post('/api/orders').send(payload)).status).toBe(400);
     for (const key of ['', 'invalid key', 'x'.repeat(129)]) {
       const response = await fixture.agent
@@ -229,7 +229,7 @@ describe('POST /api/orders', () => {
           fixture.agent
             .post('/api/orders')
             .set('Idempotency-Key', crypto.randomUUID())
-            .send({ addressId: address.id, paymentMethod: 'credit_card' }),
+            .send({ addressId: address.id, paymentMethod: 'card' }),
         ),
       );
     } finally {
@@ -269,7 +269,7 @@ describe('POST /api/orders', () => {
     const response = await fixture.agent
       .post('/api/orders')
       .set('Idempotency-Key', crypto.randomUUID())
-      .send({ addressId: address.id, paymentMethod: 'credit_card' });
+      .send({ addressId: address.id, paymentMethod: 'card' });
 
     expect(response.status).toBe(201);
     expect(response.body).toEqual(
@@ -277,7 +277,7 @@ describe('POST /api/orders', () => {
         userId: fixture.userId,
         addressId: address.id,
         totalAmount: '36',
-        paymentMethod: 'credit_card',
+        paymentMethod: 'card',
         orderItems: [expect.objectContaining({ productId: product.id, quantity: 2, price: '18' })],
       }),
     );
@@ -302,7 +302,7 @@ describe('POST /api/orders', () => {
       const response = await fixture.agent
         .post('/api/orders')
         .set('Idempotency-Key', crypto.randomUUID())
-        .send({ addressId: address.id, paymentMethod: 'credit_card' });
+        .send({ addressId: address.id, paymentMethod: 'card' });
 
       expect(response.status).toBe(201);
       expect(response.body.totalAmount).toBe(total);
@@ -317,12 +317,12 @@ describe('POST /api/orders', () => {
     const emptyResponse = await fixture.agent
       .post('/api/orders')
       .set('Idempotency-Key', crypto.randomUUID())
-      .send({ addressId: address.id, paymentMethod: 'paypal' });
+      .send({ addressId: address.id, paymentMethod: 'cash' });
     const foreign = await createForeignUserAddress();
     const foreignResponse = await fixture.agent
       .post('/api/orders')
       .set('Idempotency-Key', crypto.randomUUID())
-      .send({ addressId: foreign.address.id, paymentMethod: 'paypal' });
+      .send({ addressId: foreign.address.id, paymentMethod: 'cash' });
     await foreign.cleanup();
 
     const product = await fixture.createProduct({ stock: 1 });
@@ -330,7 +330,7 @@ describe('POST /api/orders', () => {
     const stockResponse = await fixture.agent
       .post('/api/orders')
       .set('Idempotency-Key', crypto.randomUUID())
-      .send({ addressId: address.id, paymentMethod: 'paypal' });
+      .send({ addressId: address.id, paymentMethod: 'cash' });
 
     expect(emptyResponse.status).toBe(400);
     expect(emptyResponse.body).toEqual({ error: 'Cart is empty' });
@@ -350,7 +350,7 @@ describe('GET /api/orders/:id', () => {
         userId: fixture.userId,
         addressId: address.id,
         totalAmount: 25,
-        paymentMethod: 'paypal',
+        paymentMethod: 'cash',
         orderItems: { create: { productId: product.id, quantity: 1, price: 25 } },
       },
     });
@@ -362,7 +362,7 @@ describe('GET /api/orders/:id', () => {
     expect(response.body).toEqual(
       expect.objectContaining({
         id: order.id,
-        paymentMethod: 'paypal',
+        paymentMethod: 'cash',
         orderItems: [
           expect.objectContaining({ product: expect.objectContaining({ id: product.id }) }),
         ],
@@ -383,7 +383,7 @@ describe('PATCH /api/orders/:id/cancel', () => {
     const created = await fixture.agent
       .post('/api/orders')
       .set('Idempotency-Key', crypto.randomUUID())
-      .send({ addressId: address.id, paymentMethod: 'paypal' });
+      .send({ addressId: address.id, paymentMethod: 'cash' });
     expect(created.status).toBe(201);
     await prisma.product.update({ where: { id: secondProduct.id }, data: { isActive: false } });
 
@@ -408,7 +408,7 @@ describe('PATCH /api/orders/:id/cancel', () => {
     const created = await fixture.agent
       .post('/api/orders')
       .set('Idempotency-Key', crypto.randomUUID())
-      .send({ addressId: address.id, paymentMethod: 'paypal' });
+      .send({ addressId: address.id, paymentMethod: 'cash' });
     expect(created.status).toBe(201);
 
     const responses = await Promise.all([
