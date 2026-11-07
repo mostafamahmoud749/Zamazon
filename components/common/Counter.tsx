@@ -12,33 +12,43 @@ type CounterProps = {
 export default function Counter({ product }: CounterProps) {
   const { removeFromCart, updateCartItemQuantity } = useContext(CartContext);
   const { status } = useContext(UserContext);
-  const [quantity, setQuantity] = useState(product.quantity);
-  const debouncedQuantity = useDebounce(quantity, 500);
+  const [pendingQuantity, setPendingQuantity] = useState<number | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const quantity = pendingQuantity ?? product.quantity;
+  const debouncedQuantity = useDebounce(pendingQuantity, 500);
 
   function handleIncrease() {
-    setQuantity((q) => Math.min(q + 1, product.product.stock));
+    setPendingQuantity((q) => Math.min((q ?? product.quantity) + 1, product.product.stock));
   }
 
   function handleDecrease() {
-    setQuantity((q) => Math.max(0, q - 1));
+    setPendingQuantity((q) => Math.max(0, (q ?? product.quantity) - 1));
   }
 
   const id = status === 'authenticated' ? product.id : product.product.id;
 
   useEffect(() => {
-    if (status === 'loading' || id === undefined) return;
-    if (quantity !== debouncedQuantity) return;
+    if (status !== 'authenticated' && status !== 'unauthenticated') return;
+    if (id === undefined || isUpdating || pendingQuantity === null) return;
+    if (pendingQuantity !== debouncedQuantity || debouncedQuantity === null) return;
 
-    if (debouncedQuantity === product.quantity) return;
-
-    if (debouncedQuantity === 0) {
-      void removeFromCart(id);
-    } else {
-      void updateCartItemQuantity(id, debouncedQuantity);
+    if (debouncedQuantity === product.quantity) {
+      setPendingQuantity(null);
+      return;
     }
+
+    setIsUpdating(true);
+    const update =
+      debouncedQuantity === 0 ? removeFromCart(id) : updateCartItemQuantity(id, debouncedQuantity);
+
+    void update.finally(() => {
+      setPendingQuantity((current) => (current === debouncedQuantity ? null : current));
+      setIsUpdating(false);
+    });
   }, [
-    quantity,
+    pendingQuantity,
     debouncedQuantity,
+    isUpdating,
     product.quantity,
     id,
     status,
