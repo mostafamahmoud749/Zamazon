@@ -1,4 +1,6 @@
 'use client';
+import Form from '@/components/common/Form';
+import Button from '@/components/common/Button';
 import { useState } from 'react';
 import Input from '@/components/common/Input';
 import { Plus } from 'lucide-react';
@@ -29,9 +31,7 @@ export default function AddressForm({ setAddresses, initialAddress, onClose }: A
     country?: string[];
   }>({});
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
+  async function handleSubmit() {
     const schema = initialAddress ? PatchAddressSchema : CreateAddressSchema;
     const result = schema.safeParse(address);
 
@@ -85,8 +85,8 @@ export default function AddressForm({ setAddresses, initialAddress, onClose }: A
   return (
     <>
       {showForm ? (
-        <form
-          onSubmit={(event) => handleSubmit(event)}
+        <Form
+          onSubmit={handleSubmit}
           className="mt-6 space-y-4 rounded-lg border border-gray-200 bg-gray-50 p-4 sm:p-5"
         >
           <h3 className="text-dark font-semibold">
@@ -146,13 +146,14 @@ export default function AddressForm({ setAddresses, initialAddress, onClose }: A
             />
           </div>
           <div className="flex flex-wrap gap-3 pt-1">
-            <button
+            <Button
               type="submit"
+              loadingText="Saving..."
               className="bg-yellow text-dark focus-visible:outline-dark_blue cursor-pointer rounded-full px-5 py-2.5 text-sm font-medium transition-colors hover:bg-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               Save address
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
               onClick={() => {
                 setShowForm(false);
@@ -161,19 +162,19 @@ export default function AddressForm({ setAddresses, initialAddress, onClose }: A
               className="focus-visible:outline-dark_blue cursor-pointer rounded-full border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               Cancel
-            </button>
+            </Button>
           </div>
-        </form>
+        </Form>
       ) : (
         <div className="mt-6 flex">
-          <button
+          <Button
             type="button"
             onClick={() => setShowForm(true)}
             className="focus-visible:outline-dark_blue inline-flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 px-4 py-2.5 text-sm font-medium hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             <Plus size={16} />
             Add address
-          </button>
+          </Button>
         </div>
       )}
     </>

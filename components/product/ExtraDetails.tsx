@@ -1,58 +1,30 @@
 'use client';
 import Button from '@/components/common/Button';
-import { useContext, useState, useEffect } from 'react';
+import { useContext } from 'react';
 import { CartContext } from '@/components/cart/CartProvider';
-import type { CartProduct, Product } from '@/types/index';
+import type { Product } from '@/types/index';
 import Counter from '@/components/common/Counter';
 
 type ExtraDetailsProps = {
   el: Product;
 };
 
-type AddState = 'idle' | 'loading';
-
 export default function ExtraDetails({ el }: ExtraDetailsProps) {
   const { addToCart, products } = useContext(CartContext);
-  const [isAdded, setIsAdded] = useState<boolean>(() =>
-    products.some((p) => p.product.id === el.id),
-  );
-  const [product, setProduct] = useState<CartProduct | undefined>(undefined);
-  const [addState, setAddState] = useState<AddState>('idle');
-
-  async function handleAddToCart(): Promise<void> {
-    if (addState !== 'idle') return;
-
-    setAddState('loading');
-    try {
-      await addToCart(el, 1);
-    } finally {
-      setAddState('idle');
-    }
-  }
-
-  useEffect(() => {
-    setIsAdded(products.some((p) => p.product.id === el.id));
-    const foundProduct: CartProduct | undefined = products.find((p) => p.product.id === el.id);
-    if (foundProduct) {
-      setProduct(foundProduct);
-    }
-  }, [products, el]);
+  const product = products.find((item) => item.product.id === el.id);
 
   return (
     <div className="mx-1 my-2">
       <div>{el.price}$</div>
       <p className="line-clamp-2 text-sm font-medium text-gray-700">{el.title}</p>
       <div className="-ml-1 max-w-[100px]">
-        {isAdded && product ? (
+        {product ? (
           <Counter product={product} />
         ) : (
           <Button
-            color="bg-yellow-400"
-            hoverdColor="hover:bg-amber-400"
-            margin=" my-2"
-            disabled={addState !== 'idle'}
-            onClick={handleAddToCart}
-            padding="py-1"
+            className="my-2 w-full cursor-pointer rounded-3xl bg-yellow-400 py-1 text-center transition-all duration-200 enabled:hover:bg-amber-400"
+            onClick={() => addToCart(el, 1)}
+            loadingText="Adding..."
           >
             Add to Cart
           </Button>

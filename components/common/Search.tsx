@@ -1,4 +1,5 @@
 'use client';
+import Button from '@/components/common/Button';
 import { useState, useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Search } from 'lucide-react';
@@ -50,18 +51,13 @@ export default function SearchBlock() {
       <input
         className="flex-1 cursor-pointer rounded-l-md bg-white p-2 text-black placeholder:text-gray-400"
         type="search"
-        aria-label="Search products"
         placeholder="Search Zamazon"
         value={query}
         onChange={(event) => setQuery(event.target.value)}
       />
-      <button
-        type="submit"
-        aria-label="Search"
-        className="bg-orange cursor-pointer rounded-r-md p-2 text-black"
-      >
+      <Button type="submit" className="bg-orange cursor-pointer rounded-r-md p-2 text-black">
         <Search className="stroke-[2.3]" />
-      </button>
+      </Button>
     </form>
   );
 }

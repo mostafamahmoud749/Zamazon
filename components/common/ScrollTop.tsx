@@ -1,4 +1,5 @@
 'use client';
+import Button from '@/components/common/Button';
 import { useState, useEffect } from 'react';
 
 export default function ScrollTop() {
@@ -18,12 +19,12 @@ export default function ScrollTop() {
   }, []);
 
   return visible ? (
-    <button
+    <Button
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
       className="bg-light_blue w-full cursor-pointer py-2 text-center text-white"
     >
       Back to top
-    </button>
+    </Button>
   ) : (
     <></>
   );

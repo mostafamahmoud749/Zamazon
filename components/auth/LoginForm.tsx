@@ -1,4 +1,5 @@
 'use client';
+import Form from '@/components/common/Form';
 
 import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
@@ -27,8 +28,7 @@ export default function LoginForm({ onResult, callbackUrl }: LoginFormProps) {
     password?: string[];
   }>({});
 
-  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function handleLogin() {
     onResult(null);
 
     const result = LoginSchema.safeParse(data);
@@ -64,9 +64,7 @@ export default function LoginForm({ onResult, callbackUrl }: LoginFormProps) {
 
       await refreshUser();
       const destination =
-        callbackUrl.startsWith('/') &&
-        !callbackUrl.startsWith('//') &&
-        !callbackUrl.includes('\\')
+        callbackUrl.startsWith('/') && !callbackUrl.startsWith('//') && !callbackUrl.includes('\\')
           ? callbackUrl
           : '/';
       router.replace(destination);
@@ -81,7 +79,7 @@ export default function LoginForm({ onResult, callbackUrl }: LoginFormProps) {
   }
 
   return (
-    <form className="mx-4" onSubmit={handleLogin}>
+    <Form className="mx-4" onSubmit={handleLogin}>
       <Input
         variant="auth"
         type="email"
@@ -106,15 +104,12 @@ export default function LoginForm({ onResult, callbackUrl }: LoginFormProps) {
         <SigninWithGithub />
       </div>
       <Button
-        color="bg-amber-300"
-        hoverdColor="hover:bg-amber-400"
-        padding="p-2"
-        margin="mb-4"
-        rounded="rounded-2xl"
+        className="mb-4 w-full cursor-pointer rounded-2xl bg-amber-300 p-2 text-center transition-all duration-200 enabled:hover:bg-amber-400"
         type="submit"
+        loadingText="Signing in..."
       >
         continue
       </Button>
-    </form>
+    </Form>
   );
 }

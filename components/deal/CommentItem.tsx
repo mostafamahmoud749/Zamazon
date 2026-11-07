@@ -1,4 +1,6 @@
 'use client';
+import Form from '@/components/common/Form';
+import Button from '@/components/common/Button';
 import { useEffect, useRef, useState } from 'react';
 import type { Dispatch, FormEvent, SetStateAction } from 'react';
 import Stars from '@/components/deal/Stars';
@@ -40,7 +42,6 @@ export default function CommentItem({
   }, [errorMessage]);
 
   async function editComment(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
     if (pendingAction) return;
     setErrorMessage(null);
 
@@ -58,15 +59,12 @@ export default function CommentItem({
     setPendingAction('edit');
     try {
       const csrfToken = await getCsrfToken();
-      const response = await fetch(
-        `/api/products/${productId}/reviews/${reviewId}`,
-        {
-          method: 'PATCH',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
-          body: JSON.stringify(result.data),
-        },
-      );
+      const response = await fetch(`/api/products/${productId}/reviews/${reviewId}`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+        body: JSON.stringify(result.data),
+      });
 
       if (!response.ok) {
         const data = await response.json().catch(() => null);
@@ -96,14 +94,11 @@ export default function CommentItem({
 
     try {
       const csrfToken = await getCsrfToken();
-      const response = await fetch(
-        `/api/products/${productId}/reviews/${reviewId}`,
-        {
-          method: 'DELETE',
-          credentials: 'include',
-          headers: { 'X-CSRF-Token': csrfToken },
-        },
-      );
+      const response = await fetch(`/api/products/${productId}/reviews/${reviewId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: { 'X-CSRF-Token': csrfToken },
+      });
 
       if (!response.ok) {
         const data = await response.json().catch(() => null);
@@ -141,7 +136,7 @@ export default function CommentItem({
               <span className="group-open:hidden">Edit</span>
               <span className="hidden group-open:inline">Close editor</span>
             </summary>
-            <form
+            <Form
               onSubmit={editComment}
               className="mt-3 space-y-4 rounded-lg border border-gray-200 bg-gray-50 p-4"
             >
@@ -169,24 +164,24 @@ export default function CommentItem({
                     className="mt-2 block w-full resize-y rounded-md border border-gray-300 bg-white px-3 py-2 text-sm leading-6 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
                   />
                 </label>
-                <button
+                <Button
                   type="submit"
                   className="bg-yellow text-dark focus-visible:outline-dark_blue cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-colors hover:bg-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-2"
                 >
                   {pendingAction === 'edit' ? 'Saving...' : 'Save changes'}
-                </button>
+                </Button>
               </fieldset>
-            </form>
+            </Form>
           </details>
-          <button
+          <Button
             type="button"
             onClick={deleteComment}
             disabled={pendingAction !== null}
-            className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium text-red-700 transition-colors hover:bg-red-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium text-red-700 transition-colors hover:bg-red-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700"
           >
             <Trash2 size={14} aria-hidden="true" />
             {pendingAction === 'delete' ? 'Deleting...' : 'Delete'}
-          </button>
+          </Button>
         </div>
       )}
     </div>

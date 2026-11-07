@@ -24,17 +24,12 @@ export default function EmptyCart() {
               href={'/sign?s=signin'}
               className="md:text-md block w-full text-sm md:w-fit md:py-1"
             >
-              <Button color="bg-amber-300" hoverdColor="hover:bg-amber-400" padding="p-2 md:py-1">
+              <Button className="my-2 w-full cursor-pointer rounded-3xl bg-amber-300 p-2 text-center transition-all duration-200 enabled:hover:bg-amber-400 md:py-1">
                 Sign in to your account
               </Button>
             </Link>
             <Link href={'/sign?s=signup'} className="md:text-md block w-full text-sm md:w-fit">
-              <Button
-                color=""
-                hoverdColor="hover:bg-gray-200"
-                padding="p-2 md:py-1"
-                extraStyling="border-1 border-gray-500"
-              >
+              <Button className="my-2 w-full cursor-pointer rounded-3xl border-1 border-gray-500 p-2 text-center transition-all duration-200 enabled:hover:bg-gray-200 md:py-1">
                 Sign up now
               </Button>
             </Link>

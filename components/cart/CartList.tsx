@@ -19,11 +19,7 @@ export default function CartList({ totalProductsCount, totalProductsPrice }: Car
         <div className="text-2xl font-semibold">{totalProductsPrice.toFixed(2)}$</div>
       </div>
       <Button
-        color="bg-amber-300"
-        hoverdColor="hover:bg-amber-400"
-        margin="my-4 md:my-3"
-        padding="py-2 md:px-3"
-        extraStyling="w-full md:max-w-fit"
+        className="my-4 w-full cursor-pointer rounded-3xl bg-amber-300 py-2 text-center transition-all duration-200 enabled:hover:bg-amber-400 md:my-3 md:max-w-fit md:px-3"
         onClick={() => setIsCheckoutOpen(true)}
       >
         Proceed to checkout

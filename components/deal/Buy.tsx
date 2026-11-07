@@ -1,6 +1,6 @@
 'use client';
 import Button from '@/components/common/Button';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { CartContext } from '@/components/cart/CartProvider';
 import type { Product } from '@/types/index';
 
@@ -10,48 +10,20 @@ type BuyProps = {
 export default function Buy({ product }: BuyProps) {
   const { addToCart } = useContext(CartContext);
 
-  const [addState, setAddState] = useState<string>('idle');
-  const [buyState, setBuyState] = useState<string>('idle');
-
-  async function handleAddToCart(): Promise<void> {
-    if (addState !== 'idle') return;
-
-    setAddState('loading');
-    try {
-      await addToCart(product, 1);
-    } finally {
-      setAddState('idle');
-    }
-  }
-
-  async function handleBuyNow(): Promise<void> {
-    if (buyState !== 'idle') return;
-    setBuyState('loading');
-    window.setTimeout(() => setBuyState('idle'), 300);
-  }
-
   return (
     <div className="mt-4">
       <div className="mb-2 text-3xl font-bold">{product.price}$</div>
 
       <div className="my-4">
         <Button
-          color="bg-yellow-400"
-          hoverdColor="hover:bg-amber-400 hover:shadow-md"
-          disabled={addState !== 'idle'}
-          onClick={handleAddToCart}
-          padding="py-2"
+          className="my-2 w-full cursor-pointer rounded-3xl bg-yellow-400 py-2 text-center transition-all duration-200 enabled:hover:bg-amber-400 enabled:hover:shadow-md"
+          onClick={() => addToCart(product, 1)}
+          loadingText="Adding..."
         >
           Add to Cart
         </Button>
 
-        <Button
-          color="bg-orange-500"
-          hoverdColor="hover:bg-orange-600 hover:shadow-md"
-          disabled={buyState !== 'idle'}
-          onClick={handleBuyNow}
-          padding="py-2"
-        >
+        <Button className="my-2 w-full cursor-pointer rounded-3xl bg-orange-500 py-2 text-center transition-all duration-200 enabled:hover:bg-orange-600 enabled:hover:shadow-md">
           Buy Now
         </Button>
       </div>

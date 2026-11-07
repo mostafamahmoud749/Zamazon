@@ -1,4 +1,5 @@
 'use client';
+import Button from '@/components/common/Button';
 import Image from 'next/image';
 import { Camera, LoaderCircle, X } from 'lucide-react';
 import { useEffect, useState, useContext, useRef } from 'react';
@@ -95,9 +96,7 @@ export default function UserDetails() {
         }}
         className="m-auto max-h-none max-w-none overflow-visible rounded-2xl border-0 bg-transparent p-0 shadow-2xl backdrop:bg-black/80 backdrop:backdrop-blur-sm"
       >
-        <h2 id="profile-photo-preview-title" className="sr-only">
-          Profile photo
-        </h2>
+        <h2 className="sr-only">Profile photo</h2>
         <div className="relative aspect-square w-[min(85vw,40rem,80dvh)] overflow-hidden rounded-2xl bg-slate-950">
           <Image
             src={photoSrc}
@@ -106,20 +105,18 @@ export default function UserDetails() {
             sizes="(max-width: 752px) 85vw, 640px"
             className="object-contain"
           />
-          <button
+          <Button
             type="button"
-            aria-label="Close profile photo"
             onClick={() => setIsPhotoOpen(false)}
             className="absolute top-3 right-3 z-10 flex size-10 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white transition-colors hover:bg-black/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
             <X size={22} aria-hidden="true" />
-          </button>
+          </Button>
         </div>
       </dialog>
       <div className="relative">
-        <button
+        <Button
           type="button"
-          aria-label="View profile photo"
           aria-haspopup="dialog"
           onClick={() => setIsPhotoOpen(true)}
           className="focus-visible:outline-dark_blue block cursor-zoom-in rounded-full focus-visible:outline-2 focus-visible:outline-offset-2"
@@ -132,12 +129,11 @@ export default function UserDetails() {
             className="size-28 rounded-full border-4 border-white object-cover shadow-md"
             priority
           />
-        </button>
+        </Button>
         <input
           id="profile-photo"
           type="file"
           disabled={isUploading}
-          aria-label="Choose profile photo"
           onChange={(event) => {
             const file = event.target.files?.[0];
             event.target.value = '';

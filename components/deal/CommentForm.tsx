@@ -1,4 +1,6 @@
 'use client';
+import Form from '@/components/common/Form';
+import Button from '@/components/common/Button';
 import { useContext, useEffect, useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import type { Comment } from '@/types';
@@ -17,7 +19,6 @@ export default function CommentForm({ productId, setComments }: CommentFormProps
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (!errorMessage) return;
@@ -25,9 +26,7 @@ export default function CommentForm({ productId, setComments }: CommentFormProps
     return () => clearTimeout(timeout);
   }, [errorMessage]);
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (isSubmitting) return;
+  async function handleSubmit() {
     setErrorMessage(null);
     const data = { rating, comment };
 
@@ -38,7 +37,6 @@ export default function CommentForm({ productId, setComments }: CommentFormProps
       return;
     }
 
-    setIsSubmitting(true);
     try {
       const csrfToken = await getCsrfToken();
 
@@ -81,13 +79,11 @@ export default function CommentForm({ productId, setComments }: CommentFormProps
       setErrorMessage(
         error instanceof Error ? error.message : 'Could not post your review. Please try again.',
       );
-    } finally {
-      setIsSubmitting(false);
     }
   }
 
   return (
-    <form
+    <Form
       onSubmit={handleSubmit}
       className="border-t border-gray-300 pt-6 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8"
     >
@@ -133,13 +129,13 @@ export default function CommentForm({ productId, setComments }: CommentFormProps
         />
       </div>
 
-      <button
+      <Button
         type="submit"
-        disabled={isSubmitting}
-        className="bg-yellow text-dark focus-visible:outline-dark_blue mt-4 w-full cursor-pointer rounded-full px-5 py-2.5 text-sm font-medium transition-colors hover:bg-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+        loadingText="Posting..."
+        className="bg-yellow text-dark focus-visible:outline-dark_blue mt-4 w-full cursor-pointer rounded-full px-5 py-2.5 text-sm font-medium transition-colors hover:bg-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-2"
       >
-        {isSubmitting ? 'Posting...' : 'Post comment'}
-      </button>
-    </form>
+        Post comment
+      </Button>
+    </Form>
   );
 }

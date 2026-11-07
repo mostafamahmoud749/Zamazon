@@ -1,3 +1,4 @@
+import Button from '@/components/common/Button';
 import { useContext, useState } from 'react';
 import AddressForm from './AddressForm';
 import { UserContext } from '@/components/auth/UserProvider';
@@ -28,13 +29,9 @@ export default function Address({
   setAddresses,
 }: AddressProps) {
   const [open, setOpen] = useState(false);
-  const [settingDefault, setSettingDefault] = useState(false);
   const { refreshUser } = useContext(UserContext);
 
   async function setDefaultAddress() {
-    if (settingDefault) return;
-    setSettingDefault(true);
-
     try {
       const csrfToken = await getCsrfToken();
       const response = await fetch('/api/users/me/default-address', {
@@ -54,8 +51,6 @@ export default function Address({
       await refreshUser();
     } catch (error) {
       console.log('error while setting default address:', error);
-    } finally {
-      setSettingDefault(false);
     }
   }
 
@@ -100,30 +95,30 @@ export default function Address({
           </p>
         </div>
         <div className="flex shrink-0 flex-col items-end gap-2">
-          <button
+          <Button
             type="button"
             onClick={() => setOpen(true)}
             className="focus-visible:outline-dark_blue cursor-pointer text-sm leading-6 text-gray-600 underline-offset-4 hover:text-sky-700 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             Edit
-          </button>
+          </Button>
           {!isDefault && (
-            <button
+            <Button
               type="button"
               onClick={setDefaultAddress}
-              disabled={settingDefault}
-              className="focus-visible:outline-dark_blue cursor-pointer text-sm leading-6 text-sky-700 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+              loadingText="Saving..."
+              className="focus-visible:outline-dark_blue cursor-pointer text-sm leading-6 text-sky-700 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
             >
-              {settingDefault ? 'Saving...' : 'Set as default'}
-            </button>
+              Set as default
+            </Button>
           )}
-          <button
+          <Button
             type="button"
-            onClick={() => removeAddress()}
+            onClick={removeAddress}
             className="focus-visible:outline-dark_blue cursor-pointer text-sm leading-6 text-gray-500 underline-offset-4 hover:text-red-700 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             Remove
-          </button>
+          </Button>
         </div>
       </li>
       {open && (

@@ -41,11 +41,7 @@ export default function CartSidebar() {
           <div className="text-xs">Subtotal</div>
           <div className="text-xs font-bold text-rose-700">{totalProductsPrice.toFixed(2)}$</div>
           <Link href="/cart" className="w-full">
-            <Button
-              extraStyling="border-1 text-xs border-gray-500"
-              hoverdColor="hover:bg-gray-100"
-              padding="p-[2px]"
-            >
+            <Button className="my-2 w-full cursor-pointer rounded-3xl border-1 border-gray-500 p-[2px] text-center text-xs transition-all duration-200 enabled:hover:bg-gray-100">
               Go to basket
             </Button>
           </Link>

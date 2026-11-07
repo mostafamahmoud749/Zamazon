@@ -1,4 +1,5 @@
 'use client';
+import Button from '@/components/common/Button';
 import Link from 'next/link';
 import { MapPin, ShoppingCart } from 'lucide-react';
 import Search from '@/components/common/Search';
@@ -63,12 +64,12 @@ export default function DesktopHeader({ navs }: DesktopHeaderProps): JSX.Element
       </nav>
 
       <div className="bg-dark_blue flex items-center gap-1 overflow-hidden py-[1px] pl-4">
-        <button
+        <Button
           onClick={() => toggle()}
-          className=" flex flex-shrink-0 cursor-pointer items-center border border-transparent px-2 text-xl hover:border-white"
+          className="flex flex-shrink-0 cursor-pointer items-center border border-transparent px-2 text-xl hover:border-white"
         >
           ☰<span className="ml-1 text-sm font-bold">All</span>
-        </button>
+        </Button>
         <div className="min-w-0 flex-1">
           <Navigations H={true} navs={navs} py={false} />
         </div>

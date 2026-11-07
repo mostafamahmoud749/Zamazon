@@ -1,4 +1,5 @@
 'use client';
+import Button from '@/components/common/Button';
 
 import { Banknote, CreditCard, ShoppingBag, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -36,8 +37,6 @@ export default function CheckoutDialog({
   return (
     <dialog
       ref={dialogRef}
-      aria-labelledby="checkout-title"
-      aria-describedby="checkout-description"
       onClose={(event) => {
         if (!event.currentTarget.open) onClose();
       }}
@@ -51,21 +50,16 @@ export default function CheckoutDialog({
           <p className="mb-1 text-xs font-semibold tracking-widest text-gray-500 uppercase">
             Checkout
           </p>
-          <h2 id="checkout-title" className="text-2xl font-semibold tracking-tight">
-            Choose how to pay
-          </h2>
-          <p id="checkout-description" className="mt-2 text-sm text-gray-600">
-            Select a payment method for your order.
-          </p>
+          <h2 className="text-2xl font-semibold tracking-tight">Choose how to pay</h2>
+          <p className="mt-2 text-sm text-gray-600">Select a payment method for your order.</p>
         </div>
-        <button
+        <Button
           type="button"
-          aria-label="Close checkout"
           onClick={onClose}
           className="focus-visible:outline-dark_blue flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2"
         >
           <X size={20} aria-hidden="true" />
-        </button>
+        </Button>
       </div>
 
       <div className="grid gap-6 p-5 sm:p-7 md:grid-cols-[minmax(0,1fr)_220px]">
@@ -211,13 +205,13 @@ export default function CheckoutDialog({
               <dd>{totalProductsPrice.toFixed(2)}$</dd>
             </div>
           </dl>
-          {/* Design only: payment and order submission are intentionally unconnected. */}
-          <button
+
+          <Button
             type="button"
             className="bg-yellow focus-visible:outline-dark_blue mt-5 w-full cursor-pointer rounded-full px-4 py-2.5 text-sm font-medium transition-colors hover:bg-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             Place your order
-          </button>
+          </Button>
           <p className="mt-3 text-center text-xs leading-relaxed text-gray-500">
             Design preview only. No payment will be taken or order placed.
           </p>
@@ -225,13 +219,13 @@ export default function CheckoutDialog({
       </div>
 
       <div className="border-t border-gray-200 px-5 py-4 sm:px-7">
-        <button
+        <Button
           type="button"
           onClick={onClose}
           className="focus-visible:outline-dark_blue cursor-pointer rounded text-sm text-gray-600 underline decoration-gray-300 underline-offset-4 hover:text-gray-900 focus-visible:outline-2 focus-visible:outline-offset-2"
         >
           Back to cart
-        </button>
+        </Button>
       </div>
     </dialog>
   );

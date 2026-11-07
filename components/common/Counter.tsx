@@ -1,4 +1,5 @@
 'use client';
+import Button from '@/components/common/Button';
 import type { CartProduct } from '@/types/index';
 import { CartContext } from '@/components/cart/CartProvider';
 import { UserContext } from '@/components/auth/UserProvider';
@@ -58,18 +59,19 @@ export default function Counter({ product }: CounterProps) {
 
   return (
     <div className="flex max-h-8 w-full max-w-30 items-center justify-between gap-2 rounded-3xl border-3 border-amber-300 px-2 text-xs font-bold md:mt-2">
-      <button className="cursor-pointer text-xl" onClick={handleDecrease}>
+      <Button className="cursor-pointer text-xl" onClick={handleDecrease} loading={isUpdating}>
         {' '}
         -{' '}
-      </button>
+      </Button>
       <div>{quantity}</div>
-      <button
-        className="cursor-pointer text-xl disabled:cursor-not-allowed disabled:opacity-50"
+      <Button
+        className="cursor-pointer text-xl"
         onClick={handleIncrease}
+        loading={isUpdating}
         disabled={quantity >= product.product.stock}
       >
         +
-      </button>
+      </Button>
     </div>
   );
 }

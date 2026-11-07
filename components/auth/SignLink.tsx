@@ -5,7 +5,7 @@ export default function SignLink() {
   return (
     <div className="my-2 text-center">
       <Link href="/sign?s=signin" className="m-auto mb-1 block w-40">
-        <Button color="bg-yellow" hoverdColor="hover:bg-yellow-400">
+        <Button className="bg-yellow my-2 w-full cursor-pointer rounded-3xl py-1 text-center transition-all duration-200 enabled:hover:bg-yellow-400">
           sign in
         </Button>
       </Link>

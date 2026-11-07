@@ -1,4 +1,5 @@
 'use client';
+import Button from '@/components/common/Button';
 
 type NextError = Error & { digest?: string; code?: string | number; statusCode?: number };
 
@@ -11,12 +12,12 @@ export default function GlobalError({ error, reset }: { error: NextError; reset:
         <div className="mb-2 text-6xl font-bold text-orange-500">{code}</div>
         <h2 className="mb-4 text-2xl font-semibold text-gray-800">Something went wrong!</h2>
         <p className="mb-6 text-gray-600">{error?.message || 'An unexpected error occurred.'}</p>
-        <button
+        <Button
           onClick={() => reset()}
           className="rounded bg-orange-500 px-6 py-2 text-white transition hover:bg-orange-600"
         >
           Try again
-        </button>
+        </Button>
       </div>
     </div>
   );

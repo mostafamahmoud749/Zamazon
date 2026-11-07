@@ -1,4 +1,5 @@
 'use client';
+import Button from '@/components/common/Button';
 
 type PopupProps = {
   success: boolean;
@@ -15,9 +16,9 @@ export default function Popup({ success, message, onClose }: PopupProps) {
       }`}
     >
       <span>{message}</span>
-      <button type="button" aria-label="Dismiss notification" onClick={onClose}>
+      <Button type="button" className="shrink-0 cursor-pointer" onClick={onClose}>
         ×
-      </button>
+      </Button>
     </div>
   );
 }

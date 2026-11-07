@@ -1,4 +1,5 @@
 'use client';
+import Button from '@/components/common/Button';
 import { useState, useTransition } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import FiltersBlock from '@/components/deals/FiltersBlock';
@@ -148,13 +149,13 @@ export default function MainDeals({ products, categories }: MainDealsProps) {
           {error && (
             <div role="alert">
               <p>{error}</p>
-              <button
+              <Button
                 type="button"
-                onClick={() => void loadMore()}
+                onClick={loadMore}
                 className="mt-2 cursor-pointer text-sky-800 underline"
               >
                 Try again
-              </button>
+              </Button>
             </div>
           )}
         </div>

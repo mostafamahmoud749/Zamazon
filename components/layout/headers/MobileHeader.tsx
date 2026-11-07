@@ -1,4 +1,5 @@
 'use client';
+import Button from '@/components/common/Button';
 import { ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import MUserNav from '@/components/layout/user/MUserNav';
@@ -26,9 +27,9 @@ export default function MobileHeader({ navs }: MobileHeaderProps): JSX.Element {
     <header className="bg-dark_blue p-2 text-white">
       <nav className="flex items-center justify-between">
         <div className="flex items-center gap-1">
-          <button className="cursor-pointer -mb-1 text-2xl" onClick={() => toggle()}>
+          <Button className="-mb-1 cursor-pointer text-2xl" onClick={() => toggle()}>
             ☰
-          </button>
+          </Button>
           <Logo />
         </div>
         <div className="flex">

@@ -1,47 +1,60 @@
-import { ReactNode } from 'react';
+'use client';
 
-type ButtonProps = {
-  color: string;
-  hoverdColor: string;
-  children: ReactNode;
-  padding: string;
-  onClick: () => void;
-  type: 'button' | 'submit' | 'reset';
-  disabled: boolean;
-  extraStyling: string;
-  margin: string;
-  rounded: string;
+import { useContext, useRef, useState } from 'react';
+import type { ComponentPropsWithoutRef, MouseEvent, ReactNode } from 'react';
+import { FormPendingContext } from '@/components/common/Form';
+
+type ButtonProps = Omit<ComponentPropsWithoutRef<'button'>, 'onClick'> & {
+  onClick?: (event: MouseEvent<HTMLButtonElement>) => void | Promise<void>;
+  loading?: boolean;
+  loadingText?: ReactNode;
 };
 
 export default function Button({
-  color,
-  hoverdColor,
   children,
   type = 'button',
-  padding = 'py-1',
   onClick,
   disabled = false,
-  extraStyling,
-  margin = 'my-2',
-  rounded = 'rounded-3xl',
-}: Partial<ButtonProps>) {
+  loading = false,
+  loadingText,
+  className = '',
+  ...props
+}: ButtonProps) {
+  const [isPending, setIsPending] = useState(false);
+  const inFlight = useRef(false);
+  const isFormPending = useContext(FormPendingContext);
+  const isLoading = loading || isPending || (type === 'submit' && isFormPending);
+  const isDisabled = disabled || isLoading || isFormPending;
+
+  async function handleClick(event: MouseEvent<HTMLButtonElement>) {
+    if (isDisabled || inFlight.current) {
+      event.preventDefault();
+      return;
+    }
+    if (!onClick) return;
+
+    inFlight.current = true;
+    try {
+      const result = onClick(event);
+      if (result && typeof result.then === 'function') {
+        setIsPending(true);
+        await result;
+      }
+    } finally {
+      inFlight.current = false;
+      setIsPending(false);
+    }
+  }
+
   return (
     <button
+      {...props}
       type={type}
-      disabled={disabled}
-      onClick={onClick}
-      className={[
-        rounded,
-        extraStyling,
-        margin,
-        padding,
-        color,
-        !disabled ? hoverdColor : '',
-        'w-full text-center transition-all duration-200',
-        disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer',
-      ].join(' ')}
+      disabled={isDisabled}
+      onClick={handleClick}
+      className={`${className} disabled:cursor-not-allowed disabled:opacity-70`}
     >
-      {children}
+      {isLoading && loadingText !== undefined ? loadingText : children}
     </button>
   );
 }

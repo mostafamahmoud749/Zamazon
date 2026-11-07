@@ -1,4 +1,5 @@
 'use client';
+import Form from '@/components/common/Form';
 
 import { useState } from 'react';
 import Input from '@/components/common/Input';
@@ -23,8 +24,7 @@ export default function RegisterForm({ onResult }: RegisterFormProps) {
     password?: string[];
   }>({});
 
-  async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function handleRegister() {
     onResult(null);
 
     const result = RegisterSchema.safeParse(data);
@@ -63,7 +63,7 @@ export default function RegisterForm({ onResult }: RegisterFormProps) {
   }
 
   return (
-    <form className="mx-4" onSubmit={handleRegister}>
+    <Form className="mx-4" onSubmit={handleRegister}>
       <Input
         variant="auth"
         type="text"
@@ -92,15 +92,12 @@ export default function RegisterForm({ onResult }: RegisterFormProps) {
         onChange={(e) => setData((prev) => ({ ...prev, [e.target.name]: e.target.value }))}
       />
       <Button
-        color="bg-amber-300"
-        hoverdColor="hover:bg-amber-400"
-        padding="p-2"
-        margin="mb-4"
-        rounded="rounded-2xl"
+        className="mb-4 w-full cursor-pointer rounded-2xl bg-amber-300 p-2 text-center transition-all duration-200 enabled:hover:bg-amber-400"
         type="submit"
+        loadingText="Creating account..."
       >
         continue
       </Button>
-    </form>
+    </Form>
   );
 }

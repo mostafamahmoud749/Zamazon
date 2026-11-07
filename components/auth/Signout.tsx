@@ -1,4 +1,5 @@
 'use client';
+import Button from '@/components/common/Button';
 
 import { getCsrfToken } from '@/lib/getCsrfToken';
 import { useRouter } from 'next/navigation';
@@ -28,11 +29,11 @@ export default function Signout() {
   }
 
   return (
-    <button
+    <Button
       className="block w-full cursor-pointer py-2 pl-4 text-start text-sm text-rose-700 transition-all duration-200 hover:translate-x-1 hover:bg-gray-100"
-      onClick={() => logoutUser()}
+      onClick={logoutUser}
     >
       Signout
-    </button>
+    </Button>
   );
 }

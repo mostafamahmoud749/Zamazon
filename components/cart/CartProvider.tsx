@@ -9,15 +9,15 @@ const defaultCartContextValue: CartContextValue = {
   products: [],
   totalProductsCount: 0,
   totalProductsPrice: 0,
-  addToCart: async (product: Product, quantity: number) => {},
-  updateCartItemQuantity: async (cartID: number, quantity: number) => {},
-  removeFromCart: async (cartID: number) => {},
+  addToCart: async () => {},
+  updateCartItemQuantity: async () => {},
+  removeFromCart: async () => {},
 };
 
 const CartContext = createContext<CartContextValue>(defaultCartContextValue);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  // still need to add merge carts 
+  // still need to add merge carts
   const { status } = useContext(UserContext);
   const [products, setProducts] = useState<CartProduct[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
