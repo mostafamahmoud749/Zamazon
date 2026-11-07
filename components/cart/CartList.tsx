@@ -1,4 +1,8 @@
+'use client';
+
 import Button from '@/components/common/Button';
+import CheckoutDialog from '@/components/cart/CheckoutDialog';
+import { useState } from 'react';
 
 type CartList = {
   totalProductsCount: number;
@@ -6,6 +10,8 @@ type CartList = {
 };
 
 export default function CartList({ totalProductsCount, totalProductsPrice }: CartList) {
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+
   return (
     <div className="px-3 md:flex md:flex-row-reverse md:justify-between">
       <div className="flex items-center gap-2 border-b-1 border-b-amber-100 md:my-2 md:justify-end md:border-none">
@@ -18,9 +24,17 @@ export default function CartList({ totalProductsCount, totalProductsPrice }: Car
         margin="my-4 md:my-3"
         padding="py-2 md:px-3"
         extraStyling="w-full md:max-w-fit"
+        onClick={() => setIsCheckoutOpen(true)}
       >
         Proceed to checkout
       </Button>
+      {isCheckoutOpen && (
+        <CheckoutDialog
+          totalProductsCount={totalProductsCount}
+          totalProductsPrice={totalProductsPrice}
+          onClose={() => setIsCheckoutOpen(false)}
+        />
+      )}
     </div>
   );
 }
