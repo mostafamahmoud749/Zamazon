@@ -1,11 +1,49 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import type { OrderItem as OrderItemData } from '@/types/orders';
+import Price from '@/components/common/Price';
+import { fetchProduct } from '@/lib/fetchProducts';
+import { getUnitPriceCents } from '@/lib/pricing';
 
 export default function OrderItem({ item }: { item: OrderItemData }) {
+  const unitPriceCents = Math.round(Number(item.price) * 100);
+  const [originalUnitPriceCents, setOriginalUnitPriceCents] = useState<number | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    setOriginalUnitPriceCents(null);
+
+    async function loadProductPrice() {
+      try {
+        const product = await fetchProduct(`/api/products/${item.product.id}`, controller.signal);
+        if (controller.signal.aborted) return;
+
+        // Only show savings when current product pricing matches the price actually paid.
+        if (
+          product &&
+          Number(product.discount) > 0 &&
+          getUnitPriceCents(product) === unitPriceCents
+        ) {
+          setOriginalUnitPriceCents(Math.round(Number(product.price) * 100));
+        }
+      } catch {
+        // Product pricing is optional; the saved order price is always displayed.
+      }
+    }
+
+    void loadProductPrice();
+    return () => controller.abort();
+  }, [item.product.id, unitPriceCents]);
+
   return (
     <li className="flex items-start gap-4 py-6 sm:gap-5">
-      <Link href={`/deals/${item.product.id}`} className="flex cursor-pointer size-20 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gray-50 sm:size-24">
+      <Link
+        href={`/deals/${item.product.id}`}
+        className="flex size-20 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-gray-50 sm:size-24"
+      >
         <Image
           src={item.product.image}
           alt={item.product.title}
@@ -24,9 +62,13 @@ export default function OrderItem({ item }: { item: OrderItemData }) {
             Quantity: <span className="text-gray-900">{item.quantity}</span>
           </p>
         </div>
-        <p className="text-sm font-semibold tabular-nums sm:text-base">
-          ${((Math.round(Number(item.price) * 100) * item.quantity) / 100).toFixed(2)}
-        </p>
+        <Price
+          priceCents={unitPriceCents * item.quantity}
+          originalPriceCents={
+            originalUnitPriceCents == null ? null : originalUnitPriceCents * item.quantity
+          }
+          className="text-sm sm:text-right sm:text-base"
+        />
       </div>
     </li>
   );

@@ -3,7 +3,8 @@ import Button from '@/components/common/Button';
 import { useContext } from 'react';
 import { CartContext } from '@/components/cart/CartProvider';
 import type { Product } from '@/types/index';
-import { formatPrice, getUnitPriceCents } from '@/lib/pricing';
+import { getUnitPriceCents } from '@/lib/pricing';
+import Price from '@/components/common/Price';
 
 type BuyProps = {
   product: Product;
@@ -13,7 +14,11 @@ export default function Buy({ product }: BuyProps) {
 
   return (
     <div className="mt-4">
-      <div className="mb-2 text-3xl font-bold">{formatPrice(getUnitPriceCents(product) / 100)}</div>
+      <Price
+        priceCents={getUnitPriceCents(product)}
+        originalPriceCents={Math.round(Number(product.price) * 100)}
+        className="mb-2 text-3xl"
+      />
 
       <div className="my-4">
         <Button

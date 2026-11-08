@@ -3,7 +3,8 @@ import Image from 'next/image';
 import type { CartProduct } from '@/types/index';
 import Counter from '@/components/common/Counter';
 import Link from 'next/link';
-import { formatPrice, getUnitPriceCents } from '@/lib/pricing';
+import { getUnitPriceCents } from '@/lib/pricing';
+import Price from '@/components/common/Price';
 
 type CartItemProps = {
   product: CartProduct;
@@ -26,9 +27,11 @@ export default function CartItem({ product }: CartItemProps) {
           <div className="line-clamp-2 overflow-hidden font-light md:min-w-0 md:flex-1 md:text-lg md:font-medium">
             {product.product.description}
           </div>
-          <div className="text-xl font-semibold md:ml-auto md:shrink-0 md:text-right">
-            {formatPrice(getUnitPriceCents(product.product) / 100)}
-          </div>
+          <Price
+            priceCents={getUnitPriceCents(product.product)}
+            originalPriceCents={Math.round(Number(product.product.price) * 100)}
+            className="text-xl md:ml-auto md:shrink-0 md:text-right"
+          />
         </div>
         <Counter product={product} />
       </div>

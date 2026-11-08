@@ -9,8 +9,8 @@ export async function fetchProducts(url: string, signal?: AbortSignal): Promise<
   return ProductsResponseSchema.parse(data);
 }
 
-export async function fetchProduct(url: string): Promise<Product | null> {
-  const res = await fetch(url, { next: { revalidate: 600 } });
+export async function fetchProduct(url: string, signal?: AbortSignal): Promise<Product | null> {
+  const res = await fetch(url, { next: { revalidate: 600 }, signal });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`Could not fetch product (${res.status})`);
 

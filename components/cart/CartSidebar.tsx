@@ -9,6 +9,7 @@ import Counter from '@/components/common/Counter';
 import type { CartProduct } from '@/types/index';
 import { JSX } from 'react';
 import { formatPrice, getUnitPriceCents } from '@/lib/pricing';
+import Price from '@/components/common/Price';
 
 export default function CartSidebar() {
   const { products, totalProductsPrice } = useContext(CartContext);
@@ -25,9 +26,11 @@ export default function CartSidebar() {
               className="object-contain pt-4"
             />
           </Link>
-          <div className="mt-2 mb-1 text-sm font-bold">
-            {formatPrice(getUnitPriceCents(product.product) / 100)}
-          </div>
+          <Price
+            priceCents={getUnitPriceCents(product.product)}
+            originalPriceCents={Math.round(Number(product.product.price) * 100)}
+            className="mt-2 mb-1 items-center text-center text-sm"
+          />
         </div>
         <Counter product={product} />
         <div className="mb-1"></div>
