@@ -1,15 +1,28 @@
 'use client';
 import { ChevronDown } from 'lucide-react';
 import { useState, useEffect, useContext } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { UserContext } from '../auth/UserProvider';
 import AddressForm from '@/components/profile/AddressForm';
 import Address from '@/components/profile/Address';
 import type { AddressData } from '@/types';
 
 export default function AddressSection() {
-  const [open, setOpen] = useState<boolean>(false);
+  const searchParams = useSearchParams();
+  const open = searchParams.get('section') === 'addresses';
   const [addresses, setAddresses] = useState<AddressData[]>([]);
   const { user } = useContext(UserContext);
+
+  function toggleAddresses() {
+    const params = new URLSearchParams(searchParams.toString());
+    if (open) {
+      params.delete('section');
+    } else {
+      params.set('section', 'addresses');
+    }
+    const query = params.toString();
+    window.history.replaceState(null, '', query ? `/profile?${query}` : '/profile');
+  }
 
   useEffect(() => {
     async function fetchAddresses() {
@@ -54,10 +67,10 @@ export default function AddressSection() {
   ));
 
   return (
-    <div className="border-b border-gray-200 py-8">
+    <div id="addresses" className="scroll-mt-6 border-b border-gray-200 py-8">
       <div
         className="flex cursor-pointer items-center justify-between gap-3"
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={toggleAddresses}
       >
         <h2 className="text-xl font-semibold tracking-tight">Your addresses</h2>
         <ChevronDown

@@ -20,6 +20,8 @@ type DesktopHeaderProps = {
   navs: NavItem[];
 };
 
+const deliveryAddressHref = '/profile?section=addresses#addresses';
+
 export default function DesktopHeader({ navs }: DesktopHeaderProps): JSX.Element {
   const [open, setOpen] = useState<boolean>(false);
   const { totalProductsCount } = useContext(CartContext);
@@ -35,10 +37,20 @@ export default function DesktopHeader({ navs }: DesktopHeaderProps): JSX.Element
         </Holder>
 
         <Holder>
-          <div className="flex items-end gap-1">
+          <Link
+            href={deliveryAddressHref}
+            prefetch={true}
+            onNavigate={(event) => {
+              if (window.location.pathname !== '/profile') return;
+              event.preventDefault();
+              window.history.replaceState(null, '', deliveryAddressHref);
+              document.getElementById('addresses')?.scrollIntoView({ block: 'start' });
+            }}
+            className="flex items-end gap-1"
+          >
             <MapPin className="h-5 w-5" />
             <MergeText top="Deliver to" bottom="Egypt" />
-          </div>
+          </Link>
         </Holder>
 
         <Search />
