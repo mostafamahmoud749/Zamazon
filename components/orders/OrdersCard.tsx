@@ -8,7 +8,12 @@ type OrdersCardProps = {
 };
 
 export default function OrdersCard({ id, date, status, total }: OrdersCardProps) {
-  const statusStyle = 'text-red-500';
+  const statusStyle =
+    status === 'CANCELED'
+      ? 'text-gray-500'
+      : status === 'PENDING'
+        ? 'text-sky-700'
+        : 'text-gray-600';
   return (
     <li key={id}>
       <Link

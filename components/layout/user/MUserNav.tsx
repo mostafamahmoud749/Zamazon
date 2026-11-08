@@ -10,7 +10,10 @@ export default function MUserNav() {
     status === 'authenticated' ? `Hello, ${user?.name?.split(' ')[0] ?? '?'}` : 'Hello, Sign in';
 
   return (
-    <Link href="/sign?s=signin" className="flex items-center">
+    <Link
+      href={status === 'authenticated' ? '/profile' : '/sign?s=signin'}
+      className="flex items-center"
+    >
       <div className="text-sm">{text}</div>
       <ChevronRight className="h-4 w-4" />
       <UserRound className="h-8 w-8" />

@@ -9,6 +9,7 @@ import OrderItems from '@/components/orders/OrderItems';
 import ShippingAndPayment from '@/components/orders/ShippingAndPayment';
 import OrderSummary from '@/components/orders/OrderSummary';
 import CancelOrderButton from '@/components/orders/CancelOrderButton';
+import Popup from '@/components/common/Popup';
 
 export default function OrderDetails({ orderId }: { orderId: number }) {
   const [order, setOrder] = useState<OrderDetailsData | null>(null);
@@ -19,6 +20,12 @@ export default function OrderDetails({ orderId }: { orderId: number }) {
   const [error, setError] = useState('');
 
   const isCanceled = order?.status === 'CANCELED';
+
+  useEffect(() => {
+    if (!error) return;
+    const timeout = setTimeout(() => setError(''), 8000);
+    return () => clearTimeout(timeout);
+  }, [error]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -70,6 +77,9 @@ export default function OrderDetails({ orderId }: { orderId: number }) {
 
       if (!response.ok) {
         if (response.status === 401) throw new Error('Please sign in to cancel your order.');
+        if (response.status === 403) {
+          throw new Error('Your session could not be verified. Please refresh and try again.');
+        }
         if (response.status === 404) throw new Error('This order could not be found.');
         if (response.status === 400) {
           throw new Error('This order is no longer pending and cannot be canceled.');
@@ -88,6 +98,7 @@ export default function OrderDetails({ orderId }: { orderId: number }) {
 
   return (
     <div className="text-dark mx-auto my-6 w-11/12 max-w-6xl md:my-8">
+      {error && <Popup success={false} message={error} onClose={() => setError('')} />}
       <OrderHeader orderId={orderId} createdAt={order?.createdAt} />
       {isLoading && <p>Loading your order…</p>}
       {fetchError && <p>{fetchError}</p>}
@@ -104,7 +115,6 @@ export default function OrderDetails({ orderId }: { orderId: number }) {
                 isCanceled={isCanceled}
                 isConfirming={isConfirming}
                 isCanceling={isCanceling}
-                error={error}
                 onCancel={cancelOrder}
                 onConfirm={() => setIsConfirming(true)}
                 onKeepOrder={() => {

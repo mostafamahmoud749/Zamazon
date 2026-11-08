@@ -22,10 +22,6 @@ export default function Buy({ product }: BuyProps) {
         >
           Add to Cart
         </Button>
-
-        <Button className="my-2 w-full cursor-pointer rounded-3xl bg-orange-500 py-2 text-center transition-all duration-200 enabled:hover:bg-orange-600 enabled:hover:shadow-md">
-          Buy Now
-        </Button>
       </div>
 
       <div className="border-t border-gray-300 pt-4">

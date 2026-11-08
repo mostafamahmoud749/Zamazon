@@ -5,7 +5,6 @@ type CancelOrderButtonProps = {
   isCanceled: boolean;
   isConfirming: boolean;
   isCanceling: boolean;
-  error: string;
   onCancel: () => Promise<void>;
   onConfirm: () => void;
   onKeepOrder: () => void;
@@ -15,7 +14,6 @@ export default function CancelOrderButton({
   isCanceled,
   isConfirming,
   isCanceling,
-  error,
   onCancel,
   onConfirm,
   onKeepOrder,
@@ -37,11 +35,6 @@ export default function CancelOrderButton({
               ? 'Confirm that you want to cancel this order.'
               : 'You can cancel your order while its status is pending.'}
           </p>
-          {error && (
-            <p role="alert" className="mt-3 text-sm text-red-700">
-              {error}
-            </p>
-          )}
           {isConfirming ? (
             <div className="mt-4 space-y-2">
               <Button

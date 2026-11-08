@@ -1,10 +1,11 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import type { OrderItem as OrderItemData } from '@/types/orders';
 
 export default function OrderItem({ item }: { item: OrderItemData }) {
   return (
     <li className="flex items-start gap-4 py-6 sm:gap-5">
-      <div className="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gray-50 sm:size-24">
+      <Link href={`/deals/${item.product.id}`} className="flex cursor-pointer size-20 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gray-50 sm:size-24">
         <Image
           src={item.product.image}
           alt={item.product.title}
@@ -12,7 +13,7 @@ export default function OrderItem({ item }: { item: OrderItemData }) {
           height={96}
           className="size-full object-contain p-2"
         />
-      </div>
+      </Link>
       <div className="flex min-w-0 flex-1 flex-wrap justify-between gap-x-4 gap-y-2 pt-1">
         <div>
           <h3 className="text-sm font-medium sm:text-base">{item.product.title}</h3>

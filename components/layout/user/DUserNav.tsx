@@ -15,12 +15,18 @@ export default function DUserNav({ big }: DUserNavProps) {
   return (
     <>
       {big ? (
-        <Link href="/sign?s=signin" className="flex items-center gap-3 pl-4">
+        <Link
+          href={status === 'authenticated' ? '/profile' : '/sign?s=signin'}
+          className="flex items-center gap-3 pl-4"
+        >
           <CircleUserRound className="h-8 w-8" />
           <p className="text-xl">{text}</p>
         </Link>
       ) : (
-        <Link href="/sign?s=signin" className="flex items-center gap-1">
+        <Link
+          href={status === 'authenticated' ? '/profile' : '/sign?s=signin'}
+          className="flex items-center gap-1"
+        >
           <CircleUserRound />
           <p className="text-xs">{text}</p>
         </Link>
