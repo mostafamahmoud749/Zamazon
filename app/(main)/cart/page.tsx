@@ -9,11 +9,6 @@ export default function CartPage() {
         <p>
           The price and availability of items at Zamazon.com are subject to change. The Cart is a
           temporary place to store a list of your items and reflects each items most recent price.
-          Shopping Cart
-        </p>
-        <p>
-          Do you have a gift card or promotional code? Well ask you to enter your claim code when
-          its time to pay.
         </p>
       </div>
     </div>

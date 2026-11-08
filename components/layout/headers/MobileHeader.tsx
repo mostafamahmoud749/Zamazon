@@ -45,7 +45,7 @@ export default function MobileHeader({ navs }: MobileHeaderProps): JSX.Element {
         <Navigations H={true} navs={navs} />
       </div>
       <Sidebar
-        main={<MSidebar navs={navs} toggle={() => toggle()} />}
+        main={<MSidebar navs={navs} onClose={() => setOpen(false)} />}
         header={<HSidebarMobile />}
         toggle={() => toggle()}
         open={open}

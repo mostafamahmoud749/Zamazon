@@ -88,7 +88,7 @@ export default function DesktopHeader({ navs }: DesktopHeaderProps): JSX.Element
       </div>
       <Sidebar
         border={true}
-        main={<MSidebar py={true} navs={navs} toggle={() => toggle()} />}
+        main={<MSidebar py={true} navs={navs} onClose={() => setOpen(false)} />}
         header={<HSidebarDesktop />}
         toggle={() => toggle()}
         open={open}

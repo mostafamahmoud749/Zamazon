@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
 import { UserContext } from './UserProvider';
 
-export default function Signout() {
+export default function Signout({ onSuccess }: { onSuccess?: () => void }) {
   const { logout } = useContext(UserContext);
   const router = useRouter();
   async function logoutUser() {
@@ -22,7 +22,8 @@ export default function Signout() {
     });
 
     if (response.ok) {
-      logout();
+      await logout();
+      onSuccess?.();
       router.replace('/');
       router.refresh();
     }

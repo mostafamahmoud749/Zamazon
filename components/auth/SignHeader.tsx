@@ -1,11 +1,9 @@
-import Link from 'next/link';
+import Logo from '@/components/common/Logo';
 
 export default function SignHeader() {
   return (
     <header className="bg-dark_blue p-2 text-white md:my-6 md:bg-white md:text-center md:text-black">
-      <Link href="/" className="text-xl font-bold md:text-3xl">
-        Zamazon
-      </Link>
+      <Logo className="md:text-3xl" />
     </header>
   );
 }
