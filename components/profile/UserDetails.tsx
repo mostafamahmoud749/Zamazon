@@ -7,9 +7,10 @@ import { UserContext } from '@/components/auth/UserProvider';
 import Popup from '@/components/common/Popup';
 import { uploadImage } from '@/lib/uploadImage';
 import { getCsrfToken } from '@/lib/getCsrfToken';
+import { UserDetailsSkeleton } from '@/components/loading/ProfileSkeletons';
 
 export default function UserDetails() {
-  const { user, refreshUser } = useContext(UserContext);
+  const { user, status, refreshUser } = useContext(UserContext);
   const photoDialogRef = useRef<HTMLDialogElement>(null);
   const [isPhotoOpen, setIsPhotoOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -82,6 +83,8 @@ export default function UserDetails() {
       setIsUploading(false);
     }
   }
+
+  if (status === 'loading' && !user) return <UserDetailsSkeleton />;
 
   return (
     <div className="flex flex-col items-center border-b border-gray-200 pb-8 text-center">

@@ -9,6 +9,7 @@ import { X } from 'lucide-react';
 import type { Product, Category } from '@/types/index';
 import { ProductsQuerySchema } from '@/schemas/Product.schema';
 import useInfiniteProducts from '@/hooks/useInfiniteProducts';
+import { ProductSkeletons } from '@/components/loading/ProductSkeletons';
 
 type MainDealsProps = {
   products: Product[];
@@ -132,20 +133,27 @@ export default function MainDeals({ products, categories }: MainDealsProps) {
         aria-busy={isPending || isLoading}
         className="mx-auto grid w-199/200 grid-cols-2 gap-5 bg-white px-2 py-2 sm:w-full sm:bg-white lg:grid-cols-3 xl:grid-cols-4"
       >
-        {isPending && (
-          <p role="status" className="col-span-full text-gray-600">
-            Updating products…
-          </p>
-        )}
-        {showProducts.length ? (
+        {isPending ? (
+          <>
+            <span role="status" className="sr-only">
+              Updating products
+            </span>
+            <ProductSkeletons count={Math.max(4, Math.min(visibleProducts.length, 8))} />
+          </>
+        ) : showProducts.length ? (
           showProducts
         ) : (
           <p className="col-span-full py-6 text-center text-gray-600">
             No products match your filters.
           </p>
         )}
+        {isLoading && !isPending && <ProductSkeletons count={4} />}
         <div ref={sentinelRef} className="col-span-full min-h-12 py-4 text-center">
-          {isLoading && <p role="status">Loading more products…</p>}
+          {isLoading && (
+            <span role="status" className="sr-only">
+              Loading more products
+            </span>
+          )}
           {error && (
             <div role="alert">
               <p>{error}</p>

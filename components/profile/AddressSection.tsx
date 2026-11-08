@@ -6,11 +6,13 @@ import { UserContext } from '../auth/UserProvider';
 import AddressForm from '@/components/profile/AddressForm';
 import Address from '@/components/profile/Address';
 import type { AddressData } from '@/types';
+import { AddressListSkeleton } from '@/components/loading/ProfileSkeletons';
 
 export default function AddressSection() {
   const searchParams = useSearchParams();
   const open = searchParams.get('section') === 'addresses';
   const [addresses, setAddresses] = useState<AddressData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { user } = useContext(UserContext);
 
   function toggleAddresses() {
@@ -25,9 +27,10 @@ export default function AddressSection() {
   }
 
   useEffect(() => {
+    const controller = new AbortController();
     async function fetchAddresses() {
       try {
-        const response = await fetch('/api/addresses');
+        const response = await fetch('/api/addresses', { signal: controller.signal });
 
         if (response.status === 401) {
           throw new Error('You must sign in to view addresses');
@@ -38,13 +41,16 @@ export default function AddressSection() {
         }
 
         const data = await response.json();
-        setAddresses(data);
+        if (!controller.signal.aborted) setAddresses(data);
       } catch (error) {
-        console.error('Error while fetching addresses:', error);
+        if (!controller.signal.aborted) console.error('Error while fetching addresses:', error);
+      } finally {
+        if (!controller.signal.aborted) setIsLoading(false);
       }
     }
 
-    fetchAddresses();
+    void fetchAddresses();
+    return () => controller.abort();
   }, []);
 
   const sortedAddresses = [...addresses].sort(
@@ -86,8 +92,14 @@ export default function AddressSection() {
         }`}
       >
         <div className="min-h-0 overflow-hidden">
-          {showAddresses}
-          <AddressForm setAddresses={setAddresses} />
+          {isLoading ? (
+            <AddressListSkeleton />
+          ) : (
+            <>
+              {showAddresses}
+              <AddressForm setAddresses={setAddresses} />
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -10,6 +10,7 @@ import ShippingAndPayment from '@/components/orders/ShippingAndPayment';
 import OrderSummary from '@/components/orders/OrderSummary';
 import CancelOrderButton from '@/components/orders/CancelOrderButton';
 import Popup from '@/components/common/Popup';
+import { OrderDetailsSkeleton } from '@/components/loading/OrderSkeletons';
 
 export default function OrderDetails({ orderId }: { orderId: number }) {
   const [order, setOrder] = useState<OrderDetailsData | null>(null);
@@ -100,7 +101,7 @@ export default function OrderDetails({ orderId }: { orderId: number }) {
     <div className="text-dark mx-auto my-6 w-11/12 max-w-6xl md:my-8">
       {error && <Popup success={false} message={error} onClose={() => setError('')} />}
       <OrderHeader orderId={orderId} createdAt={order?.createdAt} />
-      {isLoading && <p>Loading your order…</p>}
+      {isLoading && <OrderDetailsSkeleton />}
       {fetchError && <p>{fetchError}</p>}
       {!isLoading && order && (
         <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-6">

@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import OrdersCard from '@/components/orders/OrdersCard';
 import type { OrderSummary } from '@/types/orders';
+import { OrdersListSkeleton } from '@/components/loading/OrderSkeletons';
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState<OrderSummary[]>([]);
@@ -46,7 +47,7 @@ export default function OrdersPage() {
     <div className="text-dark mx-auto my-4 w-11/12 max-w-6xl bg-white px-4 py-5 md:px-8 md:py-6">
       <h1 className="mb-6 text-2xl md:text-3xl">Your Orders</h1>
 
-      {isLoading && <p>Loading your orders…</p>}
+      {isLoading && <OrdersListSkeleton />}
       {error && <p>{error}</p>}
       {!isLoading && !error && orders.length === 0 && <p>You haven’t placed any orders yet.</p>}
 

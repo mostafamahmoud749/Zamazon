@@ -7,6 +7,7 @@ export type CartProduct = {
 };
 export type CartContextValue = {
   products: CartProduct[];
+  isLoading: boolean;
   totalProductsCount: number;
   totalProductsPrice: number;
   addToCart: (product: Product, quantity: number) => Promise<void>;

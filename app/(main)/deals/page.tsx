@@ -3,6 +3,8 @@ import { fetchCategories } from '@/lib/fetchCategories';
 import { fetchProducts } from '@/lib/fetchProducts';
 import { ProductsQuerySchema } from '@/schemas/Product.schema';
 import Link from 'next/link';
+import { Suspense } from 'react';
+import { DealsPageSkeleton } from '@/components/loading/ProductSkeletons';
 
 type DealsPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -34,10 +36,19 @@ export default async function DealsPage({ searchParams }: DealsPageProps) {
     filters: JSON.stringify(result.data.filters),
     page: String(result.data.page),
   });
+
+  return (
+    <Suspense key={query.toString()} fallback={<DealsPageSkeleton />}>
+      <DealsResults query={query.toString()} />
+    </Suspense>
+  );
+}
+
+async function DealsResults({ query }: { query: string }) {
   const [products, categories] = await Promise.all([
     fetchProducts(`${process.env.API_URL}/api/products?${query}&cumulative=true`),
     fetchCategories(`${process.env.API_URL}/api/categories`),
   ]);
 
-  return <MainDeals key={query.toString()} products={products} categories={categories} />;
+  return <MainDeals key={query} products={products} categories={categories} />;
 }

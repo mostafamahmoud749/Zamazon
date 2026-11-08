@@ -4,6 +4,7 @@ import type { Dispatch, SetStateAction } from 'react';
 import CommentItem from '@/components/deal/CommentItem';
 import { UserContext } from '@/components/auth/UserProvider';
 import type { Comment } from '@/types/index';
+import ReviewSkeleton from '@/components/loading/ReviewSkeleton';
 
 type CommentListProps = {
   productId: number;
@@ -16,12 +17,16 @@ export default function CommentList({ productId, comments, setComments }: Commen
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    const controller = new AbortController();
+    setIsLoading(true);
     async function fetchComments() {
       try {
-        const response = await fetch(`/api/products/${productId}/reviews`);
+        const response = await fetch(`/api/products/${productId}/reviews`, {
+          signal: controller.signal,
+        });
 
         if (response.status === 404) {
-          setComments([]);
+          if (!controller.signal.aborted) setComments([]);
           return;
         }
 
@@ -30,15 +35,16 @@ export default function CommentList({ productId, comments, setComments }: Commen
         }
 
         const data = await response.json();
-        setComments(data);
+        if (!controller.signal.aborted) setComments(data);
       } catch (error) {
-        console.error('Error fetching comments:', error);
+        if (!controller.signal.aborted) console.error('Error fetching comments:', error);
       } finally {
-        setIsLoading(false);
+        if (!controller.signal.aborted) setIsLoading(false);
       }
     }
 
-    fetchComments();
+    void fetchComments();
+    return () => controller.abort();
   }, [productId, setComments]);
 
   const showComments = comments.map((comment) => {
@@ -65,11 +71,13 @@ export default function CommentList({ productId, comments, setComments }: Commen
 
   return (
     <div className="divide-y divide-gray-300 lg:col-span-2">
-      {isLoading
-        ? 'Loading reviews...'
-        : comments.length > 0
-          ? showComments
-          : 'No reviews yet. Be the first to leave one!'}
+      {isLoading ? (
+        <ReviewSkeleton />
+      ) : comments.length > 0 ? (
+        showComments
+      ) : (
+        'No reviews yet. Be the first to leave one!'
+      )}
     </div>
   );
 }

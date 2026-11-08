@@ -8,6 +8,7 @@ import { UserContext } from '../auth/UserProvider';
 
 const defaultCartContextValue: CartContextValue = {
   products: [],
+  isLoading: true,
   totalProductsCount: 0,
   totalProductsPrice: 0,
   addToCart: async () => {},
@@ -22,6 +23,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const { status } = useContext(UserContext);
   const [products, setProducts] = useState<CartProduct[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   async function addToCart(product: Product, quantity: number) {
     const productId = product.id;
@@ -128,6 +130,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }
 
   const fetchCart = useCallback(async () => {
+    setIsLoading(true);
     try {
       const result = await fetch('/api/cart/items', {
         credentials: 'include',
@@ -143,6 +146,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       setProducts(data);
     } catch (error) {
       console.error('Error fetching cart items:', error);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -152,6 +157,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       if (status === 'authenticated') {
         void fetchCart();
+      } else {
+        setIsLoading(status === 'loading');
       }
 
       return;
@@ -166,6 +173,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       setProducts([]);
     } finally {
       setIsInitialized(true);
+      setIsLoading(false);
     }
   }, [status, fetchCart]);
 
@@ -188,6 +196,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     <CartContext.Provider
       value={{
         products,
+        isLoading: status === 'loading' || isLoading,
         addToCart,
         updateCartItemQuantity,
         removeFromCart,

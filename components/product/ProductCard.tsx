@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/types/index';
 import ExtraDetails from '@/components/product/ExtraDetails';
+import Skeleton from '@/components/common/Skeleton';
 
 type ProductCardProps = {
   el: Product;
@@ -12,20 +13,25 @@ type ProductCardProps = {
 
 export default function ProductCard({ el, deals }: ProductCardProps) {
   const [failedImage, setFailedImage] = useState<string | null>(null);
+  const [loadedImage, setLoadedImage] = useState<string | null>(null);
+  const imageSrc = !el.image || failedImage === el.image ? '/products/demo-product.svg' : el.image;
+  const isImageLoading = loadedImage !== imageSrc;
   return (
     <div className="flex h-80 w-full min-w-0 flex-col justify-between overflow-hidden rounded-md bg-gray-100 p-2 shadow-md transition hover:shadow-lg">
       <Link
         href={`/deals/${el.id}`}
         prefetch={false}
-        className="flex h-40 w-full flex-1 items-center justify-center overflow-hidden"
+        className="relative flex h-40 min-h-0 w-full flex-1 items-center justify-center overflow-hidden"
       >
+        {isImageLoading && <Skeleton className="absolute inset-0" />}
         <Image
-          src={!el.image || failedImage === el.image ? '/products/demo-product.svg' : el.image}
+          src={imageSrc}
+          onLoad={() => setLoadedImage(imageSrc)}
           onError={() => setFailedImage(el.image)}
           width={200}
           height={200}
           alt={el.title}
-          className="object-contain"
+          className={`relative max-h-full object-contain transition-opacity ${isImageLoading ? 'opacity-0' : 'opacity-100'}`}
           sizes="(max-width: 768px) 40vw, (max-width: 1200px) 20vw, 180px"
         />
       </Link>
