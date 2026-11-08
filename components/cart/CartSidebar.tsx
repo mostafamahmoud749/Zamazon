@@ -8,6 +8,7 @@ import Image from 'next/image';
 import Counter from '@/components/common/Counter';
 import type { CartProduct } from '@/types/index';
 import { JSX } from 'react';
+import { formatPrice, getUnitPriceCents } from '@/lib/pricing';
 
 export default function CartSidebar() {
   const { products, totalProductsPrice } = useContext(CartContext);
@@ -24,7 +25,9 @@ export default function CartSidebar() {
               className="object-contain pt-4"
             />
           </Link>
-          <div className="mt-2 mb-1 text-sm font-bold">{product.product.price}$</div>
+          <div className="mt-2 mb-1 text-sm font-bold">
+            {formatPrice(getUnitPriceCents(product.product) / 100)}
+          </div>
         </div>
         <Counter product={product} />
         <div className="mb-1"></div>
@@ -39,7 +42,7 @@ export default function CartSidebar() {
       <div className="fixed w-[130px]">
         <CartSidebarItem>
           <div className="text-xs">Subtotal</div>
-          <div className="text-xs font-bold text-rose-700">{totalProductsPrice.toFixed(2)}$</div>
+          <div className="text-xs font-bold text-rose-700">{formatPrice(totalProductsPrice)}</div>
           <Link href="/cart" className="w-full">
             <Button className="my-2 w-full cursor-pointer rounded-3xl border-1 border-gray-500 p-[2px] text-center text-xs transition-all duration-200 enabled:hover:bg-gray-100">
               Go to basket

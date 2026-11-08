@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import { CartContext } from '@/components/cart/CartProvider';
 import type { Product } from '@/types/index';
 import Counter from '@/components/common/Counter';
+import { formatPrice, getUnitPriceCents } from '@/lib/pricing';
 
 type ExtraDetailsProps = {
   el: Product;
@@ -15,7 +16,7 @@ export default function ExtraDetails({ el }: ExtraDetailsProps) {
 
   return (
     <div className="mx-1 my-2">
-      <div>{el.price}$</div>
+      <div>{formatPrice(getUnitPriceCents(el) / 100)}</div>
       <p className="line-clamp-2 text-sm font-medium text-gray-700">{el.title}</p>
       <div className="-ml-1 max-w-[100px]">
         {product ? (

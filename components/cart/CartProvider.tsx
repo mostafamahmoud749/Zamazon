@@ -3,6 +3,7 @@ import { createContext, useEffect, useContext, useCallback, useMemo, useState } 
 import type { ReactNode } from 'react';
 import type { CartContextValue, CartProduct, Product } from '@/types';
 import { getCsrfToken } from '@/lib/getCsrfToken';
+import { getCartTotals } from '@/lib/pricing';
 import { UserContext } from '../auth/UserProvider';
 
 const defaultCartContextValue: CartContextValue = {
@@ -168,16 +169,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [status, fetchCart]);
 
-  const { totalProductsCount, totalProductsPrice } = useMemo(() => {
-    return products.reduce(
-      (acc: { totalProductsCount: number; totalProductsPrice: number }, product: CartProduct) => {
-        acc.totalProductsCount += product.quantity;
-        acc.totalProductsPrice += product.quantity * Number(product.product.price);
-        return acc;
-      },
-      { totalProductsCount: 0, totalProductsPrice: 0 },
-    );
-  }, [products]);
+  const { totalProductsCount, totalProductsPrice } = useMemo(
+    () => getCartTotals(products),
+    [products],
+  );
 
   useEffect(() => {
     if (!isInitialized || status !== 'unauthenticated') return;

@@ -4,6 +4,7 @@ import { Banknote, CreditCard, ShoppingBag, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import Input from '@/components/common/Input';
+import { formatPrice } from '@/lib/pricing';
 
 type CheckoutDialogProps = {
   totalProductsCount: number;
@@ -219,11 +220,11 @@ export default function CheckoutDialog({
           <dl className="mt-5 text-sm">
             <div className="flex justify-between gap-3 text-gray-600">
               <dt>Items ({totalProductsCount})</dt>
-              <dd>{totalProductsPrice.toFixed(2)}$</dd>
+              <dd>{formatPrice(totalProductsPrice)}</dd>
             </div>
             <div className="mt-4 flex justify-between gap-3 border-t border-gray-200 pt-4 text-base font-semibold">
               <dt>Subtotal</dt>
-              <dd>{totalProductsPrice.toFixed(2)}$</dd>
+              <dd>{formatPrice(totalProductsPrice)}</dd>
             </div>
           </dl>
 

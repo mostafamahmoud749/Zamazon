@@ -3,6 +3,7 @@ import Image from 'next/image';
 import type { CartProduct } from '@/types/index';
 import Counter from '@/components/common/Counter';
 import Link from 'next/link';
+import { formatPrice, getUnitPriceCents } from '@/lib/pricing';
 
 type CartItemProps = {
   product: CartProduct;
@@ -26,7 +27,7 @@ export default function CartItem({ product }: CartItemProps) {
             {product.product.description}
           </div>
           <div className="text-xl font-semibold md:ml-auto md:shrink-0 md:text-right">
-            {product.product.price}$
+            {formatPrice(getUnitPriceCents(product.product) / 100)}
           </div>
         </div>
         <Counter product={product} />
