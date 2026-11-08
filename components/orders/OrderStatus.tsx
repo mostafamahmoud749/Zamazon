@@ -1,0 +1,30 @@
+import { Package, PackageX } from 'lucide-react';
+
+export default function OrderStatus({ isCanceled }: { isCanceled: boolean }) {
+  return (
+    <section
+      aria-labelledby="order-status-heading"
+      className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6"
+    >
+      <div className="flex items-start gap-4" role="status">
+        <div
+          className={`flex size-11 shrink-0 items-center justify-center rounded-xl ${isCanceled ? 'bg-gray-100 text-gray-500' : 'bg-amber-50 text-amber-700'}`}
+        >
+          {isCanceled ? (
+            <PackageX size={23} aria-hidden="true" />
+          ) : (
+            <Package size={23} aria-hidden="true" />
+          )}
+        </div>
+        <div className="min-w-0 flex-1">
+          <h2 id="order-status-heading" className="text-lg font-semibold">
+            {isCanceled ? 'Order canceled' : 'Order placed'}
+          </h2>
+          <p className="mt-1 text-sm leading-relaxed text-gray-600">
+            {isCanceled ? 'This order has been canceled.' : 'Your order has been received.'}
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}

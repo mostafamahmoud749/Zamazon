@@ -54,7 +54,7 @@ router.get(
     const orderId = response.locals.params.id;
 
     try {
-      const order = await prisma.order.findFirst({
+      const order = await prisma.order.findUnique({
         where: { id: orderId, userId: request.user!.id },
         select: {
           id: true,
