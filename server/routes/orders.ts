@@ -77,6 +77,16 @@ router.get(
               },
             },
           },
+          address: {
+            select: {
+              id: true,
+              street: true,
+              city: true,
+              state: true,
+              postalCode: true,
+              country: true,
+            },
+          },
         },
       });
 

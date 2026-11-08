@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import type { OrderDetails as OrderDetailsData } from '@/types/orders';
 import { getCsrfToken } from '@/lib/getCsrfToken';
 import OrderHeader from '@/components/orders/OrderHeader';
 import OrderStatus from '@/components/orders/OrderStatus';
@@ -10,13 +11,52 @@ import OrderSummary from '@/components/orders/OrderSummary';
 import CancelOrderButton from '@/components/orders/CancelOrderButton';
 
 export default function OrderDetails({ orderId }: { orderId: number }) {
-  const [isCanceled, setIsCanceled] = useState(false);
+  const [order, setOrder] = useState<OrderDetailsData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState('');
   const [isConfirming, setIsConfirming] = useState(false);
   const [isCanceling, setIsCanceling] = useState(false);
   const [error, setError] = useState('');
 
+  const isCanceled = order?.status === 'CANCELED';
+
+  useEffect(() => {
+    const controller = new AbortController();
+    setOrder(null);
+    setIsLoading(true);
+    setFetchError('');
+    setIsConfirming(false);
+    setError('');
+
+    async function fetchOrder() {
+      try {
+        const response = await fetch(`/api/orders/${orderId}`, {
+          credentials: 'include',
+          signal: controller.signal,
+        });
+
+        if (response.status === 401) throw new Error('Please sign in to view your order.');
+        if (response.status === 404) throw new Error('This order could not be found.');
+        if (!response.ok) throw new Error('Could not load your order. Please try again.');
+
+        const data: OrderDetailsData = await response.json();
+        if (!controller.signal.aborted) setOrder(data);
+      } catch (error) {
+        if (controller.signal.aborted) return;
+        setFetchError(
+          error instanceof Error ? error.message : 'Could not load your order. Please try again.',
+        );
+      } finally {
+        if (!controller.signal.aborted) setIsLoading(false);
+      }
+    }
+
+    void fetchOrder();
+    return () => controller.abort();
+  }, [orderId]);
+
   async function cancelOrder() {
-    if (isCanceling || isCanceled) return;
+    if (isCanceling || order?.status !== 'PENDING') return;
     setIsCanceling(true);
     setError('');
 
@@ -37,7 +77,7 @@ export default function OrderDetails({ orderId }: { orderId: number }) {
         throw new Error('Could not cancel your order. Please try again.');
       }
 
-      setIsCanceled(true);
+      setOrder((current) => (current ? { ...current, status: 'CANCELED' } : current));
       setIsConfirming(false);
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Could not cancel your order.');
@@ -48,28 +88,34 @@ export default function OrderDetails({ orderId }: { orderId: number }) {
 
   return (
     <div className="text-dark mx-auto my-6 w-11/12 max-w-6xl md:my-8">
-      <OrderHeader orderId={orderId} />
-      <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-6">
-        <div className="min-w-0 space-y-5">
-          <OrderStatus isCanceled={isCanceled} />
-          <OrderItems />
-          <ShippingAndPayment />
+      <OrderHeader orderId={orderId} createdAt={order?.createdAt} />
+      {isLoading && <p>Loading your order…</p>}
+      {fetchError && <p>{fetchError}</p>}
+      {!isLoading && order && (
+        <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-6">
+          <div className="min-w-0 space-y-5">
+            <OrderStatus status={order.status} />
+            <OrderItems items={order.orderItems} />
+            <ShippingAndPayment address={order.address} paymentMethod={order.paymentMethod} />
+          </div>
+          <OrderSummary total={Number(order.totalAmount)}>
+            {(order.status === 'PENDING' || isCanceled) && (
+              <CancelOrderButton
+                isCanceled={isCanceled}
+                isConfirming={isConfirming}
+                isCanceling={isCanceling}
+                error={error}
+                onCancel={cancelOrder}
+                onConfirm={() => setIsConfirming(true)}
+                onKeepOrder={() => {
+                  setIsConfirming(false);
+                  setError('');
+                }}
+              />
+            )}
+          </OrderSummary>
         </div>
-        <OrderSummary>
-          <CancelOrderButton
-            isCanceled={isCanceled}
-            isConfirming={isConfirming}
-            isCanceling={isCanceling}
-            error={error}
-            onCancel={cancelOrder}
-            onConfirm={() => setIsConfirming(true)}
-            onKeepOrder={() => {
-              setIsConfirming(false);
-              setError('');
-            }}
-          />
-        </OrderSummary>
-      </div>
+      )}
     </div>
   );
 }

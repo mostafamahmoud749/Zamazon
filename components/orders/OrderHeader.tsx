@@ -1,7 +1,13 @@
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
 
-export default function OrderHeader({ orderId }: { orderId: number }) {
+export default function OrderHeader({
+  orderId,
+  createdAt,
+}: {
+  orderId: number;
+  createdAt?: string;
+}) {
   return (
     <>
       <Link
@@ -17,10 +23,19 @@ export default function OrderHeader({ orderId }: { orderId: number }) {
           <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">Order details</h1>
           <p className="mt-2 text-sm text-gray-600">
             Order <span className="font-medium text-gray-900">#{orderId}</span>
-            <span className="mx-2 text-gray-300" aria-hidden="true">
-              |
-            </span>
-            Placed on November 6, 2026
+            {createdAt && (
+              <>
+                <span className="mx-2 text-gray-300" aria-hidden="true">
+                  |
+                </span>
+                Placed on{' '}
+                {new Date(createdAt).toLocaleDateString('en-US', {
+                  month: 'long',
+                  day: 'numeric',
+                  year: 'numeric',
+                })}
+              </>
+            )}
           </p>
         </div>
       </header>

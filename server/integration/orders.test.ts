@@ -363,6 +363,16 @@ describe('GET /api/orders/:id', () => {
       expect.objectContaining({
         id: order.id,
         paymentMethod: 'cash',
+        totalAmount: '25',
+        status: 'PENDING',
+        address: {
+          id: address.id,
+          street: address.street,
+          city: address.city,
+          state: address.state,
+          postalCode: address.postalCode,
+          country: address.country,
+        },
         orderItems: [
           expect.objectContaining({ product: expect.objectContaining({ id: product.id }) }),
         ],
