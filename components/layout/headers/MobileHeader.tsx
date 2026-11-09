@@ -41,8 +41,16 @@ export default function MobileHeader({ navs }: MobileHeaderProps): JSX.Element {
       </nav>
       <Search />
 
-      <div className="max-w-full overflow-hidden">
-        <Navigations H={true} navs={navs} />
+      <div className="flex max-w-full items-center gap-3 overflow-hidden">
+        <Link
+          href="/orders"
+          className="flex h-8 shrink-0 items-center border-1 border-transparent px-2 text-sm font-semibold hover:border-white"
+        >
+          Returns &amp; Orders
+        </Link>
+        <div className="min-w-0 flex-1">
+          <Navigations H={true} navs={navs} />
+        </div>
       </div>
       <Sidebar
         main={<MSidebar navs={navs} onClose={() => setOpen(false)} />}
