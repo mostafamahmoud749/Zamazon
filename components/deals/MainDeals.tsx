@@ -1,21 +1,19 @@
 'use client';
-import Button from '@/components/common/Button';
 import { useState, useTransition } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import FiltersBlock from '@/components/deals/FiltersBlock';
-import ProductCard from '@/components/product/ProductCard';
 import Filter from '@/components/deals/Filter';
 import { X } from 'lucide-react';
 import type { Product, Category } from '@/types/index';
 import { ProductsQuerySchema } from '@/schemas/Product.schema';
-import useInfiniteProducts from '@/hooks/useInfiniteProducts';
-import { ProductSkeletons } from '@/components/loading/ProductSkeletons';
+import DealsProducts from '@/components/deals/DealsProducts';
 
 type MainDealsProps = {
   products: Product[];
   categories: Category[];
+  resultsKey: string;
 };
-export default function MainDeals({ products, categories }: MainDealsProps) {
+export default function MainDeals({ products, categories, resultsKey }: MainDealsProps) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
@@ -27,13 +25,6 @@ export default function MainDeals({ products, categories }: MainDealsProps) {
     rating: searchParams.get('rating') ?? undefined,
     page: searchParams.get('page') ?? undefined,
   });
-  const {
-    products: visibleProducts,
-    isLoading,
-    error,
-    sentinelRef,
-    loadMore,
-  } = useInfiniteProducts(products, query.page, searchParams.toString(), isPending);
   const selectedIds = query.filters;
   const departments = Object.fromEntries(
     categories.map((category) => [String(category.id), selectedIds.includes(category.id)]),
@@ -92,8 +83,6 @@ export default function MainDeals({ products, categories }: MainDealsProps) {
     );
   }
 
-  const showProducts = visibleProducts.map((el) => <ProductCard key={el.id} el={el} deals />);
-
   return (
     <div className="md:m-auto md:my-8 md:flex md:w-4/5 md:gap-3">
       <div>
@@ -129,45 +118,13 @@ export default function MainDeals({ products, categories }: MainDealsProps) {
         </div>
       </div>
 
-      <div
-        aria-busy={isPending || isLoading}
-        className="mx-auto grid w-199/200 grid-cols-2 gap-5 bg-white px-2 py-2 sm:w-full sm:bg-white lg:grid-cols-3 xl:grid-cols-4"
-      >
-        {isPending ? (
-          <>
-            <span role="status" className="sr-only">
-              Updating products
-            </span>
-            <ProductSkeletons count={Math.max(4, Math.min(visibleProducts.length, 8))} />
-          </>
-        ) : showProducts.length ? (
-          showProducts
-        ) : (
-          <p className="col-span-full py-6 text-center text-gray-600">
-            No products match your filters.
-          </p>
-        )}
-        {isLoading && !isPending && <ProductSkeletons count={4} />}
-        <div ref={sentinelRef} className="col-span-full min-h-12 py-4 text-center">
-          {isLoading && (
-            <span role="status" className="sr-only">
-              Loading more products
-            </span>
-          )}
-          {error && (
-            <div role="alert">
-              <p>{error}</p>
-              <Button
-                type="button"
-                onClick={loadMore}
-                className="mt-2 cursor-pointer text-sky-800 underline"
-              >
-                Try again
-              </Button>
-            </div>
-          )}
-        </div>
-      </div>
+      <DealsProducts
+        key={resultsKey}
+        products={products}
+        initialPage={query.page}
+        queryString={searchParams.toString()}
+        isPending={isPending}
+      />
     </div>
   );
 }

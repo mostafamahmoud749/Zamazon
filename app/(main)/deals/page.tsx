@@ -38,7 +38,7 @@ export default async function DealsPage({ searchParams }: DealsPageProps) {
   });
 
   return (
-    <Suspense key={query.toString()} fallback={<DealsPageSkeleton />}>
+    <Suspense fallback={<DealsPageSkeleton />}>
       <DealsResults query={query.toString()} />
     </Suspense>
   );
@@ -50,5 +50,5 @@ async function DealsResults({ query }: { query: string }) {
     fetchCategories(`${process.env.API_URL}/api/categories`),
   ]);
 
-  return <MainDeals key={query} products={products} categories={categories} />;
+  return <MainDeals products={products} categories={categories} resultsKey={query} />;
 }
