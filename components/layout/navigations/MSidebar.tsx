@@ -17,6 +17,7 @@ type MSidebarProps = {
 
 export default function MSidebar({ py, navs, onClose }: MSidebarProps): JSX.Element {
   const { status } = useContext(UserContext);
+  const electronics = navs.find((category) => category.key.trim().toLowerCase() === 'electronics');
 
   return (
     <>
@@ -24,16 +25,18 @@ export default function MSidebar({ py, navs, onClose }: MSidebarProps): JSX.Elem
         <span className="text-lg font-bold">Zamazon Home</span>
         <House />
       </Link>
-      <div className="border-y-4 border-gray-300 p-4">
-        <p className="mb-2">Trending</p>
-        <Link
-          onClick={onClose}
-          className="block w-full py-2 transition-all duration-200 hover:ml-1 hover:bg-gray-100"
-          href={`/deals?filters=${encodeURIComponent(JSON.stringify({ group: 'departments', key: 'electronics' }))}`}
-        >
-          Electronics
-        </Link>
-      </div>
+      {electronics?.id && (
+        <div className="border-y-4 border-gray-300 p-4">
+          <p className="mb-2">Trending</p>
+          <Link
+            onClick={onClose}
+            className="block w-full py-2 transition-all duration-200 hover:ml-1 hover:bg-gray-100"
+            href={`/deals?filters=${encodeURIComponent(JSON.stringify([electronics.id]))}`}
+          >
+            Electronics
+          </Link>
+        </div>
+      )}
       <Navigations py={py} navs={navs} toggle={onClose} />
       {status === 'authenticated' && (
         <div className="border-t-4 border-gray-300 p-1">
