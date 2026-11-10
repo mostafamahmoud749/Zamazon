@@ -47,7 +47,7 @@ router.patch(
       });
 
       if (!address) {
-        return response.status(404).json({ error: 'This Address dosenot exist!' });
+        return response.status(404).json({ error: 'This Address does not exist!' });
       }
 
       await prisma.user.update({

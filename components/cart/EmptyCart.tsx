@@ -16,7 +16,7 @@ export default function EmptyCart() {
           href={'/deals'}
           className="text-sm text-sky-500 transition-all duration-200 hover:text-sky-600"
         >
-          shop todays deals
+          shop today&apos;s deals
         </Link>
         {status === 'unauthenticated' ? (
           <div className="my-5 flex flex-col gap-2 md:flex-row md:flex-wrap">

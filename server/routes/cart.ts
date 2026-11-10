@@ -9,7 +9,7 @@ import {
 } from '../../schemas/Cart.schema.js';
 import { validateBody } from '../middleware/validateBody.js';
 import { validateParams } from '../middleware/validateParams.js';
-import { checkAvailableProductQuantity } from '../utils/checkAvilableProductQuantity.js';
+import { checkAvailableProductQuantity } from '../utils/checkAvailableProductQuantity.js';
 import { Prisma } from '../../generated/prisma/client.js';
 import { MAX_CART_QUANTITY } from '../../schemas/Cart.schema.js';
 import { isPrismaError } from '../utils/isPrismaError.js';
@@ -138,7 +138,7 @@ router.patch(
       });
 
       if (!cartItem) {
-        return response.status(404).json({error:"Cart item dose not exist!"});
+        return response.status(404).json({error:"Cart item does not exist!"});
       }
 
       if (!(await checkAvailableProductQuantity(cartItem.productId, quantity))) {

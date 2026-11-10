@@ -39,16 +39,16 @@ router.get(
   async (request: Request<{ id: string }>, response) => {
     const id = response.locals.params.id;
     try {
-      const categoryChildrens = await prisma.category.findMany({
+      const categoryChildren = await prisma.category.findMany({
         where: {
           parentId: id,
         },
       });
-      if (categoryChildrens.length === 0) {
-        response.status(404).json({ error: 'Category has no childrens' });
+      if (categoryChildren.length === 0) {
+        response.status(404).json({ error: 'Category has no children' });
         return;
       }
-      response.json(categoryChildrens);
+      response.json(categoryChildren);
     } catch (error) {
       console.error('Error fetching category:', error);
       throw error;

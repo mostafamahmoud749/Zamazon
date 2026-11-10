@@ -3,7 +3,7 @@ import { prisma } from '../../prisma/lib/prisma.js';
 import { requireAuth } from '../middleware/requireAuth.js';
 import { CreateReviewDto, PatchReviewDto } from '../dtos/Reviews.dto.js';
 import { validateParams } from '../middleware/validateParams.js';
-import { ProducIdParamsSchema } from '../../schemas/Product.schema.js';
+import { ProductIdParamsSchema } from '../../schemas/Product.schema.js';
 import {
   CreateReviewSchema,
   ReviewRouteParamsSchema,
@@ -16,7 +16,7 @@ const router = Router();
 
 router.get(
   '/api/products/:id/reviews',
-  validateParams(ProducIdParamsSchema),
+  validateParams(ProductIdParamsSchema),
   async (request, response) => {
     const productId = response.locals.params.id;
     try {
@@ -56,7 +56,7 @@ router.get(
 router.post(
   '/api/products/:id/reviews',
   requireAuth,
-  validateParams(ProducIdParamsSchema),
+  validateParams(ProductIdParamsSchema),
   validateBody(CreateReviewSchema),
   async (request: Request<{ id: string }, {}, CreateReviewDto>, response) => {
     const productId = response.locals.params.id;

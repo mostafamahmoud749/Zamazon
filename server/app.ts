@@ -1,6 +1,6 @@
 import 'dotenv/config';
-import './stratiges/local-stratigy.js';
-import './stratiges/github-stratigy.js';
+import './strategies/local-strategy.js';
+import './strategies/github-strategy.js';
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';

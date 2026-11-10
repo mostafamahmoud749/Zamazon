@@ -142,7 +142,7 @@ export default function AddressForm({ setAddresses, initialAddress, onClose }: A
               onChange={(e) => setAddress((prev) => ({ ...prev, country: e.target.value }))}
               autoComplete="country-name"
               placeholder="Country"
-              className="rounYourded-md mt-2 block w-full border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
+              className="rounded-md mt-2 block w-full border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-sky-700 focus:ring-1 focus:ring-sky-700 focus:outline-none"
             />
           </div>
           <div className="flex flex-wrap gap-3 pt-1">

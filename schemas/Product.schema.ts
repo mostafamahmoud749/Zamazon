@@ -2,7 +2,7 @@ import Z from 'zod';
 
 export const MAX_PRODUCT_PAGE = 50;
 
-export const ProducIdParamsSchema = Z.object({
+export const ProductIdParamsSchema = Z.object({
   id: Z.coerce.number().int().positive('Product ID must be a positive integer'),
 });
 

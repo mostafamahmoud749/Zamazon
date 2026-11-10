@@ -8,7 +8,7 @@ export default function CartPage() {
       <div className="hidden text-xs md:block">
         <p>
           The price and availability of items at Zamazon.com are subject to change. The Cart is a
-          temporary place to store a list of your items and reflects each items most recent price.
+          temporary place to store a list of your items and reflects each item&apos;s most recent price.
         </p>
       </div>
     </div>

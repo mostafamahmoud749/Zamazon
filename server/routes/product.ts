@@ -5,7 +5,7 @@ import { CreateProductDto, PatchProductDto } from '../dtos/Product.dto.js';
 import { validateParams } from '../middleware/validateParams.js';
 import {
   CreateProductSchema,
-  ProducIdParamsSchema,
+  ProductIdParamsSchema,
   UpdateProductSchema,
 } from '../../schemas/Product.schema.js';
 import { validateBody } from '../middleware/validateBody.js';
@@ -13,7 +13,7 @@ import { isPrismaError } from '../utils/isPrismaError.js';
 
 const router = Router();
 
-router.get('/api/products/:id', validateParams(ProducIdParamsSchema), async (request, response) => {
+router.get('/api/products/:id', validateParams(ProductIdParamsSchema), async (request, response) => {
   const id = response.locals.params.id;
 
   try {
@@ -89,7 +89,7 @@ router.post(
 router.patch(
   '/api/products/:id',
   requireAuth,
-  validateParams(ProducIdParamsSchema),
+  validateParams(ProductIdParamsSchema),
   validateBody(UpdateProductSchema),
   async (request: Request<{ id: string }, {}, PatchProductDto>, response) => {
     const id = response.locals.params.id;
@@ -139,7 +139,7 @@ router.patch(
 router.delete(
   '/api/products/:id',
   requireAuth,
-  validateParams(ProducIdParamsSchema),
+  validateParams(ProductIdParamsSchema),
   async (request: Request<{ id: string }>, response) => {
     const id = response.locals.params.id;
     const userId = request.user!.id;
