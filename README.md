@@ -209,3 +209,4 @@ You need Node.js 24.x, npm, a PostgreSQL database, and GitHub OAuth app credenti
 Open `http://localhost:3000` and register an account.
 
 To run integration tests, set `DATABASE_URL_TEST` to a separate PostgreSQL test database, apply the migrations to that database, and run `npm test`. For load testing, see [tests/load/README.md](tests/load/README.md).
+
